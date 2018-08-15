@@ -1,0 +1,42 @@
+﻿using System.Drawing;
+using Vkm.Api.Basic;
+
+namespace Vkm.Library.Common
+{
+    static class DefaultDrawingAlgs
+    {
+        internal static void DrawIconAndText(Bitmap bitmap, FontFamily iconFontFamily, string iconSymbol, FontFamily textFontFamily, string text, string textExample, Color color)
+        {
+            var textHeight = (text != null)?FontEstimation.EstimateFontSize(bitmap, textFontFamily, textExample):0;
+            var imageHeight = (int) (bitmap.Height * 0.9 - textHeight);
+
+            using (var graphics = Graphics.FromImage(bitmap))
+            using (var whiteBrush = new SolidBrush(color))
+            using (Font textFont = (textHeight > 0)?new Font(textFontFamily, textHeight, GraphicsUnit.Pixel): null)
+            using (Font imageFont = new Font(iconFontFamily, imageHeight, GraphicsUnit.Pixel))
+            {
+
+                var size = graphics.MeasureString(text, textFont);
+                graphics.DrawString(text, textFont, whiteBrush, bitmap.Width - size.Width, bitmap.Height - size.Height);
+
+                graphics.DrawString(iconSymbol, imageFont, whiteBrush, 0, 0);
+            }
+        }
+
+        internal static void DrawTexts(Bitmap bitmap, FontFamily fontFamily, string l1, string l2, string textExample, Color color)
+        {
+            var textHeight = FontEstimation.EstimateFontSize(bitmap, fontFamily, textExample);
+
+            using (var graphics = Graphics.FromImage(bitmap))
+            using (var whiteBrush = new SolidBrush(color))
+            using (var textFont = new Font(fontFamily, textHeight, GraphicsUnit.Pixel))
+            {
+                var size = graphics.MeasureString(l1, textFont);
+                graphics.DrawString(l1, textFont, whiteBrush, bitmap.Width - size.Width, 0);
+
+                size = graphics.MeasureString(l2, textFont);
+                graphics.DrawString(l2, textFont, whiteBrush, bitmap.Width - size.Width, bitmap.Height / 2);
+            }
+        }
+    }
+}
