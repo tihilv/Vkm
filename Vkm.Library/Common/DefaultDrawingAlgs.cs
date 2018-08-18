@@ -38,5 +38,19 @@ namespace Vkm.Library.Common
                 graphics.DrawString(l2, textFont, whiteBrush, bitmap.Width - size.Width, bitmap.Height / 2);
             }
         }
+
+        internal static void DrawText(Bitmap bitmap, FontFamily fontFamily, string text, string textExample, Color color)
+        {            
+            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, textExample);
+
+            using (var graphics = Graphics.FromImage(bitmap))
+            using (var whiteBrush = new SolidBrush(color))
+            using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
+            {
+                var size = graphics.MeasureString(text, font);
+                graphics.DrawString(text, font, whiteBrush, (bitmap.Width - size.Width)/2, (bitmap.Height - size.Height)/2);
+            }
+
+        }
     }
 }

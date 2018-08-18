@@ -1,12 +1,13 @@
 ﻿using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Common;
 
 namespace Vkm.Library.Clock
 {
     class ClockLayoutFactory: ILayoutFactory
     {
-        public Identifier Id => Identifiers.DefaultScreenSaverFactory;
+        public static readonly Identifier Identifier = new Identifier("Vkm.DefaultScreensaver.Factory");
+
+        public Identifier Id => Identifier;
 
         public string Name => "Time Screen Saver";
 

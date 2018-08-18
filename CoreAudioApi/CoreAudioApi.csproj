@@ -151,9 +151,6 @@
     <Compile Include="structure\PropVariant.cs" />
     <Compile Include="impl\SessionCollection.cs" />
     <Compile Include="impl\SimpleAudioVolume.cs" />
-    <Compile Include="Utils\ExclusiveAudioInput.cs" />
-    <Compile Include="Utils\WaveFileWriter.cs" />
-    <Compile Include="Utils\WaveGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

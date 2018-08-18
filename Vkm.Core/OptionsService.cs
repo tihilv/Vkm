@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using Vkm.Api.Configurator;
+using Vkm.Api.Identification;
 using Vkm.Api.Options;
 
 namespace Vkm.Core
@@ -15,7 +18,19 @@ namespace Vkm.Core
         public OptionsService(string filename)
         {
             _filename = filename;
-            _savedOptions = ReadOptions(filename);
+
+            _savedOptions = new Dictionary<string, IOptions>();
+        }
+
+        public void InitOptions(IEnumerable<IConfigurator> configurators)
+        {
+            foreach (var configurator in configurators)
+                configurator.Configure(this);
+            
+            var readOptions = ReadOptions(_filename);
+
+            foreach (var readOption in readOptions)
+                _savedOptions[readOption.Key] = readOption.Value;
         }
 
         private Dictionary<string, IOptions> ReadOptions(string filename)
@@ -39,13 +54,15 @@ namespace Vkm.Core
             return new Dictionary<string, IOptions>();
         }
 
-        private IOptions GetSavedOptions(string id, IOptions emptyOptions)
+        private IOptions GetSavedOptions(string id, IOptions emptyOptions, bool forceReplace)
         {
             if (emptyOptions == null)
                 return null;
 
+            CheckIfSerializable(emptyOptions);
+
             var typeName = id + "." + emptyOptions.GetType().Name;
-            if (!_savedOptions.TryGetValue(typeName, out var saved))
+            if (forceReplace || !_savedOptions.TryGetValue(typeName, out var saved))
             {
                 saved = emptyOptions;
                 _savedOptions[typeName] = saved;
@@ -54,9 +71,20 @@ namespace Vkm.Core
             return saved;
         }
 
+        private void CheckIfSerializable(IOptions options)
+        {
+            if (options.GetType().GetCustomAttribute(typeof(SerializableAttribute)) == null)
+                throw new TypeAccessException($"Options type {options.GetType().FullName} should be Serializable.");
+        }
+
         public void SaveOptions()
         {
             SaveOptions(_filename, _savedOptions);
+        }
+
+        public void SetDefaultOptions(Identifier identifier, IOptions options)
+        {
+            GetSavedOptions(identifier.Value, options, true);
         }
 
         private void SaveOptions(string filename, Dictionary<string, IOptions> options)
@@ -72,7 +100,7 @@ namespace Vkm.Core
         public void InitEntity(IOptionsProvider optionsProvider)
         {
             var defaultOptions = optionsProvider.GetDefaultOptions();
-            var options = GetSavedOptions(optionsProvider.Id.Value, defaultOptions);
+            var options = GetSavedOptions(optionsProvider.Id.Value, defaultOptions, false);
             optionsProvider.InitOptions(options);
         }
     }

@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Options;
+using Vkm.Library.Common;
+using Vkm.Library.Timer;
 
 namespace Vkm.Library.Clock
 {
-    internal class ClockElement: ElementBase
+    internal class ClockElement: ElementBase, IOptionsProvider
     {
+        private ClockElementOptions _options;
+
         public override DeviceSize ButtonCount => new DeviceSize(3, 1);
 
         private byte _hours = 99;
@@ -23,17 +27,27 @@ namespace Vkm.Library.Clock
             
         }
 
+        public IOptions GetDefaultOptions()
+        {
+            return new ClockElementOptions();
+        }
+
+        public void InitOptions(IOptions options)
+        {
+            _options = (ClockElementOptions) options;
+        }
+
         public override void Init()
         {
             base.Init();
-            RegisterTimer(new TimeSpan(0,0,0,1), () =>  DrawElementInvoke(ProvideTime()));
+            RegisterTimer(new TimeSpan(0,0,0,1), () =>  DrawInvoke(ProvideTime()));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
-            DrawElementInvoke(ProvideTime());
+            DrawInvoke(ProvideTime());
         }
 
         public override void LeaveLayout()
@@ -74,20 +88,20 @@ namespace Vkm.Library.Clock
 
             var fontFamily = GlobalContext.Options.Theme.FontFamily;
 
-            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, "88");
-
-            using (var graphics = Graphics.FromImage(bitmap))
-            using (var whiteBrush = new SolidBrush(GlobalContext.Options.Theme.ForegroundColor))
-            using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
-            {
-                var str = number.ToString("00");
-                var size = graphics.MeasureString(str, font);
-
-                graphics.DrawString(str, font, whiteBrush, (bitmap.Width - size.Width)/2, (bitmap.Height - size.Height)/2);
-
-            }
+            var str = number.ToString("00");
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, "88", GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
+        }
+
+        public override bool ButtonPressed(Location location, bool isDown)
+        {
+            if (isDown)
+            {
+                LayoutContext.SetLayout(_options.TimerLayoutIdentifier);
+            }
+
+            return base.ButtonPressed(location, isDown);
         }
     }
 }

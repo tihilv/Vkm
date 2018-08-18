@@ -35,7 +35,7 @@ namespace Vkm.Library.Weather
             
         }
         
-        public void EnterLayout(LayoutContext layoutContext)
+        public void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             _layoutContext = layoutContext;
             ProcessDraw();

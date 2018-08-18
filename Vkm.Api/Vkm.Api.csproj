@@ -45,13 +45,16 @@
     <Compile Include="Basic\FontEstimation.cs" />
     <Compile Include="Basic\IconSize.cs" />
     <Compile Include="Basic\Location.cs" />
+    <Compile Include="Configurator\IConfigurator.cs" />
     <Compile Include="Data\GlobalContext.cs" />
     <Compile Include="Data\GlobalServices.cs" />
     <Compile Include="Device\ButtonEventArgs.cs" />
     <Compile Include="Identification\Identifier.cs" />
     <Compile Include="Element\IElementFactory.cs" />
     <Compile Include="Options\GlobalOptions.cs" />
+    <Compile Include="Options\LayoutLoadOptions.cs" />
     <Compile Include="Options\ThemeOptions.cs" />
+    <Compile Include="Options\TransitionLoadOptions.cs" />
     <Compile Include="Processes\ICurrentProcessService.cs" />
     <Compile Include="Processes\ProcessEventArgs.cs" />
     <Compile Include="Data\IInitializable.cs" />
@@ -82,8 +85,6 @@
     <Compile Include="Transition\TransitionOptions.cs" />
     <Compile Include="Win32.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Theme\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,19 +21,10 @@ namespace Vkm.Library.Run
         public RunElement(Identifier identifier) : base(identifier)
         {
         }
-
-
+        
         public IOptions GetDefaultOptions()
         {
-            var result = new RunOptions();
-
-            if (Id == CompositeLayout.CompositeLayout.CalcIdentifier)
-            {
-                result.Executable = "calc.exe";
-                result.Symbol = FontAwesomeRes.fa_calculator;
-            }
-
-            return result;
+            return new RunOptions();
         }
 
         public void InitOptions(IOptions options)
@@ -41,11 +32,11 @@ namespace Vkm.Library.Run
             _options = (RunOptions) options;
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
-            DrawElementInvoke(new [] {new LayoutDrawElement(new Location(0, 0), Draw())});
+            DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), Draw())});
         }
 
         private Bitmap Draw()
@@ -54,15 +45,7 @@ namespace Vkm.Library.Run
 
             var fontFamily = FontService.Instance.AwesomeFontFamily;
 
-            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, _options.Symbol);
-
-            using (var graphics = Graphics.FromImage(bitmap))
-            using (var whiteBrush = new SolidBrush(GlobalContext.Options.Theme.ForegroundColor))
-            using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
-            {
-                var size = graphics.MeasureString(_options.Symbol, font);
-                graphics.DrawString(_options.Symbol, font, whiteBrush, (bitmap.Width - size.Width)/2, (bitmap.Height - size.Height)/2);
-            }
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Symbol, _options.Symbol, GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

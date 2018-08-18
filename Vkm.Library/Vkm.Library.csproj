@@ -51,8 +51,15 @@
     <Compile Include="ApplicationChangeTransition\ApplicationChangeTransitionOptions.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransition.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransitionFactory.cs" />
-    <Compile Include="ButtonElement.cs" />
+    <Compile Include="Buttons\ButtonElement.cs" />
+    <Compile Include="Timer\CountdownElement.cs" />
+    <Compile Include="Timer\InputTimeLayout.cs" />
     <Compile Include="Clock\ClockElementFactory.cs" />
+    <Compile Include="Clock\ClockElementOptions.cs" />
+    <Compile Include="Timer\StopwatchElement.cs" />
+    <Compile Include="Timer\TimerElapsedLayout.cs" />
+    <Compile Include="Timer\TimerLayoutFactory.cs" />
+    <Compile Include="Timer\TimerLayout.cs" />
     <Compile Include="Common\DefaultDrawingAlgs.cs" />
     <Compile Include="Common\FontAwesome.cs" />
     <Compile Include="Common\FontService.cs" />
@@ -60,6 +67,9 @@
     <Compile Include="CompositeLayout\CompositeLayoutElementInfo.cs" />
     <Compile Include="CompositeLayout\CompositeLayoutFactory.cs" />
     <Compile Include="CompositeLayout\CompositeLayoutOptions.cs" />
+    <Compile Include="Config\LibraryConfig.cs" />
+    <Compile Include="Date\DateElement.cs" />
+    <Compile Include="Date\ClockElementFactory.cs" />
     <Compile Include="Heartbeat\HeartbeatElement.cs" />
     <Compile Include="Heartbeat\HeartbeatFactory.cs" />
     <Compile Include="IdleTransition\LockEventArgs.cs" />
@@ -97,10 +107,6 @@
     <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">
       <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
       <Name>Vkm.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vkm.Common\Vkm.Common.csproj">
-      <Project>{2d8acc55-c5b6-4d3b-a49c-2a853dc2d04e}</Project>
-      <Name>Vkm.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

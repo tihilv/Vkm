@@ -12,7 +12,7 @@ namespace Vkm.Api.Element
 
         event EventHandler<DrawEventArgs> DrawElement;
 
-        void EnterLayout(LayoutContext layoutContext);
+        void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
         void LeaveLayout();
 
         bool ButtonPressed(Location location, bool isDown);

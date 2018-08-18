@@ -11,7 +11,7 @@ namespace Vkm.Api.Layout
 
         event EventHandler<DrawEventArgs> DrawLayout;
 
-        void EnterLayout(LayoutContext layoutContext);
+        void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
         void LeaveLayout();
 
         void ButtonPressed(Location location, bool isDown);

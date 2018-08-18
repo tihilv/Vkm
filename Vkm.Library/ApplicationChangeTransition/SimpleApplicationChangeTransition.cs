@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.ApplicationChangeTransition
 {
@@ -15,25 +13,7 @@ namespace Vkm.Library.ApplicationChangeTransition
         
         public override IOptions GetDefaultOptions()
         {
-            var result = new ApplicationChangeTransitionOptions(GlobalContext.Devices.FirstOrDefault()?.Id ?? new Identifier());
-            if (Id == Identifiers.DefaultApplicationChangeTransitionCalc)
-            {
-                result.Process = "Calculator";
-                result.LayoutId = Identifiers.DefaultNumpadLayout;
-            }
-            if (Id == Identifiers.DefaultApplicationChangeTransitionExcel)
-            {
-                result.Process = "EXCEL";
-                result.LayoutId = Identifiers.DefaultNumpadLayout;
-            }
-            if (Id == Identifiers.DefaultApplicationChangeTransitionTotalCmd)
-            {
-                result.Process = "TOTALCMD64";
-                result.LayoutId = Identifiers.DefaultNumpadLayout;
-            }
-
-
-            return result;
+            return new ApplicationChangeTransitionOptions(GlobalContext.Devices.FirstOrDefault()?.Id ?? new Identifier());
         }
 
         private bool _entered;

@@ -5,8 +5,9 @@ using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Library.Common;
 
-namespace Vkm.Library
+namespace Vkm.Library.Buttons
 {
     internal class ButtonElement: ElementBase
     {
@@ -24,11 +25,11 @@ namespace Vkm.Library
             _keys = keys;
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
-            DrawElementInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
+            DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
         }
 
         private Bitmap DrawKey()
@@ -37,15 +38,7 @@ namespace Vkm.Library
 
             var fontFamily = GlobalContext.Options.Theme.FontFamily;
 
-            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, "W");
-
-            using (var graphics = Graphics.FromImage(bitmap))
-            using (var whiteBrush = new SolidBrush(GlobalContext.Options.Theme.ForegroundColor))
-            using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
-            {
-                var size = graphics.MeasureString(_text, font);
-                graphics.DrawString(_text, font, whiteBrush, (bitmap.Width - size.Width)/2, (bitmap.Height - size.Height)/2);
-            }
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _text, "W", GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

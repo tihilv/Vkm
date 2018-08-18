@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Vkm.Common;
-using Vkm.Core;
 using Vkm.Device.StreamDeck;
-using Vkm.Library;
-using Vkm.Library.Numpad;
 
 namespace Vkm.Console
 {

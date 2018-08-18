@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
+using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 
 namespace Vkm.Core
@@ -54,10 +55,13 @@ namespace Vkm.Core
 
             if (layout != _layout)
             {
-                if (_layout != null)
+                var oldLayout = _layout;
+
+                if (oldLayout != null)
                 {
-                    _layout.LeaveLayout();
-                    _layout.DrawLayout -= LayoutOnDrawLayout;
+                    oldLayout.DrawLayout -= LayoutOnDrawLayout;
+
+                    oldLayout.LeaveLayout();
                 }
 
                 _device.Clear();
@@ -67,10 +71,9 @@ namespace Vkm.Core
                 if (_layout != null)
                 {
                     _layout.DrawLayout += LayoutOnDrawLayout;
-
                     _device.SetBrightness(_layout.PreferredBrightness ?? _globalContext.Options.Brightness);
 
-                    _layout.EnterLayout(_layoutContext);
+                    _layout.EnterLayout(_layoutContext, oldLayout);
                 }
             }
         }

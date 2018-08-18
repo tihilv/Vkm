@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -19,6 +20,8 @@ namespace Vkm.Api.Layout
 
         private bool _inLayout;
 
+        private ILayout _previousLayout;
+
         public Identifier Id { get; private set; }
         private readonly ConcurrentDictionary<ElementPlacement, ElementPlacement> _elements;
 
@@ -29,6 +32,8 @@ namespace Vkm.Api.Layout
 
         public event EventHandler<DrawEventArgs> DrawLayout;
 
+        protected IEnumerable<ElementPlacement> Elements => _elements.Values;
+
         protected LayoutBase(Identifier identifier)
         {
             Id = identifier;
@@ -37,14 +42,27 @@ namespace Vkm.Api.Layout
             _timers = new ConcurrentDictionary<ITimerToken, ITimerToken>();
         }
 
-        public virtual void EnterLayout(LayoutContext layoutContext)
+        public virtual void InitContext(GlobalContext context)
         {
+            _globalContext = context;
+        }
+
+        public virtual void Init()
+        {
+
+        }
+
+        public virtual void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        {
+            Debug.Assert(!_inLayout, "Already in layout");
+
+            _previousLayout = previousLayout;
             _inLayout = true;
 
             _layoutContext = layoutContext;
 
             foreach (var placement in _elements.Values)
-                ConnectToElement(placement.Element);
+                ConnectToElement(placement.Element, previousLayout);
 
             foreach (var timer in _timers.Values)
                 timer.Start();
@@ -52,6 +70,7 @@ namespace Vkm.Api.Layout
 
         public virtual void LeaveLayout()
         {
+            Debug.Assert(_inLayout, "Not in layout");
             _inLayout = false;
 
             foreach (var timer in _timers.Values)
@@ -61,10 +80,10 @@ namespace Vkm.Api.Layout
                 DisconnectFromElement(placement);
         }
 
-        private void ConnectToElement(IElement element)
+        private void ConnectToElement(IElement element, ILayout previousLayout)
         {
             element.DrawElement += ElementOnDrawElement;
-            element.EnterLayout(_layoutContext);
+            element.EnterLayout(_layoutContext, previousLayout);
         }
 
         private void DisconnectFromElement(ElementPlacement placement)
@@ -90,7 +109,7 @@ namespace Vkm.Api.Layout
             _elements.TryAdd(placement, placement);
 
             if (_inLayout)
-                ConnectToElement(element);
+                ConnectToElement(element, _previousLayout);
         }
 
         protected void RemoveElement(IElement element)
@@ -118,7 +137,13 @@ namespace Vkm.Api.Layout
         {
             var placedElement = _elements.Values.FirstOrDefault(el=> el.Element == sender);
             if (placedElement.Element != null)
-                DrawLayout?.Invoke(this, new DrawEventArgs(e.Elements.Select(el => new LayoutDrawElement(placedElement.Location + el.Location, el.Bitmap)).ToArray()));
+            {
+                if (e.Elements.Any(el => el.Location.X >= placedElement.Element.ButtonCount.Width || el.Location.Y >= placedElement.Element.ButtonCount.Height))
+                    throw new ArgumentException($"Element {placedElement.Element.Id.Value} of type {placedElement.Element.GetType().FullName} attempted to draw out of the borders.");
+
+                var drawEventArgs = new DrawEventArgs(e.Elements.Select(el => new LayoutDrawElement(placedElement.Location + el.Location, el.Bitmap)).ToArray());
+                DrawLayout?.Invoke(this, drawEventArgs);
+            }
         }
 
         public virtual void ButtonPressed(Location location, bool isDown)
@@ -132,20 +157,16 @@ namespace Vkm.Api.Layout
             }
         }
 
-        public virtual void InitContext(GlobalContext context)
-        {
-            _globalContext = context;
-        }
-
-        public virtual void Init()
-        {
-
-        }
-
         protected void RegisterTimer(TimeSpan interval, Action action)
         {
             var timer = GlobalContext.Services.TimerService.RegisterTimer(interval, action);
             _timers.TryAdd(timer, timer);
         }
+
+        protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)
+        {
+            DrawLayout?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
+        }
+
     }
 }

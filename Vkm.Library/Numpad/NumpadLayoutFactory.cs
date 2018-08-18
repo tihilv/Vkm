@@ -1,12 +1,13 @@
 ﻿using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Common;
 
 namespace Vkm.Library.Numpad
 {
     class NumpadLayoutFactory: ILayoutFactory
     {
-        public Identifier Id => Identifiers.DefaultNumpadFactory;
+        public static readonly Identifier Identifier = new Identifier("Vkm.DefaultNumpad.Factory");
+
+        public Identifier Id => Identifier;
 
         public string Name => "Numpad";
 

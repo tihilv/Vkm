@@ -74,9 +74,9 @@ namespace Vkm.Library.Mail
             }
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
             ProcessDraw();
         }
@@ -94,7 +94,7 @@ namespace Vkm.Library.Mail
             {
                 var img = Draw(count, LayoutContext);
                 _cachedCount = count;
-                DrawElementInvoke(new[] {new LayoutDrawElement(new Location(0, 0), img)});
+                DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), img)});
             }
         }
 

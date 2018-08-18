@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using Vkm.Api.Device;
 using Vkm.Api.Element;
+using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Module;
 using Vkm.Api.Options;
@@ -11,19 +13,26 @@ namespace Vkm.Api.Data
 {
     public class GlobalContext
     {
-        public GlobalOptions Options { get; private set; }
+        private readonly Func<IDevice[]> _devicesFunc;
+        private readonly Func<ConcurrentDictionary<Identifier, ILayout>> _layoutsFunc;
+        private readonly Func<ConcurrentDictionary<Identifier, ITransition>> _transitionsFunc;
 
-        public IDevice[] Devices { get; private set; }
+        public GlobalOptions Options { get; private set; }
 
         public GlobalServices Services { get; private set; }
 
+        public IDevice[] Devices => _devicesFunc();
+        public ConcurrentDictionary<Identifier, ILayout> Layouts => _layoutsFunc();
+        public ConcurrentDictionary<Identifier, ITransition> Transitions => _transitionsFunc();
 
-
-        public GlobalContext(GlobalOptions globalOptions, IDevice[] devices, GlobalServices services)
+        public GlobalContext(GlobalOptions globalOptions, GlobalServices services, Func<IDevice[]> devicesFunc, Func<ConcurrentDictionary<Identifier, ILayout>> layoutsFunc, Func<ConcurrentDictionary<Identifier, ITransition>> transitionsFunc)
         {
             Options = globalOptions;
-            Devices = devices;
             Services = services;
+
+            _devicesFunc = devicesFunc;
+            _layoutsFunc = layoutsFunc;
+            _transitionsFunc = transitionsFunc;
         }
 
         public ITransition CreateTransition(ModuleInitializationInfo initInfo, Action<ITransition> beforeInit = null)

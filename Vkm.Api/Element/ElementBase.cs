@@ -32,7 +32,7 @@ namespace Vkm.Api.Element
             _timers = new List<ITimerToken>();
         }
 
-        public virtual void EnterLayout(LayoutContext layoutContext)
+        public virtual void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             _layoutContext = layoutContext;
             foreach (var timer in _timers)
@@ -50,7 +50,7 @@ namespace Vkm.Api.Element
             return false;
         }
 
-        protected void DrawElementInvoke(IEnumerable<LayoutDrawElement> drawElements)
+        protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)
         {
             DrawElement?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
         }

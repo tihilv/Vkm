@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using OpenWeatherMap;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -25,7 +24,7 @@ namespace Vkm.Library.Weather
 
         public IOptions GetDefaultOptions()
         {
-            return new WeatherOptions() {Place = "Dachau", OpenWeatherApiKey = "3e1cbac94caf82e428a662bc15b2fe9e"};
+            return new WeatherOptions();
         }
 
         public void InitOptions(IOptions options)
@@ -40,9 +39,9 @@ namespace Vkm.Library.Weather
             RegisterTimer(new TimeSpan(0,0,5,0), ProcessDraw);
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
             ProcessDraw();
         }
@@ -54,13 +53,13 @@ namespace Vkm.Library.Weather
                 var service = WeatherService.Instance;
                 var weather = await service.GetWeather(_weatherOptions.OpenWeatherApiKey, _weatherOptions.Place);
                 var img = Draw(weather, LayoutContext);
-                DrawElementInvoke(new[] {new LayoutDrawElement(new Location(0, 0), img)});
+                DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), img)});
             }
             catch (Exception)
             {
                 var bitmap = LayoutContext.CreateBitmap();
                 DefaultDrawingAlgs.DrawIconAndText(bitmap, GlobalContext.Options.Theme.FontFamily, "...", GlobalContext.Options.Theme.FontFamily, "", "88888", GlobalContext.Options.Theme.ForegroundColor);
-                DrawElementInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
+                DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
             }
         }
 

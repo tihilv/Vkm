@@ -1,7 +1,6 @@
 ﻿using System;
 using Vkm.Api.Identification;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.ApplicationChangeTransition
 {
@@ -18,7 +17,7 @@ namespace Vkm.Library.ApplicationChangeTransition
 
         private ApplicationChangeTransitionOptions()
         {
-            LayoutId = Identifiers.DefaultScreenSaverLayout;
+            
         }
 
         public ApplicationChangeTransitionOptions(Identifier deviceId): this()

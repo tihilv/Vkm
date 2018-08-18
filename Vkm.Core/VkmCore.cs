@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Vkm.Api.Configurator;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
@@ -17,54 +18,59 @@ namespace Vkm.Core
     {
         private readonly GlobalContext _globalContext;
 
-        private readonly Dictionary<Identifier, DeviceManager> _deviceManagers;
+        private readonly ConcurrentDictionary<Identifier, DeviceManager> _deviceManagers;
 
-        private readonly Dictionary<Identifier, ILayout> _layouts;
+        private readonly ConcurrentDictionary<Identifier, ILayout> _layouts;
 
         private readonly ConcurrentDictionary<Identifier, ITransition> _transitions;
 
         public VkmCore()
         {
             var assemblyLocation = Path.GetDirectoryName(typeof(VkmCore).Assembly.Location);
+
+            var moduleService = new ModulesService(assemblyLocation);
+            IDevice[] devices = moduleService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
+            var configurators = moduleService.GetModules<IConfigurator>().ToArray();
+            foreach (IConfigurator configurator in configurators)
+                configurator.Devices = devices;
+
             var optionsService = new OptionsService(Path.Combine(assemblyLocation, "options.store"));
+            optionsService.InitOptions(configurators);
             optionsService.InitEntity(this);
 
             var globalServices = new GlobalServices(
                     optionsService,
-                    new ModulesService(assemblyLocation),
+                    moduleService,
                     new CurrentProcessService(),
                     new TimerService()
                 );
 
-            
-            IDevice[] devices = globalServices.ModulesService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
-
-            _globalContext = new GlobalContext(_coreOptions.GlobalOptions, devices, globalServices);
+            _globalContext = new GlobalContext(_coreOptions, globalServices, () => devices, () => _layouts, ()=>_transitions);
 
             _deviceManagers = InitDeviceManagers(devices);
             _layouts = InitLayouts();
             _transitions = InitTransitions();
         }
 
-        private Dictionary<Identifier, DeviceManager> InitDeviceManagers(IDevice[] devices)
+        private ConcurrentDictionary<Identifier, DeviceManager> InitDeviceManagers(IDevice[] devices)
         {
-            var result = new Dictionary<Identifier, DeviceManager>();
+            var result = new ConcurrentDictionary<Identifier, DeviceManager>();
 
             foreach (var device in devices)
-                result.Add(device.Id, new DeviceManager(_globalContext, device));
+                result.TryAdd(device.Id, new DeviceManager(_globalContext, device));
 
             return result;
         }
 
-        private Dictionary<Identifier, ILayout> InitLayouts()
+        private ConcurrentDictionary<Identifier, ILayout> InitLayouts()
         {
-            var result = new Dictionary<Identifier, ILayout>();
+            var result = new ConcurrentDictionary<Identifier, ILayout>();
 
             foreach (var initInfo in _coreOptions.LayoutLoadOptions.InitializationInfos)
             {
                 var layout = _globalContext.CreateLayout(initInfo);
                 if (layout != null)
-                    result.Add(initInfo.ChildId, layout);
+                    result.TryAdd(initInfo.ChildId, layout);
             }
 
             return result;

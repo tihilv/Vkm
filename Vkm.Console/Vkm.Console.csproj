@@ -80,10 +80,6 @@
       <Project>{5D6924E7-98FF-48A0-95CC-864D714DE2FD}</Project>
       <Name>Vkm.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vkm.Common\Vkm.Common.csproj">
-      <Project>{2d8acc55-c5b6-4d3b-a49c-2a853dc2d04e}</Project>
-      <Name>Vkm.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Vkm.Core\Vkm.Core.csproj">
       <Project>{FF2D8D60-65B6-438B-82E5-E7910C1652BB}</Project>
       <Name>Vkm.Core</Name>

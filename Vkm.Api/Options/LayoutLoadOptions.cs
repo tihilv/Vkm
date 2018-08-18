@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Vkm.Api.Module;
-using Vkm.Api.Options;
 
-namespace Vkm.Core.Options
+namespace Vkm.Api.Options
 {
     [Serializable]
     public class LayoutLoadOptions: IOptions

@@ -1,6 +1,7 @@
 ﻿using Vkm.Api.Basic;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Library.Buttons;
 
 namespace Vkm.Library.Numpad
 {

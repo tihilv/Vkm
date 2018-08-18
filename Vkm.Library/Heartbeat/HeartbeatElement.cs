@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -52,8 +51,6 @@ namespace Vkm.Library.Heartbeat
             _cpuLoad.Enqueue((int) _cpuCounter.NextValue());
             _memoryPercentage.Enqueue((int) (_ramCounter.NextValue() * 100 / _totalMemory));
 
-            var bitmap = LayoutContext.CreateBitmap();
-
             var networkStats = NetworkInterface.GetAllNetworkInterfaces().Where(n => n.NetworkInterfaceType != NetworkInterfaceType.Loopback).Select(n => n.GetIPv4Statistics()).ToArray();
 
             var sent = networkStats.Sum(n => n.BytesSent);
@@ -62,6 +59,8 @@ namespace Vkm.Library.Heartbeat
             double mbpsSentSpeed = 8 * (sent - _prevSent) / (1024.0 * 1024);
             double mbpsReceivedSpeed = 8 * (recv - _prevRecv) / (1024.0 * 1024);
 
+
+            var bitmap = LayoutContext.CreateBitmap();
             if (_prevSent != 0 || _prevRecv != 0)
                 Common.DefaultDrawingAlgs.DrawTexts(bitmap, GlobalContext.Options.Theme.FontFamily, $"{mbpsReceivedSpeed:F2}\n{mbpsSentSpeed:F2}", "", "888888", GlobalContext.Options.Theme.ForegroundColor);
 
@@ -70,9 +69,8 @@ namespace Vkm.Library.Heartbeat
 
             DrawLine(_cpuLoad, bitmap, GlobalContext.Options.Theme.ForegroundColor);
             DrawLine(_memoryPercentage, bitmap, Color.Aquamarine);
-
-
-            DrawElementInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
+            
+            DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
         private void DrawLine(Queue<int> queue, Bitmap bitmap, Color color)
@@ -102,9 +100,9 @@ namespace Vkm.Library.Heartbeat
             }
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
             Tick();
         }

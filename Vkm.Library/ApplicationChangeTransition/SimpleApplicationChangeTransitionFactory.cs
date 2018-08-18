@@ -1,12 +1,13 @@
 ﻿using Vkm.Api.Identification;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.ApplicationChangeTransition
 {
     public class SimpleApplicationChangeTransitionFactory : ITransitionFactory
     {
-        public Identifier Id => Identifiers.DefaultApplicationChangeTransitionFactory;
+        public static readonly Identifier Identifier = new Identifier("Vkm.DefaultApplicationChangeTransition.Factory");
+
+        public Identifier Id => Identifier;
 
         public string Name => "Active Application Transitions";
 

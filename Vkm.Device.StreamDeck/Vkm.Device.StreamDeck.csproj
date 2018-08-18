@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +48,13 @@
     <Compile Include="StreamDeckDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamDeckDeviceFactory.cs" />
+    <Compile Include="VirtualDevice.cs" />
+    <Compile Include="VirtualDeviceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VirtualDeviceForm.Designer.cs">
+      <DependentUpon>VirtualDeviceForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -56,6 +64,11 @@
       <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
       <Name>Vkm.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VirtualDeviceForm.resx">
+      <DependentUpon>VirtualDeviceForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

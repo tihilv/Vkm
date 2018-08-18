@@ -2,7 +2,6 @@
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.StartupTransition
 {
@@ -15,7 +14,7 @@ namespace Vkm.Library.StartupTransition
 
         public override IOptions GetDefaultOptions()
         {
-            return new StartupTransitionOptions(GlobalContext.Devices.FirstOrDefault()?.Id ?? new Identifier()) {LayoutId = Identifiers.DefaultCompositeLayout};
+            return new StartupTransitionOptions(GlobalContext.Devices.FirstOrDefault()?.Id ?? new Identifier());
         }
 
         

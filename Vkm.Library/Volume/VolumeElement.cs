@@ -20,12 +20,12 @@ namespace Vkm.Library.Volume
         private MMDeviceEnumerator _mmDeviceEnumerator;
         private MMDevice _mmDevice;
 
-        private readonly Timer _buttonPressedTimer;
+        private readonly System.Timers.Timer _buttonPressedTimer;
         private bool _increase;
         
         public VolumeElement(Identifier identifier) : base(identifier)
         {
-            _buttonPressedTimer = new Timer();
+            _buttonPressedTimer = new System.Timers.Timer();
             _buttonPressedTimer.Elapsed += ButtonPressedTimerOnElapsed;
         }
 
@@ -44,9 +44,9 @@ namespace Vkm.Library.Volume
                 _mmDevice.AudioEndpointVolume.VolumeStepDown();
         }
 
-        public override void EnterLayout(LayoutContext layoutContext)
+        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext);
+            base.EnterLayout(layoutContext, previousLayout);
 
             _mmDeviceEnumerator = new MMDeviceEnumerator();
             _mmDevice = _mmDeviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia);
@@ -88,7 +88,7 @@ namespace Vkm.Library.Volume
                 }
             }
 
-            DrawElementInvoke(drawElements);
+            DrawInvoke(drawElements);
         }
 
         private Bitmap DrawLevel()

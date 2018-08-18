@@ -1,12 +1,13 @@
 ﻿using Vkm.Api.Identification;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.StartupTransition
 {
     public class SimpleStartupTransitionFactory : ITransitionFactory
     {
-        public Identifier Id => Identifiers.DefaultStartupTransitionFactory;
+        public static readonly Identifier Identifier = new Identifier("Vkm.DefaultStartupTransition.Factory");
+
+        public Identifier Id => Identifier;
 
         public string Name => "Simple Startup Transitions";
 

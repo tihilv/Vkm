@@ -1,7 +1,6 @@
 ﻿using System;
 using Vkm.Api.Identification;
 using Vkm.Api.Transition;
-using Vkm.Common;
 
 namespace Vkm.Library.IdleTransition
 {
@@ -18,7 +17,6 @@ namespace Vkm.Library.IdleTransition
 
         private IdleTransitionOptions()
         {
-            LayoutId = Identifiers.DefaultScreenSaverLayout;
             IdleTimeout = new TimeSpan(0, 0, 5, 0);
         }
 
