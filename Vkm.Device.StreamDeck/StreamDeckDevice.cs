@@ -7,7 +7,6 @@ using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
-using Vkm.Api.Options;
 
 namespace Vkm.Device.StreamDeck
 {
@@ -74,20 +73,10 @@ namespace Vkm.Device.StreamDeck
             _device.SetBrightness(valuePercent);
         }
 
-        public void Clear()
-        {
-            _device.ClearKeys();
-        }
-
         public void Dispose()
         {
             _device.KeyStateChanged += DeviceOnKeyStateChanged;
             _device.Dispose();
-        }
-
-        public IOptions GetDefaultOptions()
-        {
-            return null;
         }
     }
 }

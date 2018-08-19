@@ -13,7 +13,6 @@ namespace Vkm.Api.Device
 
         void SetBitmap(Location location, Bitmap bitmap);
         void SetBrightness(byte valuePercent);
-        void Clear();
 
         event EventHandler<ButtonEventArgs> ButtonEvent;
     }

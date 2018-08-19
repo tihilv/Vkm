@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawingEngine.cs" />
     <Compile Include="TimerService.cs" />
     <Compile Include="VkmCore.cs" />
     <Compile Include="CurrentProcessService.cs" />

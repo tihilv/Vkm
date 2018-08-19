@@ -23,6 +23,8 @@ namespace Vkm.Library.Timer
         private byte _minutes = 99;
         private byte _seconds = 99;
 
+        private bool _timeRequested;
+
 
         public override DeviceSize ButtonCount => new DeviceSize(5, 1);
 
@@ -43,9 +45,10 @@ namespace Vkm.Library.Timer
         {
             base.EnterLayout(layoutContext, previousLayout);
 
-            if (previousLayout is InputTimeLayout itl)
+            if (_timeRequested && previousLayout is InputTimeLayout itl)
             {
                 _originalSpan = new TimeSpan(0, 0, itl.Values[0] * 10 + itl.Values[1], itl.Values[2] * 10 + itl.Values[3]);
+                _timeRequested = false;
             }
 
             DrawCommon();
@@ -88,8 +91,7 @@ namespace Vkm.Library.Timer
                 _hours = (byte)elapsed.Hours;
                 yield return new LayoutDrawElement(new Location(0, 0), DrawNumber(_hours));
             }
-
-
+            
             if (_minutes != elapsed.Minutes)
             {
                 _minutes = (byte)elapsed.Minutes;
@@ -134,6 +136,7 @@ namespace Vkm.Library.Timer
                 }
                 else
                 {
+                    _timeRequested = true;
                     LayoutContext.SetLayout(GlobalContext.InitializeEntity(new InputTimeLayout(new Identifier(""))));
                 }
             }
@@ -151,9 +154,13 @@ namespace Vkm.Library.Timer
 
         void Start()
         {
-            _stopwatch.Start();
-            _elapsedToken = GlobalContext.Services.TimerService.RegisterTimer(_originalSpan - _stopwatch.Elapsed, Finish);
-            _elapsedToken.Start();
+            var span = _originalSpan - _stopwatch.Elapsed;
+            if (span.TotalMilliseconds > 0)
+            {
+                _stopwatch.Start();
+                _elapsedToken = GlobalContext.Services.TimerService.RegisterTimer(span, Finish);
+                _elapsedToken.Start();
+            }
         }
 
         void Finish()
