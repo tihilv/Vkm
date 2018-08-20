@@ -105,7 +105,7 @@ namespace Vkm.Library.Timer
             }
         }
 
-        private Bitmap DrawNumber(byte number)
+        private BitmapEx DrawNumber(byte number)
         {
             var bitmap = LayoutContext.CreateBitmap();
 

@@ -63,7 +63,7 @@ namespace Vkm.Library.Weather
             }
         }
 
-        internal static Bitmap Draw(WeatherItem response, LayoutContext layoutContext)
+        internal static BitmapEx Draw(WeatherItem response, LayoutContext layoutContext)
         {
             var temperature = WeatherService.Instance.TempToStr(response.Temperature.Value);
             var symbol = WeatherService.Instance.GetWeatherSymbol(response.Weather);

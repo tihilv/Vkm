@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Drawing;
+using System.Collections.Generic;
 using System.Threading;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
+using Vkm.Api.Layout;
 
 namespace Vkm.Core
 {
-    class DrawingEngine
+    class DrawingEngine: IDisposable
     {
         private readonly IDevice _device;
         private readonly LayoutContext _layoutContext;
 
-        private readonly ConcurrentDictionary<Location, Bitmap> _imagesToDevice;
+        private readonly ConcurrentDictionary<Location, LayoutDrawElement> _imagesToDevice;
+        private readonly VisualEffectProcessor _visualEffectProcessor;
 
         private int _counter;
 
@@ -22,7 +24,8 @@ namespace Vkm.Core
             _device = device;
             _layoutContext = layoutContext;
 
-            _imagesToDevice = new ConcurrentDictionary<Location, Bitmap>();
+            _imagesToDevice = new ConcurrentDictionary<Location, LayoutDrawElement>();
+            _visualEffectProcessor = new VisualEffectProcessor(_device);
         }
 
         public IDisposable PauseDrawing()
@@ -30,13 +33,13 @@ namespace Vkm.Core
             return new Token(this);
         }
 
-        public void DrawBitmap(Location location, Bitmap bitmap)
+        public void DrawBitmap(LayoutDrawElement drawElement)
         {
-            _imagesToDevice.AddOrUpdate(location, bitmap, (l, b) =>
+            _imagesToDevice.AddOrUpdate(drawElement.Location, drawElement, (l, b) =>
             {
-                b.Dispose();
+                b.BitmapRepresentation.Dispose();
 
-                return bitmap;
+                return drawElement;
             });
 
             if (_counter == 0)
@@ -46,21 +49,28 @@ namespace Vkm.Core
         public void ClearDevice()
         {
             for (byte i = 0; i < _device.ButtonCount.Width; i++)
-            for (byte j = 0; j < _device.ButtonCount.Height; j++)
-                DrawBitmap(new Location(i, j), _layoutContext.CreateBitmap());
+                for (byte j = 0; j < _device.ButtonCount.Height; j++)
+                {
+                    var location = new Location(i, j);
+                    var drawElement = new LayoutDrawElement(location, _layoutContext.CreateBitmap());
+                    DrawBitmap(drawElement);
+                }
         }
 
         private void PerformDraw()
         {
+            List<LayoutDrawElement> currentDrawElementsCache = new List<LayoutDrawElement>();
+
             var keys = _imagesToDevice.Keys;
             foreach (var location in keys)
             {
-                if (_imagesToDevice.TryRemove(location, out var bitmap))
+                if (_imagesToDevice.TryRemove(location, out var drawElement))
                 {
-                    _device.SetBitmap(location, bitmap);
-                    bitmap.Dispose();
+                    currentDrawElementsCache.Add(drawElement);
                 }
             }
+            
+            _visualEffectProcessor.Draw(currentDrawElementsCache);
         }
 
         class Token : IDisposable
@@ -78,6 +88,11 @@ namespace Vkm.Core
                 if (Interlocked.Decrement(ref _drawingEngine._counter) == 0)
                     _drawingEngine.PerformDraw();
             }
+        }
+
+        public void Dispose()
+        {
+            _visualEffectProcessor.Dispose();
         }
     }
 }

@@ -5,12 +5,12 @@ namespace Vkm.Library.Common
 {
     static class DefaultDrawingAlgs
     {
-        internal static void DrawIconAndText(Bitmap bitmap, FontFamily iconFontFamily, string iconSymbol, FontFamily textFontFamily, string text, string textExample, Color color)
+        internal static void DrawIconAndText(BitmapEx bitmap, FontFamily iconFontFamily, string iconSymbol, FontFamily textFontFamily, string text, string textExample, Color color)
         {
             var textHeight = (text != null)?FontEstimation.EstimateFontSize(bitmap, textFontFamily, textExample):0;
             var imageHeight = (int) (bitmap.Height * 0.9 - textHeight);
 
-            using (var graphics = Graphics.FromImage(bitmap))
+            using (var graphics = bitmap.CreateGraphics())
             using (var whiteBrush = new SolidBrush(color))
             using (Font textFont = (textHeight > 0)?new Font(textFontFamily, textHeight, GraphicsUnit.Pixel): null)
             using (Font imageFont = new Font(iconFontFamily, imageHeight, GraphicsUnit.Pixel))
@@ -23,11 +23,11 @@ namespace Vkm.Library.Common
             }
         }
 
-        internal static void DrawTexts(Bitmap bitmap, FontFamily fontFamily, string l1, string l2, string textExample, Color color)
+        internal static void DrawTexts(BitmapEx bitmap, FontFamily fontFamily, string l1, string l2, string textExample, Color color)
         {
             var textHeight = FontEstimation.EstimateFontSize(bitmap, fontFamily, textExample);
 
-            using (var graphics = Graphics.FromImage(bitmap))
+            using (var graphics = bitmap.CreateGraphics())
             using (var whiteBrush = new SolidBrush(color))
             using (var textFont = new Font(fontFamily, textHeight, GraphicsUnit.Pixel))
             {
@@ -39,11 +39,11 @@ namespace Vkm.Library.Common
             }
         }
 
-        internal static void DrawText(Bitmap bitmap, FontFamily fontFamily, string text, string textExample, Color color)
+        internal static void DrawText(BitmapEx bitmap, FontFamily fontFamily, string text, string textExample, Color color)
         {            
             var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, textExample);
 
-            using (var graphics = Graphics.FromImage(bitmap))
+            using (var graphics = bitmap.CreateGraphics())
             using (var whiteBrush = new SolidBrush(color))
             using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
             {

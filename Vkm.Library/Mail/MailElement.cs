@@ -98,7 +98,7 @@ namespace Vkm.Library.Mail
             }
         }
 
-        internal static Bitmap Draw(int? unreadMessageCount, LayoutContext layoutContext)
+        internal static BitmapEx Draw(int? unreadMessageCount, LayoutContext layoutContext)
         {
             var bitmap = layoutContext.CreateBitmap();
 

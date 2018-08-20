@@ -58,8 +58,9 @@ namespace Vkm.Device.StreamDeck
             ButtonEvent?.Invoke(this, new ButtonEventArgs(new Location((byte)(ButtonCount.Width - e.Key % ButtonCount.Width - 1), (byte)(e.Key / ButtonCount.Width)), e.IsDown));
         }
 
-        public void SetBitmap(Location location, Bitmap bitmap)
+        public void SetBitmap(Location location, BitmapRepresentation bitmapRepresentation)
         {
+            using (var bitmap = bitmapRepresentation.CreateBitmap())
             using (var stream = new MemoryStream())
             {
                 bitmap.Save(stream, ImageFormat.Bmp);

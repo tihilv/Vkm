@@ -6,12 +6,19 @@ namespace Vkm.Api.Layout
     public struct LayoutDrawElement
     {
         public readonly Location Location;
-        public readonly Bitmap Bitmap;
+        public readonly BitmapRepresentation BitmapRepresentation;
 
-        public LayoutDrawElement(Location location, Bitmap bitmap)
+        public LayoutDrawElement(Location location, BitmapEx bitmap)
         {
             Location = location;
-            Bitmap = bitmap;
+            BitmapRepresentation = new BitmapRepresentation(bitmap);
+            bitmap.Dispose();
+        }
+
+        public LayoutDrawElement(Location location, BitmapRepresentation bitmapRepresentation)
+        {
+            Location = location;
+            BitmapRepresentation = bitmapRepresentation;
         }
     }
 }

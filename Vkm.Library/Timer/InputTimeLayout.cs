@@ -83,7 +83,7 @@ namespace Vkm.Library.Timer
                 DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
             }
 
-            private Bitmap DrawKey()
+            private BitmapEx DrawKey()
             {
                 var bitmap = LayoutContext.CreateBitmap();
 

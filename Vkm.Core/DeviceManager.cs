@@ -63,8 +63,8 @@ namespace Vkm.Core
 
                     if (oldLayout != null)
                     {
+                        oldLayout.LeaveLayout(); // can provide info to draw
                         oldLayout.DrawLayout -= LayoutOnDrawLayout;
-                        oldLayout.LeaveLayout();
                     }
 
                     _drawingEngine.ClearDevice();
@@ -85,8 +85,8 @@ namespace Vkm.Core
         {
             using (_drawingEngine.PauseDrawing())
             foreach (var element in e.Elements)
-                if (element.Bitmap != null)
-                    _drawingEngine.DrawBitmap(element.Location, element.Bitmap);
+                if (element.BitmapRepresentation != null)
+                    _drawingEngine.DrawBitmap(element);
         }
 
         public void Dispose()

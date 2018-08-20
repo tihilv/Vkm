@@ -82,7 +82,7 @@ namespace Vkm.Library.Clock
             }
         }
 
-        private Bitmap DrawNumber(byte number)
+        private BitmapEx DrawNumber(byte number)
         {
             var bitmap = LayoutContext.CreateBitmap();
 

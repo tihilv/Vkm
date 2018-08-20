@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using System.Timers;
 using CoreAudioApi;
@@ -79,7 +80,7 @@ namespace Vkm.Library.Volume
                 {
                     var part = LayoutContext.CreateBitmap();
 
-                    using (Graphics grD = Graphics.FromImage(part))
+                    using (Graphics grD = part.CreateGraphics())
                     {
                         grD.DrawImage(bitmap, new Rectangle(0, 0, LayoutContext.IconSize.Width, LayoutContext.IconSize.Height), new Rectangle(x*LayoutContext.IconSize.Width, y*LayoutContext.IconSize.Height, LayoutContext.IconSize.Width, LayoutContext.IconSize.Height), GraphicsUnit.Pixel);
                     }

@@ -39,7 +39,7 @@ namespace Vkm.Library.Run
             DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), Draw())});
         }
 
-        private Bitmap Draw()
+        private BitmapEx Draw()
         {
             var bitmap = LayoutContext.CreateBitmap();
 

@@ -56,7 +56,7 @@ namespace Vkm.Library.Clock
             }
         }
         
-        private Bitmap DrawDate(DateTime date)
+        private BitmapEx DrawDate(DateTime date)
         {
             var bitmap = LayoutContext.CreateBitmap();
 

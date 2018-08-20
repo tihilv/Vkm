@@ -73,7 +73,7 @@ namespace Vkm.Library.Heartbeat
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
-        private void DrawLine(Queue<int> queue, Bitmap bitmap, Color color)
+        private void DrawLine(Queue<int> queue, BitmapEx bitmap, Color color)
         {
             while (queue.Count > bitmap.Width)
                 queue.Dequeue();
@@ -89,7 +89,7 @@ namespace Vkm.Library.Heartbeat
                     points[i] = new Point(i, bitmap.Height - bitmap.Height * array[i] / 100);
                 }
 
-                using (var graphics = Graphics.FromImage(bitmap))
+                using (var graphics = bitmap.CreateGraphics())
                 using (var pen = new Pen(color))
                 using (var brush = new SolidBrush(color))
                 {

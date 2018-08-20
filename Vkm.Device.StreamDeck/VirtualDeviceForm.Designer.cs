@@ -39,7 +39,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "VirtualDeviceForm";
             this.Text = "VirtualDeviceForm";
-            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

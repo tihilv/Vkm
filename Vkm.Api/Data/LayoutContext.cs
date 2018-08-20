@@ -29,11 +29,11 @@ namespace Vkm.Api.Data
             _setPreviousLayoutAction = setPreviousLayoutAction;
         }
 
-        public Bitmap CreateBitmap()
+        public BitmapEx CreateBitmap()
         {
-            var result = new Bitmap(IconSize.Width, IconSize.Height, PixelFormat.Format24bppRgb);
+            var result = new BitmapEx(IconSize.Width, IconSize.Height, PixelFormat.Format24bppRgb);
 
-            using (var graphics = Graphics.FromImage(result))
+            using (var graphics = result.CreateGraphics())
             using (var brush = new SolidBrush(Options.Theme.BackgroundColor))
             {
                 graphics.FillRectangle(brush, 0, 0, result.Width, result.Height);

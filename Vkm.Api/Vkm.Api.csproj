@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\BitmapEx.cs" />
+    <Compile Include="Basic\BitmapRepresentation.cs" />
     <Compile Include="Basic\DeviceSize.cs" />
     <Compile Include="Basic\FontEstimation.cs" />
     <Compile Include="Basic\IconSize.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="Transition\TransitionBase.cs" />
     <Compile Include="Transition\TransitionEventArgs.cs" />
     <Compile Include="Transition\TransitionOptions.cs" />
+    <Compile Include="VisualEffect\IVisualTransition.cs" />
     <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup />

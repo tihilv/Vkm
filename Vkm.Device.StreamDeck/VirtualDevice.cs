@@ -42,19 +42,15 @@ namespace Vkm.Device.StreamDeck
 
         public DeviceSize ButtonCount => new DeviceSize(5, 3);
         
-        public void SetBitmap(Location location, Bitmap bitmap)
+        public void SetBitmap(Location location, BitmapRepresentation bitmapRepresentation)
         {
-            _virtualDeviceForm.SetImage(location, bitmap);
+            using (var bitmap = bitmapRepresentation.CreateBitmap())
+                _virtualDeviceForm.SetImage(location, bitmap);
         }
 
         public void SetBrightness(byte valuePercent)
         {
             
-        }
-
-        public void Clear()
-        {
-            _virtualDeviceForm.ClearImages();
         }
     }
 }

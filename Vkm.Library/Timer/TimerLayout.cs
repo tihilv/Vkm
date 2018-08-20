@@ -76,7 +76,7 @@ namespace Vkm.Library.Timer
             {
                 var bmp = LayoutContext.CreateBitmap();
 
-                using (var graphics = Graphics.FromImage(bmp))
+                using (var graphics = bmp.CreateGraphics())
                 using (var brush = new SolidBrush(GlobalContext.Options.Theme.ForegroundColor))
                 {
                     int r = 10;

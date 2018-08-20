@@ -30,7 +30,7 @@ namespace Vkm.Library.Timer
             {
                 var bmp = LayoutContext.CreateBitmap();
 
-                using (var grahics = Graphics.FromImage(bmp))
+                using (var grahics = bmp.CreateGraphics())
                 using (var brush = new SolidBrush(Color.FromArgb(_random.Next(0, 255), _random.Next(0, 255), _random.Next(0, 255), _random.Next(0, 255))))
                 {
                     grahics.FillRectangle(brush, 0, 0, bmp.Width, bmp.Height);

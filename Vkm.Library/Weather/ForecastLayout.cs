@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading.Tasks;
 using OpenWeatherMap;
+using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
@@ -78,7 +79,7 @@ namespace Vkm.Library.Weather
             DrawLayout?.Invoke(this, new DrawEventArgs(result));
         }
 
-        internal static Bitmap DrawIcon(ForecastTime response, string text, LayoutContext layoutContext)
+        internal static BitmapEx DrawIcon(ForecastTime response, string text, LayoutContext layoutContext)
         {
             var symbol = WeatherService.Instance.GetWeatherSymbol(response.Symbol);
             var bitmap = layoutContext.CreateBitmap();
@@ -88,7 +89,7 @@ namespace Vkm.Library.Weather
             return bitmap;
         }
 
-        internal static Bitmap DrawTexts(string l1, string l2, LayoutContext layoutContext)
+        internal static BitmapEx DrawTexts(string l1, string l2, LayoutContext layoutContext)
         {
             var bitmap = layoutContext.CreateBitmap();
 

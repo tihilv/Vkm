@@ -38,15 +38,21 @@ namespace Vkm.Device.StreamDeck
             Size = new Size(deviceSize.Width * iconSize.Width, deviceSize.Height * iconSize.Height);
         }
 
-        internal void SetImage(Location location, Bitmap bitmap)
+        internal void SetImage(Location location, BitmapEx bitmap)
         {
-            var picBox = Controls.OfType<PictureBox>().FirstOrDefault(p => (Location)p.Tag == location);
-            if (picBox != null)
+            Action action = () =>
             {
-                if (picBox.Image != null)
-                    picBox.Image.Dispose();
-                picBox.Image = (Image)bitmap.Clone();
-            }
+                var picBox = Controls.OfType<PictureBox>().FirstOrDefault(p => (Location) p.Tag == location);
+                if (picBox != null)
+                {
+                    picBox.Image?.Dispose();
+                    picBox.Image = (Image) bitmap.GetInternal().Clone();
+                }
+            };
+            if (InvokeRequired)
+                Invoke(action);
+            else
+                action();
         }
 
         private void BoxOnMouseDown(object sender, MouseEventArgs e)
@@ -59,15 +65,6 @@ namespace Vkm.Device.StreamDeck
         {
             var location = (Location)((PictureBox)sender).Tag;
             ButtonEvent?.Invoke(this, new ButtonEventArgs(location, false));
-        }
-
-        public void ClearImages()
-        {
-            foreach (var pictureBox in Controls.OfType<PictureBox>())
-            {
-                pictureBox.Image?.Dispose();
-                pictureBox.Image = null;
-            }
         }
     }
 }
