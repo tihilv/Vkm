@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Vkm.Api.Basic;
 using Vkm.Core;
 using Vkm.Manager.Properties;
 
@@ -32,7 +33,7 @@ namespace Vkm.Manager
         {
             _trayIcon.Visible = false;
 
-            _coreContext.Dispose();
+            DisposeHelper.DisposeAndNull(ref _coreContext);
 
             Application.Exit();
         }

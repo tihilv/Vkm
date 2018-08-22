@@ -6,30 +6,30 @@ namespace Vkm.Core.VisualEffect
     internal class VisualEffectInfo
     {
         private readonly Location _location;
-        private readonly IVisualTransition _transition;
+        private IVisualTransition _transition;
 
-        private readonly BitmapRepresentation _first;
-        private readonly BitmapRepresentation _last;
+        private BitmapRepresentation _first;
+        private BitmapRepresentation _last;
 
         public Location Location => _location;
         public IVisualTransition Transition => _transition;
 
-        public VisualEffectInfo(Location location, IVisualTransition transition, BitmapRepresentation first, BitmapRepresentation last)
+        public VisualEffectInfo(Location location, IVisualTransition transition, BitmapRepresentation first, BitmapRepresentation last, int steps)
         {
             _location = location;
             _transition = transition;
             _first = first;
             _last = last;
 
-            transition.Init(first, last);
+            transition.Init(first, last, steps);
         }
 
         public void Dispose()
         {
-            _first?.Dispose();
-            _last?.Dispose();
+            DisposeHelper.DisposeAndNull(ref _first);
+            DisposeHelper.DisposeAndNull(ref _last);
 
-            _transition.Dispose();
+            DisposeHelper.DisposeAndNull(ref _transition);
         }
     }
 }

@@ -4,13 +4,16 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading;
 
 namespace Vkm.Api.Basic
 {
     public class BitmapEx: IDisposable
     {
         private static readonly ConcurrentDictionary<Tuple<int, int, PixelFormat>, ConcurrentStack<Bitmap>> _bitmapPool = new ConcurrentDictionary<Tuple<int, int, PixelFormat>, ConcurrentStack<Bitmap>>();
+
+        private readonly int _width;
+        private readonly int _height;
+        private readonly PixelFormat _pixelFormat;
 
         private readonly Bitmap _internal;
 
@@ -19,11 +22,14 @@ namespace Vkm.Api.Basic
         public BitmapEx(int width, int height, PixelFormat pixelFormat)
         {
             _internal = GetNewBitmap(width, height, pixelFormat);
+            _width = _internal.Width;
+            _height = _internal.Height;
+            _pixelFormat = _internal.PixelFormat;
         }
 
-        public int Width => _internal.Width;
-        public int Height => _internal.Height;
-        public PixelFormat PixelFormat => _internal.PixelFormat;
+        public int Width => _width;
+        public int Height => _height;
+        public PixelFormat PixelFormat => _pixelFormat;
 
         private static Bitmap GetNewBitmap(int width, int height, PixelFormat pixelFormat)
         {
@@ -44,7 +50,7 @@ namespace Vkm.Api.Basic
             {
                 _disposed = true;
 
-                var key = Tuple.Create(_internal.Width, _internal.Height, _internal.PixelFormat);
+                var key = Tuple.Create(Width, Height, PixelFormat);
                 _bitmapPool[key].Push(_internal);
             }
             else

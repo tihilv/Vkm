@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
@@ -8,7 +10,7 @@ namespace Vkm.Core
 {
     public class DeviceManager: IDisposable
     {
-        private readonly IDevice _device;
+        private IDevice _device;
         private readonly DrawingEngine _drawingEngine;
 
         private readonly GlobalContext _globalContext;
@@ -92,7 +94,7 @@ namespace Vkm.Core
         public void Dispose()
         {
             SetLayout(null);
-            _device?.Dispose();
+            DisposeHelper.DisposeAndNull(ref _device);
         }
     }
 }

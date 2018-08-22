@@ -6,6 +6,7 @@ using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
+using Vkm.Api.Transition;
 
 namespace Vkm.Core
 {
@@ -15,7 +16,10 @@ namespace Vkm.Core
         private readonly LayoutContext _layoutContext;
 
         private readonly ConcurrentDictionary<Location, LayoutDrawElement> _imagesToDevice;
-        private readonly VisualEffectProcessor _visualEffectProcessor;
+
+        private readonly ConcurrentDictionary<Location, Location> _switchedLocations;
+
+        private VisualEffectProcessor _visualEffectProcessor;
 
         private int _counter;
 
@@ -25,6 +29,7 @@ namespace Vkm.Core
             _layoutContext = layoutContext;
 
             _imagesToDevice = new ConcurrentDictionary<Location, LayoutDrawElement>();
+            _switchedLocations = new ConcurrentDictionary<Location, Location>();
             _visualEffectProcessor = new VisualEffectProcessor(_device);
         }
 
@@ -48,6 +53,8 @@ namespace Vkm.Core
 
         public void ClearDevice()
         {
+            _switchedLocations.Clear();
+
             for (byte i = 0; i < _device.ButtonCount.Width; i++)
                 for (byte j = 0; j < _device.ButtonCount.Height; j++)
                 {
@@ -66,6 +73,16 @@ namespace Vkm.Core
             {
                 if (_imagesToDevice.TryRemove(location, out var drawElement))
                 {
+                    bool newSwitch = false;
+                    if (!_switchedLocations.ContainsKey(location))
+                    {
+                        newSwitch = true;
+                        _switchedLocations[location] = location;
+                    }
+
+                    if (newSwitch)
+                        drawElement = new LayoutDrawElement(drawElement.Location, drawElement.BitmapRepresentation, new TransitionInfo(TransitionType.LayoutChange, drawElement.TransitionInfo.Duration));
+
                     currentDrawElementsCache.Add(drawElement);
                 }
             }
@@ -92,7 +109,7 @@ namespace Vkm.Core
 
         public void Dispose()
         {
-            _visualEffectProcessor.Dispose();
+            DisposeHelper.DisposeAndNull(ref _visualEffectProcessor);
         }
     }
 }

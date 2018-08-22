@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Vkm.Api.Basic;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
+using Vkm.Api.Transition;
 using Vkm.Api.VisualEffect;
 using Vkm.Core.VisualEffect;
 
@@ -14,10 +15,15 @@ namespace Vkm.Core
 {
     internal class VisualEffectProcessor: IDisposable
     {
+        private const float FPS = 20;
+        private const int DefaultDuration = 1;
+
         private readonly IDevice _device;
 
         private static AutoResetEvent _transitionsAdded;
         private readonly ConcurrentDictionary<Location, VisualEffectInfo> _currentTransitions;
+
+        private readonly ConcurrentQueue<LayoutDrawElement> _scheduledTransitions;
 
         private bool _disposed;
 
@@ -29,6 +35,7 @@ namespace Vkm.Core
 
             _transitionsAdded = new AutoResetEvent(false);
             _currentTransitions = new ConcurrentDictionary<Location, VisualEffectInfo>();
+            _scheduledTransitions = new ConcurrentQueue<LayoutDrawElement>();
 
             _drawTask = Task.Run(() => DrawCycle());
         }
@@ -36,20 +43,10 @@ namespace Vkm.Core
         public void Draw(IEnumerable<LayoutDrawElement> drawElements)
         {
             bool hasNewElement = false;
+
             foreach (var drawElement in drawElements)
             {
-                var transition = GetTransition(drawElement);
-
-                _currentTransitions.AddOrUpdate(drawElement.Location, location =>
-                    {
-                        return new VisualEffectInfo(drawElement.Location, transition, null, drawElement.BitmapRepresentation);
-                    },
-                    (location, info) =>
-                    {
-                        var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition.Current.Clone(), drawElement.BitmapRepresentation);
-                        info.Dispose();
-                        return result;
-                    });
+                _scheduledTransitions.Enqueue(drawElement);
                 hasNewElement = true;
             }
 
@@ -59,7 +56,10 @@ namespace Vkm.Core
 
         IVisualTransition GetTransition(LayoutDrawElement drawElement)
         {
-            return new ImmediateTransition();
+            if (drawElement.TransitionInfo.Type == TransitionType.Instant)
+                return new InstantTransition();
+
+            return new FadeTransition();
         }
 
         void DrawCycle()
@@ -79,19 +79,44 @@ namespace Vkm.Core
         }
 
         readonly List<LayoutDrawElement> _currentDrawElementsCache = new List<LayoutDrawElement>();
+
         bool PerformDraw()
         {
+            while (_scheduledTransitions.TryDequeue(out var drawElement))
+            {
+                var secs = drawElement.TransitionInfo.Duration.TotalSeconds;
+                if (secs == 0)
+                    secs = DefaultDuration;
+
+                int steps = (int) (secs * FPS);
+                _currentTransitions.AddOrUpdate(drawElement.Location, location =>
+                    {
+                        var transition = new InstantTransition();
+                        return new VisualEffectInfo(drawElement.Location, transition, null, drawElement.BitmapRepresentation, steps);
+                    },
+                    (location, info) =>
+                    {
+                        var transition = GetTransition(drawElement);
+                        var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition.Current.Clone(), drawElement.BitmapRepresentation, steps);
+                        info.Dispose();
+                        return result;
+                    });
+            }
+
             var effectInfos = _currentTransitions.Values.Where(t => t.Transition.HasNext);
-            
+
             _currentDrawElementsCache.Clear();
+
             foreach (var effectInfo in effectInfos)
             {
                 effectInfo.Transition.Next();
                 _currentDrawElementsCache.Add(new LayoutDrawElement(effectInfo.Location, effectInfo.Transition.Current));
             }
 
-            foreach (var drawElement in _currentDrawElementsCache)
-                _device.SetBitmap(drawElement.Location, drawElement.BitmapRepresentation);
+            foreach (var currentElement in _currentDrawElementsCache)
+                _device.SetBitmap(currentElement.Location, currentElement.BitmapRepresentation);
+
+            Thread.Sleep((int) (1000 / FPS));
 
             return _currentDrawElementsCache.Any();
         }
@@ -99,36 +124,12 @@ namespace Vkm.Core
         public void Dispose()
         {
             _disposed = true;
-            _drawTask.Dispose();
+            DisposeHelper.DisposeAndNull(ref _drawTask);
 
             foreach (var effectInfo in _currentTransitions.Values)
                 effectInfo.Dispose();
+
+            _currentTransitions.Clear();
         }
-    }
-
-    internal class ImmediateTransition : IVisualTransition
-    {
-        private bool _first = true;
-        private BitmapRepresentation _current;
-
-        public BitmapRepresentation Current => _current;
-
-        public bool HasNext => _first;
-
-        public void Init(BitmapRepresentation first, BitmapRepresentation last)
-        {
-            _current = last.Clone();
-        }
-
-        public void Next()
-        {
-            _first = false;
-        }
-
-        public void Dispose()
-        {
-            _current.Dispose();
-        }
-
     }
 }

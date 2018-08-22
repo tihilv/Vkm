@@ -4,12 +4,14 @@ using System.Drawing;
 using Vkm.Api.Basic;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Transition;
 
 namespace Vkm.Library.Timer
 {
     class TimerElapsedLayout: LayoutBase
     {
-        Random _random = new Random();
+        private TimeSpan _frameDuration = TimeSpan.FromSeconds(1);
+        readonly Random _random = new Random();
 
         public TimerElapsedLayout(Identifier identifier) : base(identifier)
         {
@@ -19,7 +21,7 @@ namespace Vkm.Library.Timer
         {
             base.Init();
 
-            RegisterTimer(new TimeSpan(0,0,0,1), Draw);
+            RegisterTimer(_frameDuration, Draw);
         }
 
         private void Draw()
@@ -36,7 +38,7 @@ namespace Vkm.Library.Timer
                     grahics.FillRectangle(brush, 0, 0, bmp.Width, bmp.Height);
                 }
 
-                result.Add(new LayoutDrawElement(new Location(i, j), bmp));
+                result.Add(new LayoutDrawElement(new Location(i, j), bmp, new TransitionInfo(TransitionType.ElementUpdate, _frameDuration)));
             }
 
             DrawInvoke(result);

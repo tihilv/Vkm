@@ -40,9 +40,9 @@ namespace Vkm.Library.Volume
         private void DoVolumeChange()
         {
             if (_increase)
-                _mmDevice.AudioEndpointVolume.VolumeStepUp();
+                _mmDevice?.AudioEndpointVolume.VolumeStepUp();
             else
-                _mmDevice.AudioEndpointVolume.VolumeStepDown();
+                _mmDevice?.AudioEndpointVolume.VolumeStepDown();
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -66,8 +66,8 @@ namespace Vkm.Library.Volume
         {
             base.LeaveLayout();
             
-            _mmDevice.Dispose();
-            _mmDeviceEnumerator.Dispose();
+            DisposeHelper.DisposeAndNull(ref _mmDevice);
+            DisposeHelper.DisposeAndNull(ref _mmDeviceEnumerator);
         }
         
         void Draw()

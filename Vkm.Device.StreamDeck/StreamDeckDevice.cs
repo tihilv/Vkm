@@ -77,7 +77,7 @@ namespace Vkm.Device.StreamDeck
         public void Dispose()
         {
             _device.KeyStateChanged += DeviceOnKeyStateChanged;
-            _device.Dispose();
+            DisposeHelper.DisposeAndNull(ref _device);
         }
     }
 }
