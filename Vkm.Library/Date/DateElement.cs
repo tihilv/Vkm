@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -9,7 +7,7 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Library.Common;
 
-namespace Vkm.Library.Clock
+namespace Vkm.Library.Date
 {
     internal class DateElement: ElementBase
     {

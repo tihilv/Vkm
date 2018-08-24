@@ -99,7 +99,7 @@ namespace Vkm.Library.Volume
             var bitmap = new Bitmap(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
             bitmap.MakeTransparent();
 
-            var baseColor = (_mmDevice.AudioEndpointVolume.Mute) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
+            var baseColor = (_mmDevice?.AudioEndpointVolume.Mute??false) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
 
             var delta = 50;
             Color color1 = Color.FromArgb(baseColor.A, Math.Min(byte.MaxValue, baseColor.R + delta), Math.Min(byte.MaxValue, baseColor.G + delta), Math.Min(byte.MaxValue, baseColor.B + delta));
@@ -108,9 +108,12 @@ namespace Vkm.Library.Volume
             using (var graphics = Graphics.FromImage(bitmap))
             using (var brush = new LinearGradientBrush(new Point(0,0), new Point(0, bitmap.Height), color1, color2))
             {
-                var top =  (int)(bitmap.Height*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
-                var left =  (int)(bitmap.Width*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
-                graphics.FillPolygon(brush, new Point[] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)} );
+                if (_mmDevice != null)
+                {
+                    var top =  (int)(bitmap.Height*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
+                    var left =  (int)(bitmap.Width*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
+                    graphics.FillPolygon(brush, new Point[] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)} );
+                }
             }
 
             return bitmap;

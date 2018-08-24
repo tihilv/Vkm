@@ -59,7 +59,13 @@ namespace Vkm.Core
             if (drawElement.TransitionInfo.Type == TransitionType.Instant)
                 return new InstantTransition();
 
-            return new FadeTransition();
+            if (drawElement.TransitionInfo.Type == TransitionType.ElementUpdate)
+                return new FadeTransition();
+
+            if (drawElement.TransitionInfo.Type == TransitionType.LayoutChange)
+                return new MoveTransition();
+
+            return new InstantTransition();
         }
 
         void DrawCycle()
@@ -96,10 +102,18 @@ namespace Vkm.Core
                     },
                     (location, info) =>
                     {
-                        var transition = GetTransition(drawElement);
-                        var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition.Current.Clone(), drawElement.BitmapRepresentation, steps);
-                        info.Dispose();
-                        return result;
+                        if (info.Transition.HasNext && drawElement.TransitionInfo.Type == TransitionType.Instant)
+                        {
+                            info.ReplaceLastBitmap(drawElement.BitmapRepresentation);
+                            return info;
+                        }
+                        else
+                        {
+                            var transition = GetTransition(drawElement);
+                            var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition.Current.Clone(), drawElement.BitmapRepresentation, steps);
+                            info.Dispose();
+                            return result;
+                        }
                     });
             }
 

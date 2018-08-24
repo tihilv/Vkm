@@ -30,16 +30,19 @@ namespace Vkm.Library
 
         private void TimerOnElapsed()
         {
-            RemoveElement(_clockElement);
-
-            Location newLocation;
-            do
+            using (LayoutContext.PauseDrawing())
             {
-                newLocation = new Location((byte) _random.Next(LayoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width), (byte) _random.Next(LayoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height));
-            } while (newLocation == _prevLocation);
+                RemoveElement(_clockElement);
 
-            AddElement(newLocation, _clockElement);
-            _prevLocation = newLocation;
+                Location newLocation;
+                do
+                {
+                    newLocation = new Location((byte) _random.Next(LayoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width), (byte) _random.Next(LayoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height));
+                } while (newLocation == _prevLocation);
+
+                AddElement(newLocation, _clockElement);
+                _prevLocation = newLocation;
+            }
         }
 
         public override void Init()

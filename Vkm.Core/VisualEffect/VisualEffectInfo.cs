@@ -31,5 +31,12 @@ namespace Vkm.Core.VisualEffect
 
             DisposeHelper.DisposeAndNull(ref _transition);
         }
+
+        public void ReplaceLastBitmap(BitmapRepresentation lastBitmapRepresentation)
+        {
+            _transition.ReplaceLastBitmap(lastBitmapRepresentation);
+            DisposeHelper.DisposeAndNull(ref _last);
+            _last = lastBitmapRepresentation;
+        }
     }
 }

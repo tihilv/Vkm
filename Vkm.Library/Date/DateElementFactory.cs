@@ -1,7 +1,7 @@
 ﻿using Vkm.Api.Element;
 using Vkm.Api.Identification;
 
-namespace Vkm.Library.Clock
+namespace Vkm.Library.Date
 {
     class DateElementFactory: IElementFactory
     {

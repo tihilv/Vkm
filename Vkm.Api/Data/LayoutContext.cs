@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using Vkm.Api.Basic;
+using Vkm.Api.Device;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
@@ -12,18 +11,22 @@ namespace Vkm.Api.Data
     {
         private readonly Action<ILayout> _setLayoutAction;
         private readonly Action _setPreviousLayoutAction;
+        private Func<IDisposable> _pauseDrawingFunc;
         private readonly GlobalContext _globalContext;
-
+        private readonly IDevice _device;
+        
         public IconSize IconSize { get; private set; }
         public DeviceSize ButtonCount { get; private set; }
 
         public GlobalOptions Options => _globalContext.Options;
 
-        public LayoutContext(DeviceSize buttonCount, IconSize iconSize, GlobalContext globalContext, Action<ILayout> setLayoutAction, Action setPreviousLayoutAction)
+        public LayoutContext(IDevice device, GlobalContext globalContext, Action<ILayout> setLayoutAction, Action setPreviousLayoutAction, Func<IDisposable> pauseDrawingFunc)
         {
-            IconSize = iconSize;
-            ButtonCount = buttonCount;
+            _device = device;
+            IconSize = device.IconSize;
+            ButtonCount = device.ButtonCount;
             _globalContext = globalContext;
+            _pauseDrawingFunc = pauseDrawingFunc;
 
             _setLayoutAction = setLayoutAction;
             _setPreviousLayoutAction = setPreviousLayoutAction;
@@ -31,15 +34,7 @@ namespace Vkm.Api.Data
 
         public BitmapEx CreateBitmap()
         {
-            var result = new BitmapEx(IconSize.Width, IconSize.Height, PixelFormat.Format24bppRgb);
-
-            using (var graphics = result.CreateGraphics())
-            using (var brush = new SolidBrush(Options.Theme.BackgroundColor))
-            {
-                graphics.FillRectangle(brush, 0, 0, result.Width, result.Height);
-            }
-
-            return result;
+            return _device.CreateBitmap(Options.Theme);
         }
 
         public void SetLayout(Identifier layoutIdentifier)
@@ -55,6 +50,11 @@ namespace Vkm.Api.Data
         public void SetPreviousLayout()
         {
             _setPreviousLayoutAction();
+        }
+
+        public IDisposable PauseDrawing()
+        {
+            return _pauseDrawingFunc();
         }
     }
 }

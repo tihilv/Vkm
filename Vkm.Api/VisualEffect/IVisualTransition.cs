@@ -10,7 +10,7 @@ namespace Vkm.Api.VisualEffect
         bool HasNext { get; }
 
         void Init(BitmapRepresentation first, BitmapRepresentation last, int steps);
-
+        void ReplaceLastBitmap(BitmapRepresentation last);
         void Next();
     }
 }

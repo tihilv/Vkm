@@ -30,8 +30,9 @@ namespace Vkm.Core
             _device.ButtonEvent += DeviceOnKeyEvent;
 
             _device.Init();
-            _layoutContext = new LayoutContext(_device.ButtonCount, _device.IconSize, globalContext, SetLayout, SetPreviousLayout);
-            _drawingEngine = new DrawingEngine(device, _layoutContext);
+            _drawingEngine = new DrawingEngine(device, _globalContext.Options.Theme);
+            _layoutContext = new LayoutContext(_device, globalContext, SetLayout, SetPreviousLayout, () => _drawingEngine.PauseDrawing());
+
         }
 
         private void DeviceOnKeyEvent(object sender, ButtonEventArgs e)

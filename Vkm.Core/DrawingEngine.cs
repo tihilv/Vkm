@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using Vkm.Api.Basic;
-using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
+using Vkm.Api.Options;
 using Vkm.Api.Transition;
 
 namespace Vkm.Core
@@ -13,7 +13,7 @@ namespace Vkm.Core
     class DrawingEngine: IDisposable
     {
         private readonly IDevice _device;
-        private readonly LayoutContext _layoutContext;
+        private readonly ThemeOptions _themeOptions;
 
         private readonly ConcurrentDictionary<Location, LayoutDrawElement> _imagesToDevice;
 
@@ -23,10 +23,10 @@ namespace Vkm.Core
 
         private int _counter;
 
-        public DrawingEngine(IDevice device, LayoutContext layoutContext)
+        public DrawingEngine(IDevice device, ThemeOptions themeOptions)
         {
             _device = device;
-            _layoutContext = layoutContext;
+            _themeOptions = themeOptions;
 
             _imagesToDevice = new ConcurrentDictionary<Location, LayoutDrawElement>();
             _switchedLocations = new ConcurrentDictionary<Location, Location>();
@@ -59,7 +59,7 @@ namespace Vkm.Core
                 for (byte j = 0; j < _device.ButtonCount.Height; j++)
                 {
                     var location = new Location(i, j);
-                    var drawElement = new LayoutDrawElement(location, _layoutContext.CreateBitmap());
+                    var drawElement = new LayoutDrawElement(location, _device.CreateBitmap(_themeOptions));
                     DrawBitmap(drawElement);
                 }
         }

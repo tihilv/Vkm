@@ -17,6 +17,12 @@ namespace Vkm.Core
             _current = last.Clone();
         }
 
+        public void ReplaceLastBitmap(BitmapRepresentation last)
+        {
+            DisposeHelper.DisposeAndNull(ref _current);
+            _current = last.Clone();
+        }
+
         public void Next()
         {
             _first = false;

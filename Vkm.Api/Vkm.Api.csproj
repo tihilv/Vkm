@@ -52,6 +52,7 @@
     <Compile Include="Data\GlobalContext.cs" />
     <Compile Include="Data\GlobalServices.cs" />
     <Compile Include="Device\ButtonEventArgs.cs" />
+    <Compile Include="Device\DeviceHelper.cs" />
     <Compile Include="Identification\Identifier.cs" />
     <Compile Include="Element\IElementFactory.cs" />
     <Compile Include="Options\GlobalOptions.cs" />

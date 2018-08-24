@@ -54,6 +54,12 @@ namespace Vkm.Core
             _currentBitmap = first.CreateBitmap();
         }
 
+        public void ReplaceLastBitmap(BitmapRepresentation last)
+        {
+            DisposeHelper.DisposeAndNull(ref _lastBitmap);
+            _lastBitmap = last.CreateBitmap();
+        }
+
         public void Next()
         {
             if (HasNext)

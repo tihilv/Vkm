@@ -52,6 +52,8 @@
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransition.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransitionFactory.cs" />
     <Compile Include="Buttons\ButtonElement.cs" />
+    <Compile Include="Media\MediaElement.cs" />
+    <Compile Include="Media\MediaElementFactory.cs" />
     <Compile Include="Timer\CountdownElement.cs" />
     <Compile Include="Timer\InputTimeLayout.cs" />
     <Compile Include="Clock\ClockElementFactory.cs" />
@@ -69,7 +71,7 @@
     <Compile Include="CompositeLayout\CompositeLayoutOptions.cs" />
     <Compile Include="Config\LibraryConfig.cs" />
     <Compile Include="Date\DateElement.cs" />
-    <Compile Include="Date\ClockElementFactory.cs" />
+    <Compile Include="Date\DateElementFactory.cs" />
     <Compile Include="Heartbeat\HeartbeatElement.cs" />
     <Compile Include="Heartbeat\HeartbeatFactory.cs" />
     <Compile Include="IdleTransition\LockEventArgs.cs" />
