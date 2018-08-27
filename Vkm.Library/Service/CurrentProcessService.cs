@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using Vkm.Api;
-using Vkm.Api.Processes;
+using Vkm.Api.Identification;
+using Vkm.Library.Interfaces.Services;
 
-namespace Vkm.Core
+namespace Vkm.Library.Service
 {
     class CurrentProcessService: ICurrentProcessService
     {
@@ -66,5 +67,8 @@ namespace Vkm.Core
 
             return true;
         }
+
+        public Identifier Id => new Identifier("Vkm.CurrentProcessService");
+        public string Name => "Current process watcher";
     }
 }

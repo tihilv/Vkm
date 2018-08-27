@@ -34,6 +34,9 @@
       <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OpenWeatherMap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenWeatherMap.1.1.0\lib\netstandard1.1\OpenWeatherMap.dll</HintPath>
     </Reference>
@@ -52,8 +55,19 @@
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransition.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransitionFactory.cs" />
     <Compile Include="Buttons\ButtonElement.cs" />
+    <Compile Include="Common\BtimapHelpers.cs" />
+    <Compile Include="Media\MediaLayout.cs" />
     <Compile Include="Media\MediaElement.cs" />
     <Compile Include="Media\MediaElementFactory.cs" />
+    <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\Player\Gpmdp\GpmdpService.cs" />
+    <Compile Include="Service\Player\Gpmdp\Providers\IBitmapDownloader.cs" />
+    <Compile Include="Service\Player\Gpmdp\Providers\IGpmdpProvider.cs" />
+    <Compile Include="Service\Player\Gpmdp\Providers\JsonApi.cs" />
+    <Compile Include="Service\Player\Gpmdp\Providers\Websocket\WebsocketApi.cs" />
+    <Compile Include="Service\Player\Gpmdp\Providers\Websocket\WebsocketChannels.cs" />
+    <Compile Include="Service\Player\Gpmdp\Song.cs" />
+    <Compile Include="Service\Weather\OpenWeatherOptions.cs" />
     <Compile Include="Timer\CountdownElement.cs" />
     <Compile Include="Timer\InputTimeLayout.cs" />
     <Compile Include="Clock\ClockElementFactory.cs" />
@@ -98,8 +112,9 @@
     <Compile Include="Weather\ForecastLayout.cs" />
     <Compile Include="Weather\WeatherElement.cs" />
     <Compile Include="Weather\WeatherElementFactory.cs" />
+    <Compile Include="Weather\WeatherHelpers.cs" />
     <Compile Include="Weather\WeatherOptions.cs" />
-    <Compile Include="Weather\WeatherService.cs" />
+    <Compile Include="Service\Weather\WeatherService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj">
@@ -110,6 +125,10 @@
       <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
       <Name>Vkm.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Vkm.Library.Interfaces\Vkm.Library.Interfaces.csproj">
+      <Project>{073c0ebc-9704-4d0a-b8b5-f39f25010fb0}</Project>
+      <Name>Vkm.Library.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -119,5 +138,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\weathericons.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

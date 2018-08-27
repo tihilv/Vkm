@@ -16,6 +16,7 @@ using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;
 using Vkm.Library.Run;
+using Vkm.Library.Service.Weather;
 using Vkm.Library.StartupTransition;
 using Vkm.Library.Timer;
 using Vkm.Library.Volume;
@@ -129,13 +130,12 @@ namespace Vkm.Library.Config
 
             optionsService.SetDefaultOptions(CalcIdentifier, runOptions);
 
+            var weatherServiceOptions = new OpenWeatherOptions { OpenWeatherApiKey = "3e1cbac94caf82e428a662bc15b2fe9e" };
+            optionsService.SetDefaultOptions(OpenWeatherService.Identifier, weatherServiceOptions);
 
-
-            var weatherOptions = new WeatherOptions() {Place = "Dachau", OpenWeatherApiKey = "3e1cbac94caf82e428a662bc15b2fe9e"};
-
+            var weatherOptions = new WeatherOptions() {Place = "Dachau"};
             optionsService.SetDefaultOptions(WeatherIdentifier, weatherOptions);
-
-
+            
             var applicationTransitionOptions = new ApplicationChangeTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier());
             applicationTransitionOptions.Process = "Calculator";
             applicationTransitionOptions.LayoutId = DefaultNumpadLayout;

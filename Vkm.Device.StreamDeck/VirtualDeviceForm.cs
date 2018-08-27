@@ -14,6 +14,7 @@ namespace Vkm.Device.StreamDeck
         public VirtualDeviceForm()
         {
             InitializeComponent();
+            TopMost = false;
         }
 
         internal void Init(DeviceSize deviceSize, IconSize iconSize)

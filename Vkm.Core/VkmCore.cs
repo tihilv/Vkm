@@ -41,7 +41,6 @@ namespace Vkm.Core
             var globalServices = new GlobalServices(
                     optionsService,
                     moduleService,
-                    new CurrentProcessService(),
                     new TimerService()
                 );
 

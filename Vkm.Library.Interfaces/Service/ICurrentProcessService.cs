@@ -1,8 +1,9 @@
 ﻿using System;
+using Vkm.Api.Service;
 
-namespace Vkm.Api.Processes
+namespace Vkm.Library.Interfaces.Services
 {
-    public interface ICurrentProcessService
+    public interface ICurrentProcessService: IService
     {
         event EventHandler<ProcessEventArgs> ProcessEnter;
         event EventHandler<ProcessEventArgs> ProcessExit;

@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
-using OpenWeatherMap;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service.Weather;
 using Location = Vkm.Api.Basic.Location;
 
 namespace Vkm.Library.Weather
@@ -19,6 +19,8 @@ namespace Vkm.Library.Weather
         protected LayoutContext _layoutContext;
 
         protected WeatherOptions _weatherOptions;
+
+        protected IWeatherService _weatherService;
 
         public Identifier Id { get; }
         
@@ -33,7 +35,9 @@ namespace Vkm.Library.Weather
 
         public void Init()
         {
-            
+            _weatherService = _globalContext.GetServices<IWeatherService>().FirstOrDefault();
+            if (_weatherService == null)
+                throw new ApplicationException("Weather service is not available.");
         }
         
         public void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -49,9 +53,9 @@ namespace Vkm.Library.Weather
 
         public abstract void ButtonPressed(Location location, bool isDown);
 
-        protected abstract Task<ForecastTime[]> GetData();
+        protected abstract Task<WeatherInfo[]> GetData();
 
-        protected abstract string GetDescription(ForecastTime forecast);
+        protected abstract string GetDescription(WeatherInfo forecast);
 
         public IOptions GetDefaultOptions()
         {
@@ -72,19 +76,19 @@ namespace Vkm.Library.Weather
             for (byte i = 0; i < Math.Min(_layoutContext.ButtonCount.Width, weather.Length); i++)
             {
                 result[i*3] = new LayoutDrawElement(new Location(i, 0), DrawIcon(weather[i], GetDescription(weather[i]), _layoutContext));
-                result[i*3+1] = new LayoutDrawElement(new Location(i, 1), DrawTexts(WeatherService.Instance.TempToStr(weather[i].Temperature.Max), WeatherService.Instance.TempToStr(weather[i].Temperature.Min), _layoutContext));
-                result[i*3+2] = new LayoutDrawElement(new Location(i, 2), DrawTexts(((int)weather[i].Pressure.Value).ToString(), weather[i].Humidity.Value.ToString()+"%", _layoutContext));
+                result[i*3+1] = new LayoutDrawElement(new Location(i, 1), DrawTexts(WeatherHelpers.TempToStr(weather[i].TemperatureMaxCelsius??0), WeatherHelpers.TempToStr(weather[i].TemperatureMinCelsius??0), _layoutContext));
+                result[i*3+2] = new LayoutDrawElement(new Location(i, 2), DrawTexts(((int)(weather[i].PressureMPa??0)).ToString(), weather[i].Humidity.ToString()+"%", _layoutContext));
             }
 
             DrawLayout?.Invoke(this, new DrawEventArgs(result));
         }
 
-        internal static BitmapEx DrawIcon(ForecastTime response, string text, LayoutContext layoutContext)
+        internal static BitmapEx DrawIcon(WeatherInfo response, string text, LayoutContext layoutContext)
         {
-            var symbol = WeatherService.Instance.GetWeatherSymbol(response.Symbol);
+            var symbol = WeatherHelpers.GetWeatherSymbol(response.Symbol);
             var bitmap = layoutContext.CreateBitmap();
 
-            DefaultDrawingAlgs.DrawIconAndText(bitmap, WeatherService.Instance.WeatherFontFamily, symbol, layoutContext.Options.Theme.FontFamily, text, "22:22", layoutContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawIconAndText(bitmap, WeatherHelpers.WeatherFontFamily, symbol, layoutContext.Options.Theme.FontFamily, text, "22:22", layoutContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }
@@ -123,14 +127,14 @@ namespace Vkm.Library.Weather
             }
         }
 
-        protected override async Task<ForecastTime[]> GetData()
+        protected override async Task<WeatherInfo[]> GetData()
         {
-            return (await WeatherService.Instance.GetForecast(_weatherOptions.OpenWeatherApiKey, _weatherOptions.Place, _layoutContext.ButtonCount.Width)).Forecast;
+            return (await _weatherService.GetForecast(_weatherOptions.Place, _layoutContext.ButtonCount.Width));
         }
 
-        protected override string GetDescription(ForecastTime forecast)
+        protected override string GetDescription(WeatherInfo forecast)
         {
-            return CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int)forecast.Day.DayOfWeek];
+            return CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int)forecast.DateTime.DayOfWeek];
         }
     }
 
@@ -151,14 +155,14 @@ namespace Vkm.Library.Weather
             }
         }
 
-        protected override async Task<ForecastTime[]> GetData()
+        protected override async Task<WeatherInfo[]> GetData()
         {
-            return await WeatherService.Instance.GetForecastForDay(_weatherOptions.OpenWeatherApiKey, _weatherOptions.Place, _dateTime);
+            return await _weatherService.GetForecastForDay(_weatherOptions.Place, _dateTime);
         }
 
-        protected override string GetDescription(ForecastTime forecast)
+        protected override string GetDescription(WeatherInfo forecast)
         {
-            return $"{DateTime.SpecifyKind(forecast.From, DateTimeKind.Utc).ToLocalTime().Hour}:00";
+            return $"{DateTime.SpecifyKind(forecast.DateTime, DateTimeKind.Utc).ToLocalTime().Hour}:00";
         }
     }
 }

@@ -141,7 +141,7 @@ namespace Vkm.Api.Layout
                 if (e.Elements.Any(el => el.Location.X >= placedElement.Element.ButtonCount.Width || el.Location.Y >= placedElement.Element.ButtonCount.Height))
                     throw new ArgumentException($"Element {placedElement.Element.Id.Value} of type {placedElement.Element.GetType().FullName} attempted to draw out of the borders.");
 
-                var drawEventArgs = new DrawEventArgs(e.Elements.Select(el => new LayoutDrawElement(placedElement.Location + el.Location, el.BitmapRepresentation)).ToArray());
+                var drawEventArgs = new DrawEventArgs(e.Elements.Select(el => new LayoutDrawElement(placedElement.Location + el.Location, el.BitmapRepresentation, el.TransitionInfo)).ToArray());
                 DrawLayout?.Invoke(this, drawEventArgs);
             }
         }

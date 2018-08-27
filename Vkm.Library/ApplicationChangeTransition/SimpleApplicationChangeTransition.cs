@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
 using Vkm.Api.Transition;
+using Vkm.Library.Interfaces.Services;
 
 namespace Vkm.Library.ApplicationChangeTransition
 {
@@ -20,7 +22,11 @@ namespace Vkm.Library.ApplicationChangeTransition
 
         public override void Init()
         {
-            GlobalContext.Services.CurrentProcessService.ProcessEnter += (sender, args) =>
+            var service = GlobalContext.GetServices<ICurrentProcessService>().FirstOrDefault();
+            if (service == null)
+                throw new ApplicationException("ICurrentProcessService service is not found.");
+
+            service.ProcessEnter += (sender, args) =>
             {
                 if (!_entered && args.ProcessName == TransitionOptions.Process)
                 {
@@ -28,7 +34,7 @@ namespace Vkm.Library.ApplicationChangeTransition
                     OnTransition();
                 }
             };
-            GlobalContext.Services.CurrentProcessService.ProcessExit += (sender, args) =>
+            service.ProcessExit += (sender, args) =>
             {
                 if (_entered && args.ProcessName == TransitionOptions.Process)
                 {

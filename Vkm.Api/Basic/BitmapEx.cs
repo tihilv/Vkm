@@ -19,7 +19,7 @@ namespace Vkm.Api.Basic
 
         private bool _disposed;
 
-        public BitmapEx(int width, int height, PixelFormat pixelFormat)
+        public BitmapEx(int width, int height, PixelFormat pixelFormat = PixelFormat.Format32bppArgb)
         {
             _internal = GetNewBitmap(width, height, pixelFormat);
             _width = _internal.Width;
@@ -87,6 +87,11 @@ namespace Vkm.Api.Basic
         public void MakeTransparent()
         {
             _internal.MakeTransparent();
+            
+            using (Graphics g = CreateGraphics()) {
+                g.Clip = new Region(new Rectangle(0, 0, Width, Height));
+                g.Clear(Color.FromArgb(0, Color.White));
+            }
         }
     }
 }

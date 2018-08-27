@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using OpenWeatherMap;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -8,6 +7,7 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service.Weather;
 using Location = Vkm.Api.Basic.Location;
 
 namespace Vkm.Library.Weather
@@ -15,6 +15,8 @@ namespace Vkm.Library.Weather
     class WeatherElement: ElementBase, IOptionsProvider
     {
         private WeatherOptions _weatherOptions;
+
+        private IWeatherService _weatherService;
 
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
@@ -36,6 +38,10 @@ namespace Vkm.Library.Weather
         {
             base.Init();
 
+            _weatherService = GlobalContext.GetServices<IWeatherService>().FirstOrDefault();
+            if (_weatherService == null)
+                throw new ApplicationException("Weather service is not available.");
+
             RegisterTimer(new TimeSpan(0,0,5,0), ProcessDraw);
         }
 
@@ -50,8 +56,7 @@ namespace Vkm.Library.Weather
         {
             try
             {
-                var service = WeatherService.Instance;
-                var weather = await service.GetWeather(_weatherOptions.OpenWeatherApiKey, _weatherOptions.Place);
+                WeatherInfo weather = await _weatherService.GetCurrentWeather(_weatherOptions.Place);
                 var img = Draw(weather, LayoutContext);
                 DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), img)});
             }
@@ -63,14 +68,14 @@ namespace Vkm.Library.Weather
             }
         }
 
-        internal static BitmapEx Draw(WeatherItem response, LayoutContext layoutContext)
+        private static BitmapEx Draw(WeatherInfo weatherInfo, LayoutContext layoutContext)
         {
-            var temperature = WeatherService.Instance.TempToStr(response.Temperature.Value);
-            var symbol = WeatherService.Instance.GetWeatherSymbol(response.Weather);
+            var temperature = WeatherHelpers.TempToStr(weatherInfo.TemperatureCelsius??0);
+            var symbol = WeatherHelpers.GetWeatherSymbol(weatherInfo.Symbol);
             
             var bitmap = layoutContext.CreateBitmap();
 
-            DefaultDrawingAlgs.DrawIconAndText(bitmap, WeatherService.Instance.WeatherFontFamily, symbol, layoutContext.Options.Theme.FontFamily, temperature, "+88", layoutContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawIconAndText(bitmap, WeatherHelpers.WeatherFontFamily, symbol, layoutContext.Options.Theme.FontFamily, temperature, "+88", layoutContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }
@@ -87,6 +92,5 @@ namespace Vkm.Library.Weather
             }
             return base.ButtonPressed(location, isDown);
         }
-
     }
 }

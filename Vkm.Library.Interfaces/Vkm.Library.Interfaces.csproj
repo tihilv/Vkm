@@ -4,19 +4,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FF2D8D60-65B6-438B-82E5-E7910C1652BB}</ProjectGuid>
+    <ProjectGuid>{073C0EBC-9704-4D0A-B8B5-F39F25010FB0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vkm.Core</RootNamespace>
-    <AssemblyName>Vkm.Core</AssemblyName>
+    <RootNamespace>Vkm.Library.Interfaces</RootNamespace>
+    <AssemblyName>Vkm.Library.Interfaces</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\out\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\out\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,28 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawingEngine.cs" />
-    <Compile Include="TimerService.cs" />
-    <Compile Include="VisualEffect\MoveTransition.cs" />
-    <Compile Include="VisualEffect\FadeTransition.cs" />
-    <Compile Include="VisualEffect\InstantTransition.cs" />
-    <Compile Include="VisualEffect\VisualEffectInfo.cs" />
-    <Compile Include="VisualEffect\VisualEffectProcessor.cs" />
-    <Compile Include="VkmCore.cs" />
-    <Compile Include="DeviceManager.cs" />
-    <Compile Include="Options\VkmCore.Options.cs" />
-    <Compile Include="ModuleService.cs" />
-    <Compile Include="OptionsService.cs" />
+    <Compile Include="Service\ICurrentProcessService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Player\IPlayerService.cs" />
+    <Compile Include="Service\Player\PlayingEventArgs.cs" />
+    <Compile Include="Service\Player\PlayingInfo.cs" />
+    <Compile Include="Service\ProcessEventArgs.cs" />
+    <Compile Include="Service\Weather\IWeatherService.cs" />
+    <Compile Include="Service\Weather\WeatherInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">
       <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
       <Name>Vkm.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vkm.Device.StreamDeck\Vkm.Device.StreamDeck.csproj">
-      <Project>{466b4ee9-70f4-4cd5-9085-ab08c35c1769}</Project>
-      <Name>Vkm.Device.StreamDeck</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

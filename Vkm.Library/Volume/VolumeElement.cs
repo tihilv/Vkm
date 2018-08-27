@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Threading.Tasks;
 using System.Timers;
 using CoreAudioApi;
+using Microsoft.Office.Interop.Outlook;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Library.Common;
 
 namespace Vkm.Library.Volume
 {
@@ -75,28 +75,14 @@ namespace Vkm.Library.Volume
             List<LayoutDrawElement> drawElements = new List<LayoutDrawElement>();
             using (var bitmap = DrawLevel())
             {
-                for (byte x = 0; x < ButtonCount.Width; x++)
-                for (byte y = 0; y < ButtonCount.Height; y++)
-                {
-                    var part = LayoutContext.CreateBitmap();
-
-                    using (Graphics grD = part.CreateGraphics())
-                    {
-                        grD.DrawImage(bitmap, new Rectangle(0, 0, LayoutContext.IconSize.Width, LayoutContext.IconSize.Height), new Rectangle(x*LayoutContext.IconSize.Width, y*LayoutContext.IconSize.Height, LayoutContext.IconSize.Width, LayoutContext.IconSize.Height), GraphicsUnit.Pixel);
-                    }
-
-                    drawElements.Add(new LayoutDrawElement(new Location(x, y), part));
-                }
+                DrawInvoke(BitmapHelpers.ExtractLayoutDrawElements(bitmap, ButtonCount, 0, 0, LayoutContext));
             }
 
-            DrawInvoke(drawElements);
         }
 
-        private Bitmap DrawLevel()
+        private BitmapEx DrawLevel()
         {
-            //LayoutContext.IconSize
-
-            var bitmap = new Bitmap(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
+            var bitmap = new BitmapEx(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
             bitmap.MakeTransparent();
 
             var baseColor = (_mmDevice?.AudioEndpointVolume.Mute??false) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
@@ -105,7 +91,7 @@ namespace Vkm.Library.Volume
             Color color1 = Color.FromArgb(baseColor.A, Math.Min(byte.MaxValue, baseColor.R + delta), Math.Min(byte.MaxValue, baseColor.G + delta), Math.Min(byte.MaxValue, baseColor.B + delta));
             Color color2 = Color.FromArgb(baseColor.A, Math.Max(0, baseColor.R - delta), Math.Max(0, baseColor.G - delta), Math.Max(0, baseColor.B - delta));
 
-            using (var graphics = Graphics.FromImage(bitmap))
+            using (var graphics = bitmap.CreateGraphics())
             using (var brush = new LinearGradientBrush(new Point(0,0), new Point(0, bitmap.Height), color1, color2))
             {
                 if (_mmDevice != null)

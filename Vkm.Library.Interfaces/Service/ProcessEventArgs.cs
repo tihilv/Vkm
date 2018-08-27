@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vkm.Api.Processes
+namespace Vkm.Library.Interfaces.Services
 {
     public class ProcessEventArgs : EventArgs
     {

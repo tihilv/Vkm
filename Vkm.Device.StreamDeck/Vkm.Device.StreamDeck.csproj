@@ -30,8 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StreamDeckSharp, Version=0.1.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\streamdecksharp.0.1.10\lib\net40\StreamDeckSharp.dll</HintPath>
+    <Reference Include="OpenMacroBoard.SDK, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenMacroBoard.SDK.0.2.0\lib\net40\OpenMacroBoard.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamDeckSharp, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamDeckSharp.0.2.0\lib\net40\StreamDeckSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,9 +60,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">
       <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
       <Name>Vkm.Api</Name>
@@ -69,6 +69,9 @@
     <EmbeddedResource Include="VirtualDeviceForm.resx">
       <DependentUpon>VirtualDeviceForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

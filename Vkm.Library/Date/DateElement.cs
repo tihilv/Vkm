@@ -63,7 +63,7 @@ namespace Vkm.Library.Date
             var day = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int) date.DayOfWeek];
             var dateStr1 = $"{day}, {date.Day}";
             var dateStr2 = $"{date.ToString("MM.yy")}";
-            DefaultDrawingAlgs.DrawTexts(bitmap, fontFamily, dateStr1, dateStr2, "00.00", GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawTexts(bitmap, fontFamily, dateStr1, dateStr2, "W00.00", GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

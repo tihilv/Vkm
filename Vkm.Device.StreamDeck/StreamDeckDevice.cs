@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using OpenMacroBoard.SDK;
 using StreamDeckSharp;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -16,7 +18,7 @@ namespace Vkm.Device.StreamDeck
         private readonly string _devicePath;
         private IconSize _iconSize;
 
-        private IStreamDeck _device;
+        private IMacroBoard _device;
 
         public Identifier Id => _identifier;
         public IconSize IconSize => _iconSize;
@@ -25,10 +27,10 @@ namespace Vkm.Device.StreamDeck
         {
             get
             {
-                if (_device.KeyCount == 15)
+                if (_device.Keys.Count == 15)
                     return new DeviceSize(5, 3);
 
-                return new DeviceSize((byte)_device.KeyCount, 1);
+                return new DeviceSize((byte)_device.Keys.Count, 1);
             }
         }
 
@@ -48,7 +50,7 @@ namespace Vkm.Device.StreamDeck
         public void Init()
         {
             _device = StreamDeckSharp.StreamDeck.OpenDevice(_devicePath);
-            _iconSize = new IconSize(_device.IconSize, _device.IconSize);
+            _iconSize = new IconSize(_device.Keys.Max(k=>k.Width), _device.Keys.Max(k=>k.Width));
 
             _device.KeyStateChanged += DeviceOnKeyStateChanged;
         }
@@ -65,7 +67,7 @@ namespace Vkm.Device.StreamDeck
             {
                 bitmap.Save(stream, ImageFormat.Bmp);
                 stream.Position = 0;
-                _device.SetKeyBitmap(ButtonCount.Width - 1-location.X + location.Y * ButtonCount.Width, KeyBitmap.FromStream(stream));
+                _device.SetKeyBitmap(ButtonCount.Width - 1-location.X + location.Y * ButtonCount.Width, KeyBitmap.Create.FromStream(stream));
             }
         }
 

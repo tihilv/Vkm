@@ -59,9 +59,8 @@
     <Compile Include="Options\LayoutLoadOptions.cs" />
     <Compile Include="Options\ThemeOptions.cs" />
     <Compile Include="Options\TransitionLoadOptions.cs" />
-    <Compile Include="Processes\ICurrentProcessService.cs" />
-    <Compile Include="Processes\ProcessEventArgs.cs" />
     <Compile Include="Data\IInitializable.cs" />
+    <Compile Include="Service\IService.cs" />
     <Compile Include="Time\ITimerService.cs" />
     <Compile Include="Transition\ITransition.cs" />
     <Compile Include="Layout\ILayoutFactory.cs" />

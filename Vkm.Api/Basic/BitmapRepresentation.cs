@@ -19,7 +19,7 @@ namespace Vkm.Api.Basic
 
         private bool _disposed;
 
-        public BitmapRepresentation(byte[] bitmapInternal, int width, int height, PixelFormat pixelFormat)
+        private BitmapRepresentation(byte[] bitmapInternal, int width, int height, PixelFormat pixelFormat)
         {
             _bitmapInternal = bitmapInternal;
             _pixelFormat = pixelFormat;
@@ -27,7 +27,12 @@ namespace Vkm.Api.Basic
             _height = height;
         }
 
-        public BitmapRepresentation(BitmapEx bitmap)
+        public BitmapRepresentation(BitmapEx bitmap): this(bitmap.GetInternal())
+        {
+
+        }
+
+        public BitmapRepresentation(Bitmap bitmap)
         {
             _bitmapInternal = Array1DFromBitmap(bitmap);
             
@@ -69,7 +74,7 @@ namespace Vkm.Api.Basic
             return bitmap;
         }
 
-        private static byte[] Array1DFromBitmap(BitmapEx bmp)
+        private static byte[] Array1DFromBitmap(Bitmap bmp)
         {
             if (bmp == null) throw new NullReferenceException("Bitmap is null");
 
