@@ -35,6 +35,8 @@ namespace CoreAudioApi
     public static class PKEY 
     {
         public static readonly Guid PKEY_DeviceInterface_FriendlyName = new Guid( 0xa45c254e, 0xdf1c, 0x4efd, 0x80, 0x20, 0x67, 0xd1, 0x46, 0xa8, 0x50, 0xe0);  
+        public static readonly Guid PKEY_DeviceInterface_Icon = new Guid("259ABFFC-50A7-47CE-AF08-68C9A7D73366");
+        public static readonly Guid PKEY_DeviceInterface_RealName = new Guid("026e516e-b814-414b-83cd-856d6fef4822");
         public static readonly Guid PKEY_AudioEndpoint_FormFactor = new Guid( 0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e); 
         public static readonly Guid PKEY_AudioEndpoint_ControlPanelPageProvider = new Guid( 0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e); 
         public static readonly Guid PKEY_AudioEndpoint_Association = new Guid( 0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e);
@@ -43,6 +45,7 @@ namespace CoreAudioApi
         public static readonly Guid PKEY_AudioEndpoint_Disable_SysFx = new Guid( 0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e);
         public static readonly Guid PKEY_AudioEndpoint_FullRangeSpeakers = new Guid( 0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e);
         public static readonly Guid PKEY_AudioEngine_DeviceFormat = new Guid(0xf19f064d, 0x82c, 0x4e27, 0xbc, 0x73, 0x68, 0x82, 0xa1, 0xbb, 0x8e, 0x4c);
+        
 
         /* added -> */
         private static Dictionary<Guid, string> _keyDic = null;

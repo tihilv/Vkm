@@ -8,9 +8,12 @@ namespace Vkm.Api.Basic
     {
         private static readonly ConcurrentDictionary<Tuple<int, int, FontFamily, string>, int> _cache = new ConcurrentDictionary<Tuple<int, int, FontFamily, string>, int>();
 
-        public static int EstimateFontSize(BitmapEx bitmap, FontFamily fontFamily, string sample)
+        public static int EstimateFontSize(BitmapEx bitmap, FontFamily fontFamily, string sample, int? alterWidth = null, int? alterHeight = null)
         {
-            return _cache.GetOrAdd(new Tuple<int, int, FontFamily, string>(bitmap.Width, bitmap.Height, fontFamily, sample), tuple =>
+            var requestedWidth = alterWidth ?? bitmap.Width;
+            var requestedHeight = alterHeight ?? bitmap.Height;
+
+            return _cache.GetOrAdd(new Tuple<int, int, FontFamily, string>(requestedWidth, requestedHeight, fontFamily, sample), tuple =>
             {
                 using (var graphics = bitmap.CreateGraphics())
                 {

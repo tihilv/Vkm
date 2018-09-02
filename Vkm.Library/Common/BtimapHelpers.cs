@@ -62,7 +62,7 @@ namespace Vkm.Library.Common
                     grD.DrawImage(source.GetInternal(), new Rectangle(0, 0, itemWidth, itemHeight), new Rectangle(x * itemWidth, y * itemHeight, itemWidth, itemHeight), GraphicsUnit.Pixel);
                 }
 
-                yield return new LayoutDrawElement(new Location((byte) (left + x), (byte) (top + y)), part);
+                yield return new LayoutDrawElement(new Location(left + x, top + y), part);
             }
         }
     }

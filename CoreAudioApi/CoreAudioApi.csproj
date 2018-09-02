@@ -58,7 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtendedConfig\IPolicyConfig.cs" />
+    <Compile Include="ExtendedConfig\IPolicyConfigVista.cs" />
+    <Compile Include="ExtendedConfig\IPolicyConfigX.cs" />
+    <Compile Include="ExtendedConfig\PolicyConfig.cs" />
     <Compile Include="enumerations\AudioError.cs" />
+    <Compile Include="enumerations\DeviceIcon.cs" />
     <Compile Include="impl\AudioCaptureClient.cs" />
     <Compile Include="impl\AudioClient.cs" />
     <Compile Include="impl\AudioClock.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Vkm.Api.Basic
 {
@@ -13,15 +14,17 @@ namespace Vkm.Api.Basic
         public readonly byte X;
         public readonly byte Y;
 
-        public Location(byte x, byte y)
+        public Location(int x, int y)
         {
-            X = x;
-            Y = y;
+            Debug.Assert(x >= 0 && y >= 0 && x < byte.MaxValue && y < byte.MaxValue, "Coordinates doesn't fit byte value");
+
+            X = (byte)x;
+            Y = (byte)y;
         }
 
         public static Location operator +(Location a, Location b)
         {
-            return new Location((byte) (a.X + b.X), (byte) (a.Y + b.Y));
+            return new Location(a.X + b.X, a.Y + b.Y);
         }
 
         public static bool operator ==(Location a, Location b)

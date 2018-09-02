@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Text;
 using CoreAudioApi.Interfaces;
 using System.Runtime.InteropServices;
+using CoreAudioApi.enumerations;
 
 namespace CoreAudioApi
 {
@@ -176,7 +177,13 @@ namespace CoreAudioApi
         public DeviceState State { get { return _state; } }
 
         private string _friendlyName = "Unknown";
+        private string _realName = "Unknown";
+        private DeviceIcon _icon = DeviceIcon.Unknown;
+        
         public string FriendlyName { get { return _friendlyName; } }
+        public string RealName { get { return _realName; } }
+        public DeviceIcon Icon { get { return _icon; } }
+
         #endregion
 
         #region Constructor
@@ -195,6 +202,20 @@ namespace CoreAudioApi
 
             if (_PropertyStore.Contains(PKEY.PKEY_DeviceInterface_FriendlyName))
                 _friendlyName = (string)_PropertyStore[PKEY.PKEY_DeviceInterface_FriendlyName].Value;
+
+            if (_PropertyStore.Contains(PKEY.PKEY_DeviceInterface_Icon))
+            {
+                var iconPath = (string) _PropertyStore[PKEY.PKEY_DeviceInterface_Icon].Value;
+
+                _icon = DeviceIconHelper.GetIconByPath(iconPath);
+            }
+
+            if (_PropertyStore.Contains(PKEY.PKEY_DeviceInterface_RealName))
+            {
+                var nameValue = _PropertyStore[PKEY.PKEY_DeviceInterface_RealName].Value;
+                if (nameValue is string s)
+                    _realName = s;
+            }
         }
         #endregion
 

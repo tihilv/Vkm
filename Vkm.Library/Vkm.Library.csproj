@@ -54,6 +54,9 @@
     <Compile Include="ApplicationChangeTransition\ApplicationChangeTransitionOptions.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransition.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransitionFactory.cs" />
+    <Compile Include="AudioSelect\AudioSelectElement.cs" />
+    <Compile Include="AudioSelect\AudioSelectLayout.cs" />
+    <Compile Include="AudioSelect\AudioSelectElementFactory.cs" />
     <Compile Include="Buttons\ButtonElement.cs" />
     <Compile Include="Common\BackElement.cs" />
     <Compile Include="Common\BtimapHelpers.cs" />
@@ -123,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj">
-      <Project>{bc339d74-1608-4c64-a2d8-6133041bf144}</Project>
+      <Project>{BC339D74-1608-4C64-A2D8-6133041BF144}</Project>
       <Name>CoreAudioApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">

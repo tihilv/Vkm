@@ -7,6 +7,7 @@ using Vkm.Api.Identification;
 using Vkm.Api.Module;
 using Vkm.Api.Options;
 using Vkm.Library.ApplicationChangeTransition;
+using Vkm.Library.AudioSelect;
 using Vkm.Library.Clock;
 using Vkm.Library.Common;
 using Vkm.Library.CompositeLayout;
@@ -44,6 +45,7 @@ namespace Vkm.Library.Config
             Identifier DateIdentifier = new Identifier("Vkm.DesktopDefaults.Date");
             Identifier MediaIdentifier = new Identifier("Vkm.DesktopDefaults.Media");
             Identifier PowerOffIdentifier = new Identifier("Vkm.DesktopDefaults.PowerOff");
+            Identifier AudioSelectIdentifier = new Identifier("Vkm.DesktopDefaults.AudioSelect");
             
             Identifier DefaultCompositeLayout = new Identifier("Vkm.DefaultCompositeLayout.Desktop");
             Identifier DefaultTimerLayout = new Identifier("Vkm.TimerLayout.Default");
@@ -114,11 +116,6 @@ namespace Vkm.Library.Config
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
-                Location = new Location(4, 2),
-                ModuleInfo = new ModuleInitializationInfo(PowerElementFactory.Identifier, PowerOffIdentifier)
-            });
-            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
-            {
                 Location = new Location(3, 2),
                 ModuleInfo = new ModuleInitializationInfo(HeartbeatFactory.Identifier, HeartbeatIdentifier)
             });
@@ -129,6 +126,20 @@ namespace Vkm.Library.Config
                 ModuleInfo = new ModuleInitializationInfo(DateElementFactory.Identifier, DateIdentifier)
             });
 
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(0, 2),
+                ModuleInfo = new ModuleInitializationInfo(PowerElementFactory.Identifier, PowerOffIdentifier)
+            });
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(4, 2),
+                ModuleInfo = new ModuleInitializationInfo(AudioSelectElementFactory.Identifier, AudioSelectIdentifier)
+            });
+            
+            
             optionsService.SetDefaultOptions(DefaultCompositeLayout, desktopOptions);
 
 
@@ -174,6 +185,12 @@ namespace Vkm.Library.Config
 
             var powerOffOptions = new PowerOptions() {PressToActionTimeout = TimeSpan.FromSeconds(1), Action = PowerAction.PowerOff};
             optionsService.SetDefaultOptions(PowerOffIdentifier, powerOffOptions);
+
+            var audioSelectOptions = new AudioSelectOptions();
+            audioSelectOptions.Names.Add("{0.0.0.00000000}.{4eff022d-8d54-413f-9020-581e6654434b}", "Наушники");
+            audioSelectOptions.Names.Add("{0.0.0.00000000}.{5325d718-fd5e-479b-907c-a4873af76102}", "Камера");
+            audioSelectOptions.Names.Add("{0.0.0.00000000}.{ba74e64f-2267-4701-ab2e-2cc8685c124d}", "Колонки");
+            optionsService.SetDefaultOptions(AudioSelectIdentifier, audioSelectOptions);
         }
 
     }

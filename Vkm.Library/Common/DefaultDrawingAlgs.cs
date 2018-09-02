@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Vkm.Api.Basic;
 
@@ -21,6 +22,42 @@ namespace Vkm.Library.Common
                 graphics.DrawString(text, textFont, whiteBrush, bitmap.Width - size.Width, bitmap.Height - size.Height);
 
                 graphics.DrawString(iconSymbol, imageFont, whiteBrush, 0, 0);
+            }
+        }
+
+        internal static void DrawCaptionedIcon(BitmapEx bitmap, FontFamily iconFontFamily, string iconSymbol, FontFamily textFontFamily, string text, string textExample, Color color)
+        {
+            DrawElements(bitmap, new TextDrawElement(iconFontFamily, iconSymbol, color, 70, StringAlignment.Center), new TextDrawElement(textFontFamily, text, color, 30, StringAlignment.Center));
+        }
+
+        internal static void DrawElements(BitmapEx bitmap, params TextDrawElement[] elements)
+        {
+            using (var graphics = bitmap.CreateGraphics())
+            {
+                int yPosition = 0;
+                for (var index = 0; index < elements.Length; index++)
+                {
+                    TextDrawElement element = elements[index];
+
+                    var maxHeight = bitmap.Height * element.Percentage / 100;
+                    var textHeight = (element.Text != null)?FontEstimation.EstimateFontSize(bitmap, element.FontFamily, element.Text, alterHeight:maxHeight):0;
+
+                    using (var brush = new SolidBrush(element.Color))
+                    using (Font textFont = (textHeight > 0)?new Font(element.FontFamily, textHeight, GraphicsUnit.Pixel): null)
+                    {
+                        var size = graphics.MeasureString(element.Text, textFont);
+
+                        float x = 0;
+                        if (element.Alignment == StringAlignment.Center)
+                            x = (bitmap.Width - size.Width) / 2;
+                        else if (element.Alignment == StringAlignment.Far)
+                            x = (bitmap.Width - size.Width);
+
+                        graphics.DrawString(element.Text, textFont, brush, x, yPosition + (maxHeight - size.Height) / 2);
+                    }
+
+                    yPosition += maxHeight;
+                }
             }
         }
 
@@ -72,6 +109,24 @@ namespace Vkm.Library.Common
             }
 
             return text;
+        }
+    }
+
+    internal struct TextDrawElement
+    {
+        public readonly string Text;
+        public readonly FontFamily FontFamily;
+        public readonly Color Color;
+        public readonly byte Percentage;
+        public readonly StringAlignment Alignment;
+
+        public TextDrawElement(FontFamily fontFamily, string text, Color color, byte percentage, StringAlignment alignment)
+        {
+            Text = text;
+            FontFamily = fontFamily;
+            Color = color;
+            Percentage = percentage;
+            Alignment = alignment;
         }
     }
 }
