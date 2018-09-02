@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Vkm.Api.Basic;
 using Vkm.Core;
 using Vkm.Manager.Properties;
@@ -17,6 +18,20 @@ namespace Vkm.Manager
             _trayIcon = InitTrayIcon();
 
             _coreContext = new VkmCore();
+            
+            SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
+        }
+
+        private void SystemEventsOnSessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLogon || e.Reason == SessionSwitchReason.SessionUnlock)
+            {
+                _coreContext.Resume();
+            }
+            else if (e.Reason == SessionSwitchReason.SessionLogoff || e.Reason == SessionSwitchReason.SessionLock)
+            {
+                _coreContext.Pause();
+            }
         }
 
         private NotifyIcon InitTrayIcon()
@@ -34,6 +49,8 @@ namespace Vkm.Manager
             _trayIcon.Visible = false;
 
             DisposeHelper.DisposeAndNull(ref _coreContext);
+
+            SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
 
             Application.Exit();
         }

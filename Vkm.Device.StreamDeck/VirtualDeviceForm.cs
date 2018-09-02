@@ -19,6 +19,7 @@ namespace Vkm.Device.StreamDeck
 
         internal void Init(DeviceSize deviceSize, IconSize iconSize)
         {
+            SuspendLayout();
             Controls.Clear();
 
             for (byte i = 0; i < deviceSize.Width; i++)
@@ -37,6 +38,7 @@ namespace Vkm.Device.StreamDeck
             }
 
             Size = new Size(deviceSize.Width * iconSize.Width, deviceSize.Height * iconSize.Height);
+            ResumeLayout();
         }
 
         internal void SetImage(Location location, BitmapEx bitmap)

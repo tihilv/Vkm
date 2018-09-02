@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using OpenMacroBoard.SDK;
-using StreamDeckSharp;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
+using Vkm.Api.Layout;
 
 namespace Vkm.Device.StreamDeck
 {
     public class StreamDeckDevice: IDevice
     {
         private readonly Identifier _identifier;
-        private readonly string _devicePath;
+        private readonly IDeviceReferenceHandle _devicePath;
         private IconSize _iconSize;
 
         private IMacroBoard _device;
@@ -36,7 +37,7 @@ namespace Vkm.Device.StreamDeck
 
         public event EventHandler<ButtonEventArgs> ButtonEvent;
 
-        public StreamDeckDevice(string devicePath)
+        public StreamDeckDevice(IDeviceReferenceHandle devicePath)
         {
             _devicePath = devicePath;
             _identifier = new Identifier("StreamDeck." + _devicePath);
@@ -49,7 +50,7 @@ namespace Vkm.Device.StreamDeck
 
         public void Init()
         {
-            _device = StreamDeckSharp.StreamDeck.OpenDevice(_devicePath);
+            _device = _devicePath.Open();
             _iconSize = new IconSize(_device.Keys.Max(k=>k.Width), _device.Keys.Max(k=>k.Width));
 
             _device.KeyStateChanged += DeviceOnKeyStateChanged;
@@ -57,17 +58,20 @@ namespace Vkm.Device.StreamDeck
 
         private void DeviceOnKeyStateChanged(object sender, KeyEventArgs e)
         {
-            ButtonEvent?.Invoke(this, new ButtonEventArgs(new Location((byte)(ButtonCount.Width - e.Key % ButtonCount.Width - 1), (byte)(e.Key / ButtonCount.Width)), e.IsDown));
+            ButtonEvent?.Invoke(this, new ButtonEventArgs(new Location((byte)(e.Key % ButtonCount.Width), (byte)(e.Key / ButtonCount.Width)), e.IsDown));
         }
 
-        public void SetBitmap(Location location, BitmapRepresentation bitmapRepresentation)
+        public void SetBitmaps(IEnumerable<LayoutDrawElement> elements)
         {
-            using (var bitmap = bitmapRepresentation.CreateBitmap())
-            using (var stream = new MemoryStream())
+            foreach (var element in elements)
             {
-                bitmap.Save(stream, ImageFormat.Bmp);
-                stream.Position = 0;
-                _device.SetKeyBitmap(ButtonCount.Width - 1-location.X + location.Y * ButtonCount.Width, KeyBitmap.Create.FromStream(stream));
+                using (var bitmap = element.BitmapRepresentation.CreateBitmap())
+                using (var stream = new MemoryStream())
+                {
+                    bitmap.Save(stream, ImageFormat.Bmp);
+                    stream.Position = 0;
+                    _device?.SetKeyBitmap(element.Location.X + element.Location.Y * ButtonCount.Width, KeyBitmap.Create.FromStream(stream));
+                }
             }
         }
 

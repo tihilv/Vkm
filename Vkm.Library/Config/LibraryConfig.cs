@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Configurator;
 using Vkm.Api.Device;
@@ -15,6 +16,7 @@ using Vkm.Library.IdleTransition;
 using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;
+using Vkm.Library.Power;
 using Vkm.Library.Run;
 using Vkm.Library.Service.Weather;
 using Vkm.Library.StartupTransition;
@@ -41,6 +43,7 @@ namespace Vkm.Library.Config
             Identifier HeartbeatIdentifier = new Identifier("Vkm.DesktopDefaults.Heartbeat");
             Identifier DateIdentifier = new Identifier("Vkm.DesktopDefaults.Date");
             Identifier MediaIdentifier = new Identifier("Vkm.DesktopDefaults.Media");
+            Identifier PowerOffIdentifier = new Identifier("Vkm.DesktopDefaults.PowerOff");
             
             Identifier DefaultCompositeLayout = new Identifier("Vkm.DefaultCompositeLayout.Desktop");
             Identifier DefaultTimerLayout = new Identifier("Vkm.TimerLayout.Default");
@@ -83,27 +86,40 @@ namespace Vkm.Library.Config
                 Location = new Location(4, 0),
                 ModuleInfo = new ModuleInitializationInfo(VolumeElementFactory.Identifier, VolumeIdentifier)
             });
-            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
-            {
-                Location = new Location(3, 2),
-                ModuleInfo = new ModuleInitializationInfo(WeatherElementFactory.Identifier, WeatherIdentifier)
-            });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
-                Location = new Location(2, 2),
-                ModuleInfo = new ModuleInitializationInfo(MailElementFactory.Identifier, MailIdentifier)
-            });
-
-            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
-            {
-                Location = new Location(0, 2),
+                Location = new Location(0, 1),
                 ModuleInfo = new ModuleInitializationInfo(RunElementFactory.Identifier, CalcIdentifier)
             });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
+                Location = new Location(1, 1),
+                ModuleInfo = new ModuleInitializationInfo(MediaElementFactory.Identifier, MediaIdentifier)
+            });
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(2, 1),
+                ModuleInfo = new ModuleInitializationInfo(MailElementFactory.Identifier, MailIdentifier)
+            });
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(2, 2),
+                ModuleInfo = new ModuleInitializationInfo(WeatherElementFactory.Identifier, WeatherIdentifier)
+            });
+
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
                 Location = new Location(4, 2),
+                ModuleInfo = new ModuleInitializationInfo(PowerElementFactory.Identifier, PowerOffIdentifier)
+            });
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(3, 2),
                 ModuleInfo = new ModuleInitializationInfo(HeartbeatFactory.Identifier, HeartbeatIdentifier)
             });
 
@@ -111,12 +127,6 @@ namespace Vkm.Library.Config
             {
                 Location = new Location(3, 0),
                 ModuleInfo = new ModuleInitializationInfo(DateElementFactory.Identifier, DateIdentifier)
-            });
-
-            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
-            {
-                Location = new Location(1, 2),
-                ModuleInfo = new ModuleInitializationInfo(MediaElementFactory.Identifier, MediaIdentifier)
             });
 
             optionsService.SetDefaultOptions(DefaultCompositeLayout, desktopOptions);
@@ -161,6 +171,9 @@ namespace Vkm.Library.Config
 
             var clockOptions = new ClockElementOptions() {TimerLayoutIdentifier = DefaultTimerLayout};
             optionsService.SetDefaultOptions(ClockIdentifier, clockOptions);
+
+            var powerOffOptions = new PowerOptions() {PressToActionTimeout = TimeSpan.FromSeconds(1), Action = PowerAction.PowerOff};
+            optionsService.SetDefaultOptions(PowerOffIdentifier, powerOffOptions);
         }
 
     }

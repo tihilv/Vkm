@@ -12,7 +12,7 @@ namespace Vkm.Core
 {
     class DrawingEngine: IDisposable
     {
-        private readonly IDevice _device;
+        private IDevice _device;
         private readonly ThemeOptions _themeOptions;
 
         private readonly ConcurrentDictionary<Location, LayoutDrawElement> _imagesToDevice;
@@ -22,6 +22,9 @@ namespace Vkm.Core
         private VisualEffectProcessor _visualEffectProcessor;
 
         private int _counter;
+
+        private byte _brightness;
+        private byte _brightnessSet;
 
         public DrawingEngine(IDevice device, ThemeOptions themeOptions)
         {
@@ -90,6 +93,32 @@ namespace Vkm.Core
             _visualEffectProcessor.Draw(currentDrawElementsCache);
         }
 
+        public byte Brightness
+        {
+            get { return _brightness; }
+            set
+            {
+                _brightness = value;
+                if (_counter == 0)
+                    SetBrightnessIfNeeded();
+            }
+        }
+
+        void SetBrightnessIfNeeded()
+        {
+            if (_brightness != _brightnessSet)
+            {
+                _brightnessSet = _brightness;
+                _device.SetBrightness(_brightness);
+            }
+        }
+
+        public void Dispose()
+        {
+            DisposeHelper.DisposeAndNull(ref _visualEffectProcessor);
+            DisposeHelper.DisposeAndNull(ref _device);
+        }
+
         class Token : IDisposable
         {
             private readonly DrawingEngine _drawingEngine;
@@ -103,13 +132,11 @@ namespace Vkm.Core
             public void Dispose()
             {
                 if (Interlocked.Decrement(ref _drawingEngine._counter) == 0)
+                {
+                    _drawingEngine.SetBrightnessIfNeeded();
                     _drawingEngine.PerformDraw();
+                }
             }
-        }
-
-        public void Dispose()
-        {
-            DisposeHelper.DisposeAndNull(ref _visualEffectProcessor);
         }
     }
 }

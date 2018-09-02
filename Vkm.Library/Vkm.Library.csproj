@@ -55,10 +55,15 @@
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransition.cs" />
     <Compile Include="ApplicationChangeTransition\SimpleApplicationChangeTransitionFactory.cs" />
     <Compile Include="Buttons\ButtonElement.cs" />
+    <Compile Include="Common\BackElement.cs" />
     <Compile Include="Common\BtimapHelpers.cs" />
     <Compile Include="Media\MediaLayout.cs" />
     <Compile Include="Media\MediaElement.cs" />
     <Compile Include="Media\MediaElementFactory.cs" />
+    <Compile Include="Power\PowerElementFactory.cs" />
+    <Compile Include="Power\PowerElement.cs" />
+    <Compile Include="Power\PowerLayout.cs" />
+    <Compile Include="Power\PowerOptions.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
     <Compile Include="Service\Player\Gpmdp\GpmdpService.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\IBitmapDownloader.cs" />

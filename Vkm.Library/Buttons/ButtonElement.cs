@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -11,8 +12,12 @@ namespace Vkm.Library.Buttons
 {
     internal class ButtonElement: ElementBase
     {
-        private readonly string _text;
+        private string _text;
+        
         private readonly string _keys;
+        private readonly byte? _key;
+        
+        private readonly FontFamily _fontFamily;
         
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
@@ -25,33 +30,51 @@ namespace Vkm.Library.Buttons
             _keys = keys;
         }
 
+        public ButtonElement(string text, FontFamily fontFamily, byte key): base(new Identifier($"{text}.{key}"))
+        {
+            _text = text;
+            _key = key;
+
+            _fontFamily = fontFamily;
+        }
+        
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             base.EnterLayout(layoutContext, previousLayout);
 
-            DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
+            DrawKey();
         }
-
-        private BitmapEx DrawKey()
+        
+        private void DrawKey()
         {
             var bitmap = LayoutContext.CreateBitmap();
 
-            var fontFamily = GlobalContext.Options.Theme.FontFamily;
+            var fontFamily = _fontFamily??GlobalContext.Options.Theme.FontFamily;
 
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _text, "W", GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _text, GlobalContext.Options.Theme.ForegroundColor);
 
-            return bitmap;
+            DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
         public override bool ButtonPressed(Location location, bool isDown)
         {
             if (isDown && location.X == 0 && location.Y == 0)
             {
-                SendKeys.SendWait(_keys);
+                if (_key == null)
+                    SendKeys.SendWait(_keys);
+                else
+                    Win32.ButtonPress(_key.Value);
+                
                 return true;
             }
 
             return false;
+        }
+
+        public void ReplaceText(string text)
+        {
+            _text = text;
+            DrawKey();
         }
     }
 }

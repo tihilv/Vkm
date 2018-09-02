@@ -10,8 +10,22 @@ namespace Vkm.Library.Common
 {
     static class BitmapHelpers
     {
-        public static void ResizeBitmap(BitmapEx source, BitmapEx destination)
+        public static readonly ColorMatrix GrayColorMatrix = new ColorMatrix(
+            new[]
+            {
+                new float[] {.3f, .3f, .3f, 0, 0},
+                new float[] {.59f, .59f, .59f, 0, 0},
+                new float[] {.11f, .11f, .11f, 0, 0},
+                new float[] {0, 0, 0, 1, 0},
+                new float[] {0, 0, 0, 0, 1}
+            });
+
+        public static void ResizeBitmap(BitmapEx source, BitmapEx destination, ColorMatrix colorMatrix = null)
         {
+            //create the grayscale ColorMatrix
+            
+            
+            
             using (var graphics = destination.CreateGraphics())
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
@@ -23,6 +37,10 @@ namespace Vkm.Library.Common
                 using (var wrapMode = new ImageAttributes())
                 {
                     wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    
+                    if (colorMatrix != null)
+                        wrapMode.SetColorMatrix(colorMatrix);
+                    
                     var destRect = new Rectangle(0, 0, destination.Width, destination.Height);
                     graphics.DrawImage(source.GetInternal(), destRect, 0, 0, source.Width, source.Height, GraphicsUnit.Pixel, wrapMode);
                 }

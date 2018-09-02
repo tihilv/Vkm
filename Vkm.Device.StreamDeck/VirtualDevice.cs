@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
+using Vkm.Api.Layout;
 
 namespace Vkm.Device.StreamDeck
 {
@@ -42,10 +43,11 @@ namespace Vkm.Device.StreamDeck
 
         public DeviceSize ButtonCount => new DeviceSize(5, 3);
         
-        public void SetBitmap(Location location, BitmapRepresentation bitmapRepresentation)
+        public void SetBitmaps(IEnumerable<LayoutDrawElement> elements)
         {
-            using (var bitmap = bitmapRepresentation.CreateBitmap())
-                _virtualDeviceForm.SetImage(location, bitmap);
+            foreach (var element in elements)
+            using (var bitmap = element.BitmapRepresentation.CreateBitmap())
+                _virtualDeviceForm.SetImage(element.Location, bitmap);
         }
 
         public void SetBrightness(byte valuePercent)

@@ -55,7 +55,7 @@ namespace Vkm.Library.Timer
             _values[_currentIndex] = value;
 
             var bmp = LayoutContext.CreateBitmap();
-            DefaultDrawingAlgs.DrawText(bmp, GlobalContext.Options.Theme.FontFamily, value.ToString(), "8", GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bmp, GlobalContext.Options.Theme.FontFamily, value.ToString(), GlobalContext.Options.Theme.ForegroundColor);
             DrawInvoke(new[] {new LayoutDrawElement(new Location((byte) (3 + _currentIndex % 2), (byte) (_currentIndex / 2)), bmp)});
 
             _currentIndex++;
@@ -89,7 +89,7 @@ namespace Vkm.Library.Timer
 
                 var fontFamily = GlobalContext.Options.Theme.FontFamily;
 
-                DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _value.ToString(), "8", GlobalContext.Options.Theme.ForegroundColor);
+                DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _value.ToString(), GlobalContext.Options.Theme.ForegroundColor);
 
                 return bitmap;
             }

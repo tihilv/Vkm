@@ -15,8 +15,8 @@ namespace Vkm.Core
 {
     internal class VisualEffectProcessor: IDisposable
     {
-        private const float FPS = 20;
-        private const int DefaultDuration = 1;
+        private const float FPS = 25;
+        private const double DefaultDuration = 0.5;
 
         private readonly IDevice _device;
 
@@ -25,19 +25,23 @@ namespace Vkm.Core
 
         private readonly ConcurrentQueue<LayoutDrawElement> _scheduledTransitions;
 
-        private bool _disposed;
+        private readonly CancellationTokenSource _cts;
 
-        private Task _drawTask;
+        private readonly Task _drawTask;
+
+        private readonly object _disposeLock;
 
         public VisualEffectProcessor(IDevice device)
         {
             _device = device;
 
+            _disposeLock = new object();
+            _cts = new CancellationTokenSource();
             _transitionsAdded = new AutoResetEvent(false);
             _currentTransitions = new ConcurrentDictionary<Location, VisualEffectInfo>();
             _scheduledTransitions = new ConcurrentQueue<LayoutDrawElement>();
 
-            _drawTask = Task.Run(() => DrawCycle());
+            _drawTask = Task.Run(() => DrawCycle(_cts.Token), _cts.Token);
         }
 
         public void Draw(IEnumerable<LayoutDrawElement> drawElements)
@@ -68,7 +72,7 @@ namespace Vkm.Core
             return new InstantTransition();
         }
 
-        void DrawCycle()
+        void DrawCycle(CancellationToken ctsToken)
         {
             do
             {
@@ -77,15 +81,19 @@ namespace Vkm.Core
                 bool hasTransitions;
                 do
                 {
-                    hasTransitions = PerformDraw();
+                    lock (_disposeLock)
+                        hasTransitions = PerformDraw();
+
+                    Thread.Sleep((int) (1000 / FPS));
 
                 } while (hasTransitions);
 
-            } while (!_disposed);
+            } while (!ctsToken.IsCancellationRequested);
         }
 
         readonly List<LayoutDrawElement> _currentDrawElementsCache = new List<LayoutDrawElement>();
 
+        
         bool PerformDraw()
         {
             while (_scheduledTransitions.TryDequeue(out var drawElement))
@@ -110,7 +118,7 @@ namespace Vkm.Core
                         else
                         {
                             var transition = GetTransition(drawElement);
-                            var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition.Current.Clone(), drawElement.BitmapRepresentation, steps);
+                            var result = new VisualEffectInfo(drawElement.Location, transition, info.Transition?.Current.Clone(), drawElement.BitmapRepresentation, steps);
                             info.Dispose();
                             return result;
                         }
@@ -127,23 +135,25 @@ namespace Vkm.Core
                 _currentDrawElementsCache.Add(new LayoutDrawElement(effectInfo.Location, effectInfo.Transition.Current));
             }
 
-            foreach (var currentElement in _currentDrawElementsCache)
-                _device.SetBitmap(currentElement.Location, currentElement.BitmapRepresentation);
-
-            Thread.Sleep((int) (1000 / FPS));
+            _device.SetBitmaps(_currentDrawElementsCache);
 
             return _currentDrawElementsCache.Any();
         }
 
         public void Dispose()
         {
-            _disposed = true;
-            DisposeHelper.DisposeAndNull(ref _drawTask);
+            _cts.Cancel();
 
-            foreach (var effectInfo in _currentTransitions.Values)
-                effectInfo.Dispose();
+            lock (_disposeLock)
+            {
+                while (_scheduledTransitions.TryDequeue(out var layoutDrawElement))
+                    layoutDrawElement.BitmapRepresentation.Dispose();
 
-            _currentTransitions.Clear();
+                foreach (var effectInfo in _currentTransitions.Values)
+                    effectInfo.Dispose();
+
+                _currentTransitions.Clear();
+            }
         }
     }
 }

@@ -36,13 +36,13 @@ namespace Vkm.Library.Timer
                 _countdownElements[i] = GlobalContext.InitializeEntity(new CountdownElement(new Identifier($"Vkm.Countdown.N{i}")));
                 _stopwatchElements[i] = GlobalContext.InitializeEntity(new StopwatchElement(new Identifier($"Vkm.Stopwatch.N{i}")));
             }
+
+            AddElement(new Location(4, 2), GlobalContext.InitializeEntity(new BackElement()));
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             base.EnterLayout(layoutContext, previousLayout);
-
-            DrawCommon();
 
             if (_currentPage == -1)
                 ReplaceTimers(0);
@@ -56,7 +56,7 @@ namespace Vkm.Library.Timer
             var countdownLocation = new Location(0, 0);
             var timerLocation = new Location(0, 1);
 
-            if (Elements.Any())
+            if (Elements.Count() > 1)
             {
                 RemoveElement(countdownLocation);
                 RemoveElement(timerLocation);
@@ -90,14 +90,6 @@ namespace Vkm.Library.Timer
             }
 
             DrawInvoke(result);
-        }
-
-        private void DrawCommon()
-        {
-            var bmp = LayoutContext.CreateBitmap();
-            DefaultDrawingAlgs.DrawText(bmp, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_arrow_left, FontAwesomeRes.fa_arrow_left, GlobalContext.Options.Theme.ForegroundColor);
-
-            DrawInvoke(new[] { new LayoutDrawElement(new Location(4, 2), bmp)});
         }
 
         public override void ButtonPressed(Location location, bool isDown)

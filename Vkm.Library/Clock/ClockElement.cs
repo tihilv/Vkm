@@ -89,7 +89,7 @@ namespace Vkm.Library.Clock
             var fontFamily = GlobalContext.Options.Theme.FontFamily;
 
             var str = number.ToString("00");
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, "88", GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
@@ -10,8 +10,7 @@ namespace Vkm.Core
 {
     public class DeviceManager: IDisposable
     {
-        private IDevice _device;
-        private readonly DrawingEngine _drawingEngine;
+        private DrawingEngine _drawingEngine;
 
         private readonly GlobalContext _globalContext;
         private readonly LayoutContext _layoutContext;
@@ -23,15 +22,14 @@ namespace Vkm.Core
         public DeviceManager(GlobalContext globalContext, IDevice device)
         {
             _globalContext = globalContext;
-            _device = device;
-
+            
             _layouts = new Stack<ILayout>();
 
-            _device.ButtonEvent += DeviceOnKeyEvent;
+            device.ButtonEvent += DeviceOnKeyEvent;
 
-            _device.Init();
+            device.Init();
             _drawingEngine = new DrawingEngine(device, _globalContext.Options.Theme);
-            _layoutContext = new LayoutContext(_device, globalContext, SetLayout, SetPreviousLayout, () => _drawingEngine.PauseDrawing());
+            _layoutContext = new LayoutContext(device, globalContext, SetLayout, SetPreviousLayout, () => _drawingEngine.PauseDrawing());
 
         }
 
@@ -76,7 +74,7 @@ namespace Vkm.Core
                     if (_layout != null)
                     {
                         _layout.DrawLayout += LayoutOnDrawLayout;
-                        _device.SetBrightness(_layout.PreferredBrightness ?? _globalContext.Options.Brightness);
+                        _drawingEngine.Brightness = _layout.PreferredBrightness ?? _globalContext.Options.Brightness;
 
                         _layout.EnterLayout(_layoutContext, oldLayout);
                     }
@@ -92,10 +90,31 @@ namespace Vkm.Core
                     _drawingEngine.DrawBitmap(element);
         }
 
+        private IDisposable _drawingPause;
+        private byte _prevBrightness;
+        public void Pause()
+        {
+            Debug.Assert(_drawingPause == null);
+
+            _prevBrightness = _drawingEngine.Brightness;
+            _drawingEngine.Brightness = 0;
+            
+            _drawingPause = _drawingEngine.PauseDrawing();
+        }
+
+        public void Resume()
+        {
+            Debug.Assert(_drawingPause != null);
+            
+            DisposeHelper.DisposeAndNull(ref _drawingPause);
+            _drawingEngine.Brightness = _prevBrightness;
+        }
+
         public void Dispose()
         {
+            _drawingEngine.Brightness = 0;
             SetLayout(null);
-            DisposeHelper.DisposeAndNull(ref _device);
+            DisposeHelper.DisposeAndNull(ref _drawingEngine);
         }
     }
 }

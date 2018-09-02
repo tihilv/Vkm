@@ -87,6 +87,10 @@ namespace Vkm.Library.Service.Player.Gpmdp
                 DisposeHelper.DisposeAndNull(ref _lastBitmapRepresentation);
 
                 _lastBitmapUrl = url;
+
+                if (url == null)
+                    return null;
+
                 using (var client = new HttpClient())
             
                 using (var stream = client.GetStreamAsync(url))

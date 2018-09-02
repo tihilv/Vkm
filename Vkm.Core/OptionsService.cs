@@ -26,7 +26,11 @@ namespace Vkm.Core
         {
             foreach (var configurator in configurators)
                 configurator.Configure(this);
-            
+
+            var directoryPath = Path.GetDirectoryName(_filename);
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
             var readOptions = ReadOptions(_filename);
 
             foreach (var readOption in readOptions)

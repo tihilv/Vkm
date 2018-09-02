@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -54,12 +51,14 @@ namespace Vkm.Library.Media
         }
 
         private BitmapRepresentation _previousRepresentation;
+        private bool _prevPlaying;
 
         private void PerformDraw(PlayingInfo playingInfo)
         {
-            if (_previousRepresentation != playingInfo?.BitmapRepresentation)
+            if (_previousRepresentation != playingInfo?.BitmapRepresentation || _prevPlaying != playingInfo?.IsPlaying)
             {
                 _previousRepresentation = playingInfo?.BitmapRepresentation;
+                _prevPlaying = playingInfo?.IsPlaying ?? false;
                 
                 var bitmap = LayoutContext.CreateBitmap();
 
@@ -67,7 +66,7 @@ namespace Vkm.Library.Media
                 {
                     using (var coverBitmap = playingInfo.BitmapRepresentation.CreateBitmap())
                     {
-                        BitmapHelpers.ResizeBitmap(coverBitmap, bitmap);
+                        BitmapHelpers.ResizeBitmap(coverBitmap, bitmap, _prevPlaying ? null : BitmapHelpers.GrayColorMatrix);
                     }
                 }
 
@@ -80,6 +79,8 @@ namespace Vkm.Library.Media
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged -= PlayerServiceOnPlayingInfoChanged;
 
+            _previousRepresentation = null;
+            
             base.LeaveLayout();
         }
 
@@ -87,7 +88,7 @@ namespace Vkm.Library.Media
         {
             if (isDown)
             {
-                var mediaLayout = new MediaLayout();
+                var mediaLayout = new MediaLayout(new Identifier(Id.Value + ".Layout"));
                 GlobalContext.InitializeEntity(mediaLayout);
 
                 LayoutContext.SetLayout(mediaLayout);

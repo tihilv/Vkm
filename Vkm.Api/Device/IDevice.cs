@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
+using Vkm.Api.Layout;
 
 namespace Vkm.Api.Device
 {
@@ -10,7 +12,7 @@ namespace Vkm.Api.Device
         IconSize IconSize { get; }
         DeviceSize ButtonCount { get; }
 
-        void SetBitmap(Location location, BitmapRepresentation bitmapRepresentation);
+        void SetBitmaps(IEnumerable<LayoutDrawElement> elements);
         void SetBrightness(byte valuePercent);
 
         event EventHandler<ButtonEventArgs> ButtonEvent;

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Vkm.Api.Basic;
 
 namespace Vkm.Library.Common
@@ -39,18 +40,38 @@ namespace Vkm.Library.Common
             }
         }
 
-        internal static void DrawText(BitmapEx bitmap, FontFamily fontFamily, string text, string textExample, Color color)
+        internal static void DrawText(BitmapEx bitmap, FontFamily fontFamily, string text, Color color)
         {            
-            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, textExample);
+            var height = FontEstimation.EstimateFontSize(bitmap, fontFamily, text);
 
             using (var graphics = bitmap.CreateGraphics())
             using (var whiteBrush = new SolidBrush(color))
             using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
             {
                 var size = graphics.MeasureString(text, font);
-                graphics.DrawString(text, font, whiteBrush, (bitmap.Width - size.Width)/2, (bitmap.Height - size.Height)/2);
+                if (size.Width / size.Height > 10)
+                    DrawText(bitmap, fontFamily, SplitText(text), color);
+                else
+                    graphics.DrawString(text, font, whiteBrush, (bitmap.Width - size.Width) / 2, (bitmap.Height - size.Height) / 2);
             }
 
+        }
+
+        private static string SplitText(string text)
+        {
+            int pos = 0;
+            for (int i = 0; i < Math.Min(text.Length, text.Length-pos); i++)
+            {
+                if (text[i] == ' ')
+                    pos = i;
+            }
+
+            if (pos > 0)
+            {
+                text = text.Substring(0, pos - 1) + "\n" + text.Substring(pos + 1);
+            }
+
+            return text;
         }
     }
 }

@@ -58,10 +58,10 @@ namespace Vkm.Library.Timer
         private void DrawCommon()
         {
             var bmp1 = LayoutContext.CreateBitmap();
-            DefaultDrawingAlgs.DrawText(bmp1, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_undo, FontAwesomeRes.fa_undo, GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bmp1, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_undo, GlobalContext.Options.Theme.ForegroundColor);
          
             var bmp2 = LayoutContext.CreateBitmap();
-            DefaultDrawingAlgs.DrawText(bmp2, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_hand_grab_o, FontAwesomeRes.fa_hand_grab_o, GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bmp2, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_hand_grab_o, GlobalContext.Options.Theme.ForegroundColor);
 
             DrawInvoke(new[] {new LayoutDrawElement(new Location(3, 0), bmp1), new LayoutDrawElement(new Location(4, 0), bmp2)});
         }
@@ -103,7 +103,7 @@ namespace Vkm.Library.Timer
             var fontFamily = GlobalContext.Options.Theme.FontFamily;
 
             var str = number.ToString("00");
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, "88", GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

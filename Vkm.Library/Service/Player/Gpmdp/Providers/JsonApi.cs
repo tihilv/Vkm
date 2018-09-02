@@ -18,12 +18,9 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
         private readonly string _jsonApiDirectory;
         private readonly string _playbackFilePath;
         
-        private DateTime _lastUpdate;
-
         internal JsonApi(IBitmapDownloader bitmapDownloader)
         {
             _bitmapDownloader = bitmapDownloader;
-            _lastUpdate = DateTime.UtcNow;
             _jsonApiDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), JsonSubdirectory);
             _playbackFilePath = Path.Combine(_jsonApiDirectory, JsonApiFile);
         }
@@ -81,21 +78,12 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
             if (!string.IsNullOrEmpty(contents))
                 _prevRootObject = JObject.Parse(contents).ToObject<RootObject>();
 
-            if (contents != string.Empty)
-                return await _prevRootObject.ToPlayingInfo(_bitmapDownloader);
-            
-            return null;
+            return await _prevRootObject.ToPlayingInfo(_bitmapDownloader);
         }
 
         private PlayingInfo _prevInfo;
         private async void OnChanged(object source, FileSystemEventArgs e)
         {
-            // Rate limit events
-            if ((DateTime.UtcNow - _lastUpdate).TotalSeconds <= 2)
-                return;
-
-            _lastUpdate = DateTime.UtcNow;
-
             PlayingInfo currentInfo = await GetCurrent();
             if (!Object.Equals(currentInfo, _prevInfo))
             {

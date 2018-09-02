@@ -9,7 +9,7 @@ namespace Vkm.Library.IdleTransition
 {
     internal class SimpleIdleTransition: TransitionBase<IdleTransitionOptions>
     {
-        private bool _transfered;
+        private bool _transferred;
 
         public SimpleIdleTransition(Identifier id) : base(id)
         {
@@ -23,13 +23,6 @@ namespace Vkm.Library.IdleTransition
         public override void Init()
         {
             RegisterTimer(new TimeSpan(0,0,0,5), TimerOnElapsed);
-            WorkstationLockService.Instance.LockChanged += InstanceOnLockChanged;
-        }
-
-        private void InstanceOnLockChanged(object sender, LockEventArgs e)
-        {
-            if (e.Locked)
-                DoIdleTransfer();
         }
 
         private void TimerOnElapsed()
@@ -44,9 +37,9 @@ namespace Vkm.Library.IdleTransition
                     DoIdleTransfer();
                 else
                 {
-                    if (_transfered && !WorkstationLockService.Instance.Locked)
+                    if (_transferred && !WorkstationLockService.Instance.Locked)
                     {
-                        _transfered = false;
+                        _transferred = false;
                         OnTransitionBack();
                     }
                 }
@@ -55,9 +48,9 @@ namespace Vkm.Library.IdleTransition
 
         private void DoIdleTransfer()
         {
-            if (!_transfered)
+            if (!_transferred)
             {
-                _transfered = true;
+                _transferred = true;
                 OnTransition();
             }
         }

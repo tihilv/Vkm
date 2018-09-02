@@ -45,7 +45,7 @@ namespace Vkm.Library.Run
 
             var fontFamily = FontService.Instance.AwesomeFontFamily;
 
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Symbol, _options.Symbol, GlobalContext.Options.Theme.ForegroundColor);
+            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Symbol, GlobalContext.Options.Theme.ForegroundColor);
 
             return bitmap;
         }

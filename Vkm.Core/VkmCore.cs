@@ -27,6 +27,7 @@ namespace Vkm.Core
         public VkmCore()
         {
             var assemblyLocation = Path.GetDirectoryName(typeof(VkmCore).Assembly.Location);
+            var settingsLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Vkm");
 
             var moduleService = new ModulesService(assemblyLocation);
             IDevice[] devices = moduleService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
@@ -34,7 +35,7 @@ namespace Vkm.Core
             foreach (IConfigurator configurator in configurators)
                 configurator.Devices = devices;
 
-            var optionsService = new OptionsService(Path.Combine(assemblyLocation, "options.store"));
+            var optionsService = new OptionsService(Path.Combine(settingsLocation, "options.store"));
             optionsService.InitOptions(configurators);
             optionsService.InitEntity(this);
 
@@ -121,6 +122,18 @@ namespace Vkm.Core
                 deviceManager.Dispose();
 
             _deviceManagers.Clear();
+        }
+
+        public void Pause()
+        {
+            foreach (var deviceManager in _deviceManagers.Values)
+                deviceManager.Pause();
+        }
+
+        public void Resume()
+        {
+            foreach (var deviceManager in _deviceManagers.Values)
+                deviceManager.Resume();
         }
     }
 }
