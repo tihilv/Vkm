@@ -1,8 +1,5 @@
 using System;
-using System.Drawing;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Vkm.Api.Basic;
 using Vkm.Library.Interfaces.Service.Player;
 using Vkm.Library.Service.Player.Gpmdp.Providers;
 
