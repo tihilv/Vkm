@@ -6,6 +6,7 @@ using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
+using Vkm.Api.Win32;
 using Vkm.Library.Common;
 
 namespace Vkm.Library.Power

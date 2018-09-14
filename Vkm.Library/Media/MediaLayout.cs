@@ -8,6 +8,7 @@ using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Win32;
 using Vkm.Library.Buttons;
 using Vkm.Library.Common;
 using Vkm.Library.Interfaces.Service.Player;

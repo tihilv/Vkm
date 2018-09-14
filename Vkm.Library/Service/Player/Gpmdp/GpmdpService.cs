@@ -9,7 +9,6 @@ using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Library.Interfaces.Service.Player;
 using Vkm.Library.Service.Player.Gpmdp.Providers;
-using Vkm.Library.Service.Player.Gpmdp.Providers.Websocket;
 
 namespace Vkm.Library.Service.Player.Gpmdp
 {

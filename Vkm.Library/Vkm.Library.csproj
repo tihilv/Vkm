@@ -68,6 +68,7 @@
     <Compile Include="Power\PowerLayout.cs" />
     <Compile Include="Power\PowerOptions.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\Mail\OutlookService.cs" />
     <Compile Include="Service\Player\Gpmdp\GpmdpService.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\IBitmapDownloader.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\IGpmdpProvider.cs" />

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Vkm.Api.Basic;
+using Vkm.Api.Win32;
 using Vkm.Core;
 using Vkm.Manager.Properties;
 
@@ -16,6 +18,13 @@ namespace Vkm.Manager
         public VkmApplicationContext ()
         {
             _trayIcon = InitTrayIcon();
+
+            using (WindowsSession session = new WindowsSession())
+                while (session.IsLocked())
+                {
+                    Thread.Sleep(5000);
+                }
+
 
             _coreContext = new VkmCore();
             

@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Outlook;
-using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Library.Common;
-using Exception = System.Exception;
+using Vkm.Library.Interfaces.Service.Mail;
 using Location = Vkm.Api.Basic.Location;
 
 
@@ -20,9 +14,9 @@ namespace Vkm.Library.Mail
 {
     class MailElement: ElementBase
     {
-        private Application _application;
-        private Items _items;
+        
 
+        private IMailService[] _mailServices;
 
         private int? _cachedCount=-1;
 
@@ -37,41 +31,29 @@ namespace Vkm.Library.Mail
             base.Init();
 
             RegisterTimer(new TimeSpan(0,0,0,5), ProcessDraw);
+
+            _mailServices = GlobalContext.GetServices<IMailService>().ToArray();
         }
 
-        void ConnectToOutlook()
-        {
-            _application = new Application();
-            var outlookNameSpace = _application.GetNamespace("MAPI");
-            var inbox = outlookNameSpace.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            _items = inbox.Items.Restrict("[Unread] = true");
-        }
 
-        Process GetOutlookProc()
-        {
-            return Process.GetProcessesByName("OUTLOOK").FirstOrDefault();
-        }
-
-        bool IsOutlookRunning()
-        {
-            return GetOutlookProc() != null;
-        }
 
         int? GetUnreadMessages()
         {
-            try
-            {
-                if (_application == null && IsOutlookRunning())
-                    ConnectToOutlook();
+            int? result = null;
 
-                return _items?.Count;
-            }
-            catch (Exception)
+            foreach (var service in _mailServices)
             {
-                _application = null;
-                _items = null;
-                return null;
+                var r = service.GetUnreadMessageCount();
+                if (r != null)
+                {
+                    if (result == null)
+                        result = r;
+                    else
+                        result += r;
+                }
             }
+
+            return result;
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -130,15 +112,11 @@ namespace Vkm.Library.Mail
         {
             if (isDown)
             {
-                var proc = GetOutlookProc();
-                if (proc == null)
+                foreach (var service in _mailServices)
                 {
-                    Process.Start("outlook.exe");
+                    service.Activate();
                 }
-                else
-                {
-                    Win32.SwitchToThisWindow(proc.MainWindowHandle, true);
-                }
+                
                 return true;
             }
             return base.ButtonPressed(location, isDown);

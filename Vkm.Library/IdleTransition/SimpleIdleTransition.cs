@@ -4,6 +4,7 @@ using Vkm.Api;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
 using Vkm.Api.Transition;
+using Vkm.Api.Win32;
 
 namespace Vkm.Library.IdleTransition
 {

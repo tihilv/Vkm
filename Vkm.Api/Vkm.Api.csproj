@@ -88,7 +88,8 @@
     <Compile Include="Transition\TransitionInfo.cs" />
     <Compile Include="Transition\TransitionOptions.cs" />
     <Compile Include="VisualEffect\IVisualTransition.cs" />
-    <Compile Include="Win32.cs" />
+    <Compile Include="Win32\Win32.cs" />
+    <Compile Include="Win32\WindowsSession.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Vkm.Api;
 using Vkm.Api.Identification;
+using Vkm.Api.Win32;
 using Vkm.Library.Interfaces.Services;
 
 namespace Vkm.Library.Service

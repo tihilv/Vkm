@@ -10,6 +10,7 @@ using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Win32;
 
 namespace Vkm.Library.Heartbeat
 {
