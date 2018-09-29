@@ -69,13 +69,14 @@
     <Compile Include="Power\PowerOptions.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
     <Compile Include="Service\Mail\OutlookService.cs" />
+    <Compile Include="Service\Player\AmipPlayerService.cs" />
     <Compile Include="Service\Player\Gpmdp\GpmdpService.cs" />
-    <Compile Include="Service\Player\Gpmdp\Providers\IBitmapDownloader.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\IGpmdpProvider.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\JsonApi.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\Websocket\WebsocketApi.cs" />
     <Compile Include="Service\Player\Gpmdp\Providers\Websocket\WebsocketChannels.cs" />
     <Compile Include="Service\Player\Gpmdp\Song.cs" />
+    <Compile Include="Service\Player\LastFmAlbumCoverService.cs" />
     <Compile Include="Service\Weather\OpenWeatherOptions.cs" />
     <Compile Include="Timer\CountdownElement.cs" />
     <Compile Include="Timer\InputTimeLayout.cs" />

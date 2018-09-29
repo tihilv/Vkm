@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Net.NetworkInformation;
-using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
@@ -30,7 +27,7 @@ namespace Vkm.Library.Media
             base.Init();
             _playerServices = GlobalContext.GetServices<IPlayerService>().ToArray();
             
-            _playPauseButton = GlobalContext.InitializeEntity(new ButtonElement("", FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_PLAY_PAUSE));
+            _playPauseButton = GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_play, FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_PLAY_PAUSE));
             
             AddElement(new Location(1, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_backward, FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_PREV_TRACK)));
             AddElement(new Location(2, 2), _playPauseButton);
@@ -64,9 +61,24 @@ namespace Vkm.Library.Media
 
         async void DrawNow()
         {
-            var playingNow = _playerServices.Select(async s => await s.GetCurrent()).FirstOrDefault(c => c != null);
-            if (playingNow != null)
-                PerformDraw(await playingNow);
+            bool drawn = false;
+            foreach (var playingNowTask in _playerServices.Select(async s => await s.GetCurrent()))
+            {
+                if (playingNowTask != null)
+                {
+                    var playingNow = await playingNowTask;
+                    if (playingNow != null)
+                    {
+                        if (!drawn)
+                        {
+                            PerformDraw(playingNow);
+                            drawn = true;
+                        }
+
+                        playingNow.Dispose();
+                    }
+                }
+            }
         }
 
         private BitmapRepresentation _previousRepresentation;

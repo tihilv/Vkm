@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Service\CachedBitmapDownloadService.cs" />
+    <Compile Include="Service\IBitmapDownloadService.cs" />
     <Compile Include="Service\ICurrentProcessService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Mail\IMailService.cs" />
+    <Compile Include="Service\Player\IAlbumCoverService.cs" />
     <Compile Include="Service\Player\IPlayerService.cs" />
     <Compile Include="Service\Player\PlayingEventArgs.cs" />
     <Compile Include="Service\Player\PlayingInfo.cs" />

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Vkm.Library.Interfaces.Service.Player;
+using Vkm.Library.Interfaces.Services;
 
 namespace Vkm.Library.Service.Player.Gpmdp.Providers
 {
@@ -15,17 +16,17 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
         private const string JsonSubdirectory = @"Google Play Music Desktop Player\json_store";
         private const string JsonApiFile = "playback.json";
         
-        private readonly IBitmapDownloader _bitmapDownloader;
+        private readonly IBitmapDownloadService _bitmapDownloadService;
 
         private readonly string _jsonApiDirectory;
         private readonly string _playbackFilePath;
 
         private Task _updateTask;
-        private AutoResetEvent _updateSync;
+        private readonly AutoResetEvent _updateSync;
         
-        internal JsonApi(IBitmapDownloader bitmapDownloader)
+        internal JsonApi(IBitmapDownloadService bitmapDownloadService)
         {
-            _bitmapDownloader = bitmapDownloader;
+            _bitmapDownloadService = bitmapDownloadService;
             _jsonApiDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), JsonSubdirectory);
             _playbackFilePath = Path.Combine(_jsonApiDirectory, JsonApiFile);
             
@@ -107,11 +108,11 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
             if (_prevRootObject == null)
                 return await Task.FromResult<PlayingInfo>(null);
 
-            return await _prevRootObject.ToPlayingInfo(_bitmapDownloader);
+            return await _prevRootObject.ToPlayingInfo(_bitmapDownloadService);
         }
 
         private PlayingInfo _prevInfo;
-        private async void OnChanged(object source, FileSystemEventArgs e)
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
             _updateSync.Set();
         }
@@ -120,14 +121,12 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
         {
             while (true)
             {
-                PlayingInfo currentInfo = await GetCurrent();
+                using (PlayingInfo currentInfo = await GetCurrent())
                 if (!Object.Equals(currentInfo, _prevInfo))
                 {
                     _prevInfo = currentInfo;
                     PlayingInfoChanged?.Invoke(this, new PlayingEventArgs(currentInfo));
                 }
-
-                Console.WriteLine($"A {DateTime.Now}");
 
                 await Task.Delay(UpdateTimeoutMs);
 

@@ -3,7 +3,7 @@ using Vkm.Api.Basic;
 
 namespace Vkm.Library.Interfaces.Service.Player
 {
-    public class PlayingInfo
+    public class PlayingInfo: IDisposable
     {
         public string Title { get; private set; }
         public string Artist { get; set; }
@@ -50,6 +50,11 @@ namespace Vkm.Library.Interfaces.Service.Player
                 hashCode = (hashCode * 397) ^ CurrentPosition.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public void Dispose()
+        {
+            BitmapRepresentation?.Dispose();
         }
     }
 }

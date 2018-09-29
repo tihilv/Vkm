@@ -8,12 +8,14 @@ using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Library.Interfaces.Service.Player;
+using Vkm.Library.Interfaces.Services;
 using Vkm.Library.Service.Player.Gpmdp.Providers;
 
 namespace Vkm.Library.Service.Player.Gpmdp
 {
-    public class GpmdpService : IPlayerService, IInitializable, IBitmapDownloader
+    public class GpmdpService : IPlayerService, IInitializable
     {
+        private IBitmapDownloadService _bitmapDownloadService;
         private IGpmdpProvider _provider;
 
         public Identifier Id => new Identifier("Vkm.GpmdpService");
@@ -23,7 +25,7 @@ namespace Vkm.Library.Service.Player.Gpmdp
 
         public void InitContext(GlobalContext context)
         {
-            
+            _bitmapDownloadService = context.GetServices<IBitmapDownloadService>().FirstOrDefault();
         }
 
         public void Init()
@@ -32,7 +34,7 @@ namespace Vkm.Library.Service.Player.Gpmdp
             {
                 new ProviderEntry()
                 {
-                    Provider = new JsonApi(this),
+                    Provider = new JsonApi(_bitmapDownloadService),
                     Weight = 10
                 },
                 //new ProviderEntry()
@@ -76,29 +78,5 @@ namespace Vkm.Library.Service.Player.Gpmdp
             public IGpmdpProvider Provider;
             public int Weight;
         };
-
-        private string _lastBitmapUrl;
-        private BitmapRepresentation _lastBitmapRepresentation;
-        public async Task<BitmapRepresentation> DownloadBitmap(string url)
-        {
-            if (_lastBitmapUrl != url)
-            {
-                DisposeHelper.DisposeAndNull(ref _lastBitmapRepresentation);
-
-                _lastBitmapUrl = url;
-
-                if (url == null)
-                    return null;
-
-                using (var client = new HttpClient())
-            
-                using (var stream = client.GetStreamAsync(url))
-                using (var bitmap = (Bitmap) Bitmap.FromStream(await stream))
-
-                    _lastBitmapRepresentation = new BitmapRepresentation(bitmap);
-            }
-
-            return _lastBitmapRepresentation;
-        }
     }
 }

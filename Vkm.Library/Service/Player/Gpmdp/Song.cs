@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Vkm.Library.Interfaces.Service.Player;
-using Vkm.Library.Service.Player.Gpmdp.Providers;
+using Vkm.Library.Interfaces.Services;
 
 namespace Vkm.Library.Service.Player.Gpmdp
 {
@@ -36,9 +36,9 @@ namespace Vkm.Library.Service.Player.Gpmdp
         public string repeat { get; set; }
         public int volume { get; set; }
 
-        internal async Task<PlayingInfo> ToPlayingInfo(IBitmapDownloader bitmapDownloader)
+        internal async Task<PlayingInfo> ToPlayingInfo(IBitmapDownloadService bitmapDownloader)
         {
-                return new PlayingInfo(Song.Title, Song.Artist, Song.Album, await bitmapDownloader.DownloadBitmap(Song.AlbumArt), Playing, TimeSpan.FromSeconds(Time.Total), TimeSpan.FromSeconds(Time.Current));
+            return new PlayingInfo(Song.Title, Song.Artist, Song.Album, await bitmapDownloader.GetBitmap(Song.AlbumArt), Playing, TimeSpan.FromSeconds(Time.Total), TimeSpan.FromSeconds(Time.Current));
         }
     }
 }

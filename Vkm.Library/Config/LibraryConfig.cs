@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Configurator;
@@ -19,6 +20,7 @@ using Vkm.Library.Media;
 using Vkm.Library.Numpad;
 using Vkm.Library.Power;
 using Vkm.Library.Run;
+using Vkm.Library.Service.Player;
 using Vkm.Library.Service.Weather;
 using Vkm.Library.StartupTransition;
 using Vkm.Library.Timer;
@@ -191,6 +193,12 @@ namespace Vkm.Library.Config
             audioSelectOptions.Names.Add("{0.0.0.00000000}.{5325d718-fd5e-479b-907c-a4873af76102}", "Камера");
             audioSelectOptions.Names.Add("{0.0.0.00000000}.{ba74e64f-2267-4701-ab2e-2cc8685c124d}", "Колонки");
             optionsService.SetDefaultOptions(AudioSelectIdentifier, audioSelectOptions);
+            
+            var lastFmOptions = new LastFmOptions() {Domain = "http://ws.audioscrobbler.com", ApiKey = "d1a52a26a6f62158fbd86090441f81fb"};
+            optionsService.SetDefaultOptions(LastFmAlbumCoverService.Identifier, lastFmOptions);
+
+            var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};
+            optionsService.SetDefaultOptions(AmipPlayerService.Identifier, amipOptions);
         }
 
     }

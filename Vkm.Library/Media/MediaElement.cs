@@ -40,9 +40,24 @@ namespace Vkm.Library.Media
 
         async void DrawNow()
         {
-            var playingNow = _playerServices.Select(async s => await s.GetCurrent()).FirstOrDefault(c => c != null);
-            if (playingNow != null)
-                PerformDraw(await playingNow);
+            bool drawn = false;
+            foreach (var playingNowTask in _playerServices.Select(async s => await s.GetCurrent()))
+            {
+                if (playingNowTask != null)
+                {
+                    var playingNow = await playingNowTask;
+                    if (playingNow != null)
+                    {
+                        if (!drawn)
+                        {
+                            PerformDraw(playingNow);
+                            drawn = true;
+                        }
+
+                        playingNow.Dispose();
+                    }
+                }
+            }
         }
 
         private void PlayerServiceOnPlayingInfoChanged(object sender, PlayingEventArgs e)
