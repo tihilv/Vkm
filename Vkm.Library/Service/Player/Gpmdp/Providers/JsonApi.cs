@@ -121,16 +121,23 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
         {
             while (true)
             {
-                using (PlayingInfo currentInfo = await GetCurrent())
-                if (!Object.Equals(currentInfo, _prevInfo))
+                try
                 {
-                    _prevInfo = currentInfo;
-                    PlayingInfoChanged?.Invoke(this, new PlayingEventArgs(currentInfo));
+                    using (PlayingInfo currentInfo = await GetCurrent())
+                        if (!Object.Equals(currentInfo, _prevInfo))
+                        {
+                            _prevInfo = currentInfo;
+                            PlayingInfoChanged?.Invoke(this, new PlayingEventArgs(currentInfo));
+                        }
+
+                    await Task.Delay(UpdateTimeoutMs);
+
+                    _updateSync.WaitOne();
                 }
-
-                await Task.Delay(UpdateTimeoutMs);
-
-                _updateSync.WaitOne();
+                catch
+                {
+                    // doesn't matter if we got an exception here.
+                }
             }
 
         }

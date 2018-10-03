@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
@@ -13,8 +15,12 @@ namespace Vkm.Library.Media
 {
     internal class MediaElement: ElementBase
     {
+        private static readonly BitmapRepresentation DefaultBitmapRepresentation = new BitmapRepresentation(new Bitmap(1,1));
+        
         private IPlayerService[] _playerServices;
-
+        private BitmapRepresentation _previousRepresentation = DefaultBitmapRepresentation;
+        private bool _prevPlaying;
+        
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
         public MediaElement(Identifier id) : base(id)
@@ -58,15 +64,14 @@ namespace Vkm.Library.Media
                     }
                 }
             }
+            if (!drawn)
+                PerformDraw(null);
         }
 
         private void PlayerServiceOnPlayingInfoChanged(object sender, PlayingEventArgs e)
         {
             PerformDraw(e.PlayingInfo);
         }
-
-        private BitmapRepresentation _previousRepresentation;
-        private bool _prevPlaying;
 
         private void PerformDraw(PlayingInfo playingInfo)
         {
@@ -84,6 +89,10 @@ namespace Vkm.Library.Media
                         BitmapHelpers.ResizeBitmap(coverBitmap, bitmap, _prevPlaying ? null : BitmapHelpers.GrayColorMatrix);
                     }
                 }
+                else
+                {
+                    DefaultDrawingAlgs.DrawText(bitmap, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_headphones, LayoutContext.Options.Theme.ForegroundColor);
+                }
 
                 DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap, new TransitionInfo(TransitionType.ElementUpdate, TimeSpan.FromSeconds(1)))});
             }
@@ -94,7 +103,7 @@ namespace Vkm.Library.Media
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged -= PlayerServiceOnPlayingInfoChanged;
 
-            _previousRepresentation = null;
+            _previousRepresentation = DefaultBitmapRepresentation;
             
             base.LeaveLayout();
         }

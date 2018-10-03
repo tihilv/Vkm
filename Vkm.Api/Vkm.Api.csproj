@@ -48,6 +48,7 @@
     <Compile Include="Basic\FontEstimation.cs" />
     <Compile Include="Basic\IconSize.cs" />
     <Compile Include="Basic\Location.cs" />
+    <Compile Include="Common\BtimapHelpers.cs" />
     <Compile Include="Configurator\IConfigurator.cs" />
     <Compile Include="Data\GlobalContext.cs" />
     <Compile Include="Data\GlobalServices.cs" />
@@ -91,6 +92,5 @@
     <Compile Include="Win32\Win32.cs" />
     <Compile Include="Win32\WindowsSession.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

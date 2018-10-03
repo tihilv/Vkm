@@ -50,7 +50,7 @@ namespace Vkm.Library.Heartbeat
         private void Tick()
         {
             _cpuLoad.Enqueue((int) _cpuCounter.NextValue());
-            _memoryPercentage.Enqueue((int) (_ramCounter.NextValue() * 100 / _totalMemory));
+            _memoryPercentage.Enqueue((int) (100 - _ramCounter.NextValue() * 100 / _totalMemory));
 
             var networkStats = NetworkInterface.GetAllNetworkInterfaces().Where(n => n.NetworkInterfaceType != NetworkInterfaceType.Loopback).Select(n => n.GetIPv4Statistics()).ToArray();
 

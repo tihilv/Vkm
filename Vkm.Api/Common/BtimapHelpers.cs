@@ -6,9 +6,9 @@ using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Layout;
 
-namespace Vkm.Library.Common
+namespace Vkm.Api.Common
 {
-    static class BitmapHelpers
+    public static class BitmapHelpers
     {
         public static readonly ColorMatrix GrayColorMatrix = new ColorMatrix(
             new[]
@@ -22,10 +22,6 @@ namespace Vkm.Library.Common
 
         public static void ResizeBitmap(BitmapEx source, BitmapEx destination, ColorMatrix colorMatrix = null)
         {
-            //create the grayscale ColorMatrix
-            
-            
-            
             using (var graphics = destination.CreateGraphics())
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;

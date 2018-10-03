@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using Vkm.Api.Basic;
@@ -19,6 +20,7 @@ using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;
 using Vkm.Library.Power;
+using Vkm.Library.Properties;
 using Vkm.Library.Run;
 using Vkm.Library.Service.Player;
 using Vkm.Library.Service.Weather;
@@ -61,6 +63,7 @@ namespace Vkm.Library.Config
 
             var globalOptions = new GlobalOptions();
 
+            globalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.BackgroundBitmap);
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(NumpadLayoutFactory.Identifier, DefaultNumpadLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(ClockLayoutFactory.Identifier, DefaultScreenSaverLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));

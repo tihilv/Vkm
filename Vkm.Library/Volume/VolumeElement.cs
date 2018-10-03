@@ -5,11 +5,11 @@ using System.Drawing.Drawing2D;
 using System.Timers;
 using CoreAudioApi;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Library.Common;
 
 namespace Vkm.Library.Volume
 {
@@ -92,12 +92,18 @@ namespace Vkm.Library.Volume
 
             using (var graphics = bitmap.CreateGraphics())
             using (var brush = new LinearGradientBrush(new Point(0,0), new Point(0, bitmap.Height), color1, color2))
+            using (var pen = new Pen(baseColor, 2))
             {
                 if (_mmDevice != null)
                 {
-                    var top =  (int)(bitmap.Height*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
-                    var left =  (int)(bitmap.Width*(1-_mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
-                    graphics.FillPolygon(brush, new Point[] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)} );
+                    var top = (int) (bitmap.Height * (1 - _mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
+                    var left = (int) (bitmap.Width * (1 - _mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
+
+                    var pointsCurrent = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)};
+                    var pointsFull = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, 0), new Point(0, 0)};
+
+                    graphics.FillPolygon(brush, pointsCurrent);
+                    graphics.DrawPolygon(pen, pointsFull);
                 }
             }
 

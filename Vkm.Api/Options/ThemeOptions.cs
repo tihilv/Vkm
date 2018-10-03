@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using Vkm.Api.Basic;
 
 namespace Vkm.Api.Options
 {
@@ -12,6 +13,7 @@ namespace Vkm.Api.Options
         private Color _backgroundColor = Color.Black;
         private Color _levelColor = Color.DarkGreen;
         private Color _warningColor = Color.DarkRed;
+        private BitmapRepresentation _backgroundBitmapRepresentation;
 
         [NonSerialized]
         private FontFamily _fontFamilyCached;
@@ -49,6 +51,12 @@ namespace Vkm.Api.Options
         {
             get => _warningColor;
             set => _warningColor = value;
+        }
+
+        public BitmapRepresentation BackgroundBitmapRepresentation
+        {
+            get => _backgroundBitmapRepresentation;
+            set => _backgroundBitmapRepresentation = value;
         }
 
         public string FontFamilyName

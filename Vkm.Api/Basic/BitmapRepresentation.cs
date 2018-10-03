@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 
 namespace Vkm.Api.Basic
 {
+    [Serializable]
     public class BitmapRepresentation: IDisposable
     {
         private static readonly ConcurrentDictionary<int, ConcurrentStack<byte[]>> _pool = new ConcurrentDictionary<int, ConcurrentStack<byte[]>>();
