@@ -51,11 +51,13 @@ namespace Vkm.Library.Service.Player.Gpmdp
                 _provider = providers
                     .Where(entry => entry.Provider.IsUseable())
                     .OrderByDescending(entry => entry.Weight)
-                    .First()
-                    .Provider;
+                    .FirstOrDefault().Provider;
 
-                _provider.PlayingInfoChanged += ProviderOnPlayingInfoChanged;
-                _provider.Start();
+                if (_provider != null)
+                {
+                    _provider.PlayingInfoChanged += ProviderOnPlayingInfoChanged;
+                    _provider.Start();
+                }
             }
             catch
             {
@@ -70,7 +72,10 @@ namespace Vkm.Library.Service.Player.Gpmdp
 
         public Task<PlayingInfo> GetCurrent()
         {
-            return _provider?.GetCurrent();
+            if (_provider == null)
+                return Task.FromResult<PlayingInfo>(null);
+
+            return _provider.GetCurrent();
         }
 
         struct ProviderEntry

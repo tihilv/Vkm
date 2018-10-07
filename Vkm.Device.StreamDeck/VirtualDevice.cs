@@ -24,9 +24,12 @@ namespace Vkm.Device.StreamDeck
         public void Init()
         {
             _virtualDeviceForm = new VirtualDeviceForm();
-            _virtualDeviceForm.Init(ButtonCount, IconSize);
-            _virtualDeviceForm.ButtonEvent += VirtualDeviceFormOnButtonEvent;
-            _virtualDeviceForm.Show();
+            if (_virtualDeviceForm != null)
+            {
+                _virtualDeviceForm.Init(ButtonCount, IconSize);
+                _virtualDeviceForm.ButtonEvent += VirtualDeviceFormOnButtonEvent;
+                _virtualDeviceForm.Show();
+            }
         }
 
         private void VirtualDeviceFormOnButtonEvent(object sender, ButtonEventArgs e)
@@ -47,7 +50,7 @@ namespace Vkm.Device.StreamDeck
         {
             foreach (var element in elements)
             using (var bitmap = element.BitmapRepresentation.CreateBitmap())
-                _virtualDeviceForm.SetImage(element.Location, bitmap);
+                _virtualDeviceForm?.SetImage(element.Location, bitmap);
         }
 
         public void SetBrightness(byte valuePercent)
