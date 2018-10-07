@@ -1,12 +1,11 @@
-﻿using System.Windows.Forms;
-using Vkm.Api;
-using Vkm.Api.Basic;
+﻿using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
-using Vkm.Api.Win32;
+using Vkm.Common;
+using Vkm.Common.Win32.Win32;
 using Vkm.Library.Common;
 
 namespace Vkm.Library.Power
@@ -15,7 +14,7 @@ namespace Vkm.Library.Power
     {
         private PowerOptions _options;
         
-        private PowerAction? _overridenAction;
+        private readonly PowerAction? _overridenAction;
 
         private System.Timers.Timer _timer;
 

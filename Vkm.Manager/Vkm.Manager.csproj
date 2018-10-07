@@ -75,13 +75,17 @@
     <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">
-      <Project>{5d6924e7-98ff-48a0-95cc-864d714de2fd}</Project>
-      <Name>Vkm.Api</Name>
+    <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj">
+      <Project>{b1766ac5-85ea-473b-b4a7-7553c6d4ece4}</Project>
+      <Name>Vkm.Api.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vkm.Core\Vkm.Core.csproj">
-      <Project>{ff2d8d60-65b6-438b-82e5-e7910c1652bb}</Project>
-      <Name>Vkm.Core</Name>
+    <ProjectReference Include="..\Vkm.Common.Win32\Vkm.Common.Win32.csproj">
+      <Project>{0cf86ea0-0fbd-4de8-9f6e-4ff34b3e782e}</Project>
+      <Name>Vkm.Common.Win32</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vkm.Kernel.Core\Vkm.Kernel.Core.csproj">
+      <Project>{a67aaf40-448b-44b5-a972-a755065ed171}</Project>
+      <Name>Vkm.Kernel.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

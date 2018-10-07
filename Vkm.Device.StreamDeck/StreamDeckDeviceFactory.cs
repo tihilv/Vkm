@@ -17,15 +17,7 @@ namespace Vkm.Device.StreamDeck
 
         public IDevice[] GetDevices()
         {
-#if VIRTUAL
-            return new IDevice[] {new VirtualDevice()};
-#else      
             return StreamDeckSharp.StreamDeck.EnumerateDevices().Select(d => new StreamDeckDevice(d)).ToArray();
-#endif
         }
-
-        
-
-        
     }
 }

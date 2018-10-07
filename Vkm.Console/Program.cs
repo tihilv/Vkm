@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
-using Vkm.Device.StreamDeck;
 
 namespace Vkm.Console
 {
@@ -21,9 +19,6 @@ namespace Vkm.Console
 
         public static void Test()
         {
-            StreamDeckDeviceFactory factory = new StreamDeckDeviceFactory();
-            var device = factory.GetDevices().FirstOrDefault();
-
 
         }
     }

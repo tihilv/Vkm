@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Api.Win32;
+using Vkm.Common;
+using Vkm.Common.Win32.Win32;
 using Vkm.Library.Common;
 
 namespace Vkm.Library.Buttons

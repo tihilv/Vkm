@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Vkm.Api.Basic;
-using Vkm.Api.Win32;
-using Vkm.Core;
+using Vkm.Common.Win32.Win32;
+using Vkm.Kernel;
 using Vkm.Manager.Properties;
 
 namespace Vkm.Manager
@@ -26,7 +24,7 @@ namespace Vkm.Manager
     {
         private readonly NotifyIcon _trayIcon;
 
-        private VkmCore _coreContext;
+        private VkmKernel _coreContext;
 
         public VkmApplicationContext ()
         {
@@ -40,7 +38,7 @@ namespace Vkm.Manager
                 }
             }
 
-            _coreContext = new VkmCore();
+            _coreContext = new VkmKernel();
             
             SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
             SystemEvents.SessionEnding += SystemEventsOnSessionEnding;

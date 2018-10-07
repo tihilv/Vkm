@@ -76,18 +76,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Vkm.Api\Vkm.Api.csproj">
-      <Project>{5D6924E7-98FF-48A0-95CC-864D714DE2FD}</Project>
-      <Name>Vkm.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vkm.Core\Vkm.Core.csproj">
-      <Project>{FF2D8D60-65B6-438B-82E5-E7910C1652BB}</Project>
-      <Name>Vkm.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vkm.Device.StreamDeck\Vkm.Device.StreamDeck.csproj">
-      <Project>{466B4EE9-70F4-4CD5-9085-AB08C35C1769}</Project>
-      <Name>Vkm.Device.StreamDeck</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Vkm.Library\Vkm.Library.csproj">
       <Project>{603F023B-B30F-4CF4-A368-7477C2B1B61C}</Project>
       <Name>Vkm.Library</Name>

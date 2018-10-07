@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
-using Vkm.Api;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Api.Win32;
+using Vkm.Common;
+using Vkm.Common.Win32.Win32;
 
 namespace Vkm.Library.Heartbeat
 {
@@ -63,7 +63,7 @@ namespace Vkm.Library.Heartbeat
 
             var bitmap = LayoutContext.CreateBitmap();
             if (_prevSent != 0 || _prevRecv != 0)
-                Common.DefaultDrawingAlgs.DrawTexts(bitmap, GlobalContext.Options.Theme.FontFamily, $"{mbpsReceivedSpeed:F2}\n{mbpsSentSpeed:F2}", "", "888888", GlobalContext.Options.Theme.ForegroundColor);
+                DefaultDrawingAlgs.DrawTexts(bitmap, GlobalContext.Options.Theme.FontFamily, $"{mbpsReceivedSpeed:F2}\n{mbpsSentSpeed:F2}", "", "888888", GlobalContext.Options.Theme.ForegroundColor);
 
             _prevSent = sent;
             _prevRecv = recv;
