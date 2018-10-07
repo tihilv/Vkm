@@ -7,7 +7,6 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
 using Vkm.Common.Win32.Win32;
-using Vkm.Library.Common;
 
 namespace Vkm.Library.Buttons
 {
