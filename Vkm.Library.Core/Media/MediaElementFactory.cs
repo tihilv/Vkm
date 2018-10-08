@@ -1,10 +1,9 @@
 ﻿using Vkm.Api.Element;
 using Vkm.Api.Identification;
-using Vkm.Library.Clock;
 
 namespace Vkm.Library.Media
 {
-    class MediaElementFactory: IElementFactory
+    public class MediaElementFactory: IElementFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.MediaElement.Factory");
 

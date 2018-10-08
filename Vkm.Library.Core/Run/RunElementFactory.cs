@@ -3,7 +3,7 @@ using Vkm.Api.Identification;
 
 namespace Vkm.Library.Run
 {
-    class RunElementFactory: IElementFactory
+    public class RunElementFactory: IElementFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.RunElement.Factory");
 

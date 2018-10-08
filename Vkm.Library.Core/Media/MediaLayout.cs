@@ -7,9 +7,9 @@ using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
-using Vkm.Common.Win32.Win32;
 using Vkm.Library.Buttons;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service;
 using Vkm.Library.Interfaces.Service.Player;
 
 namespace Vkm.Library.Media
@@ -27,13 +27,16 @@ namespace Vkm.Library.Media
         public override void Init()
         {
             base.Init();
+
+            var keyboardService = GlobalContext.GetServices<IKeyboardService>().First();
+
             _playerServices = GlobalContext.GetServices<IPlayerService>().ToArray();
             
-            _playPauseButton = GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_play, FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_PLAY_PAUSE));
+            _playPauseButton = GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_play, FontService.Instance.AwesomeFontFamily, keyboardService.PlayPause));
             
-            AddElement(new Location(1, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_backward, FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_PREV_TRACK)));
+            AddElement(new Location(1, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_backward, FontService.Instance.AwesomeFontFamily, keyboardService.PreviousTrack)));
             AddElement(new Location(2, 2), _playPauseButton);
-            AddElement(new Location(3, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_forward, FontService.Instance.AwesomeFontFamily, Win32.VK_MEDIA_NEXT_TRACK)));
+            AddElement(new Location(3, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_forward, FontService.Instance.AwesomeFontFamily, keyboardService.NextTrack)));
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)

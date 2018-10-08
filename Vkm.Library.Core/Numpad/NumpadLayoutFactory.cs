@@ -3,7 +3,7 @@ using Vkm.Api.Layout;
 
 namespace Vkm.Library.Numpad
 {
-    class NumpadLayoutFactory: ILayoutFactory
+    public class NumpadLayoutFactory: ILayoutFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.DefaultNumpad.Factory");
 

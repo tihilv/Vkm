@@ -3,7 +3,7 @@ using Vkm.Api.Identification;
 
 namespace Vkm.Library.Heartbeat
 {
-    class HeartbeatFactory : IElementFactory
+    public class HeartbeatFactory : IElementFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.HeartbeatElement.Factory");
 

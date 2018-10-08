@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -6,22 +7,30 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Common;
-using Vkm.Common.Win32.Win32;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Run
 {
     class RunElement: ElementBase, IOptionsProvider
     {
+        private IProcessService _processService;
         private RunOptions _options;
-        private Process _process;
+        private IntPtr _handle;
         
         public override DeviceSize ButtonCount => new DeviceSize(1,1);
 
         public RunElement(Identifier identifier) : base(identifier)
         {
         }
-        
+
+        public override void Init()
+        {
+            base.Init();
+
+            _processService = GlobalContext.GetServices<IProcessService>().First();
+        }
+
         public IOptions GetDefaultOptions()
         {
             return new RunOptions();
@@ -54,14 +63,9 @@ namespace Vkm.Library.Run
         {
             if (isDown)
             {
-                if (_process == null || _process.HasExited)
-                {
-                    _process = Process.Start(_options.Executable);
-                }
-                else
-                {
-                    Win32.SwitchToThisWindow(_process.MainWindowHandle, true);
-                }
+                if (_handle == IntPtr.Zero || !_processService.Activate(_handle))
+                    _handle = _processService.Start(_options.Executable);
+
                 return true;
             }
 

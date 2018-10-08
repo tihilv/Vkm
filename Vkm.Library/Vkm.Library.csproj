@@ -53,10 +53,6 @@
     <Compile Include="AudioSelect\AudioSelectElement.cs" />
     <Compile Include="AudioSelect\AudioSelectLayout.cs" />
     <Compile Include="AudioSelect\AudioSelectElementFactory.cs" />
-    <Compile Include="Buttons\ButtonElement.cs" />
-    <Compile Include="Media\MediaLayout.cs" />
-    <Compile Include="Media\MediaElement.cs" />
-    <Compile Include="Media\MediaElementFactory.cs" />
     <Compile Include="Power\PowerElementFactory.cs" />
     <Compile Include="Power\PowerElement.cs" />
     <Compile Include="Power\PowerLayout.cs" />
@@ -68,21 +64,17 @@
     </Compile>
     <Compile Include="Service\CachedBitmapDownloadService.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\ProcessService.cs" />
+    <Compile Include="Service\SystemStatusService.cs" />
+    <Compile Include="Service\KeyboardService.cs" />
     <Compile Include="Service\Mail\OutlookService.cs" />
     <Compile Include="Config\LibraryConfig.cs" />
-    <Compile Include="Heartbeat\HeartbeatElement.cs" />
-    <Compile Include="Heartbeat\HeartbeatFactory.cs" />
     <Compile Include="IdleTransition\LockEventArgs.cs" />
     <Compile Include="IdleTransition\WorkstationLockService.cs" />
-    <Compile Include="Numpad\NumpadLayout.cs" />
-    <Compile Include="Numpad\NumpadLayoutFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IdleTransition\SimpleIdleTransition.cs" />
     <Compile Include="IdleTransition\SimpleIdleTransitionFactory.cs" />
     <Compile Include="IdleTransition\IdleTransitionOptions.cs" />
-    <Compile Include="Run\RunElement.cs" />
-    <Compile Include="Run\RunElementFactory.cs" />
-    <Compile Include="Run\RunOptions.cs" />
     <Compile Include="Service\Weather\OpenWeatherOptions.cs" />
     <Compile Include="Service\Weather\WeatherService.cs" />
     <Compile Include="Volume\VolumeElement.cs" />

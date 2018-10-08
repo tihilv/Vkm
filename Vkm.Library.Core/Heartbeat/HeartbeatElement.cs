@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Net.NetworkInformation;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
-using Vkm.Common.Win32.Win32;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Heartbeat
 {
     class HeartbeatElement: ElementBase
     {
-        private PerformanceCounter _cpuCounter;
-        private PerformanceCounter _ramCounter;
-        private long _totalMemory;
-
-        private readonly Queue<int> _cpuLoad;
-        private readonly Queue<int> _memoryPercentage;
-
+        private ISystemStatusService _systemStatusService;
+        
         private long _prevSent;
         private long _prevRecv;
 
+
+        private readonly Queue<int> _cpuLoad;
+        private readonly Queue<int> _memoryPercentage;
+        
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
         public HeartbeatElement(Identifier identifier) : base(identifier)
@@ -38,24 +35,20 @@ namespace Vkm.Library.Heartbeat
         {
             base.Init();
 
-            _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            _ramCounter = new PerformanceCounter("Memory", "Available MBytes");
-
-            Win32.GetPhysicallyInstalledSystemMemory(out _totalMemory);
-            _totalMemory /= 1024;
+            _systemStatusService = GlobalContext.GetServices<ISystemStatusService>().First();
 
             RegisterTimer(new TimeSpan(0,0,0,1), Tick);
         }
 
         private void Tick()
         {
-            _cpuLoad.Enqueue((int) _cpuCounter.NextValue());
-            _memoryPercentage.Enqueue((int) (100 - _ramCounter.NextValue() * 100 / _totalMemory));
+            _cpuLoad.Enqueue(_systemStatusService.GetCpuLoad());
+            _memoryPercentage.Enqueue((int) (100 - _systemStatusService.GetFreeMemoryMBytes() * 100 / _systemStatusService.GetTotalMemoryMBytes()));
 
-            var networkStats = NetworkInterface.GetAllNetworkInterfaces().Where(n => n.NetworkInterfaceType != NetworkInterfaceType.Loopback).Select(n => n.GetIPv4Statistics()).ToArray();
+            var stats = _systemStatusService.GetNetworkStats();
 
-            var sent = networkStats.Sum(n => n.BytesSent);
-            var recv = networkStats.Sum(n => n.BytesReceived);
+            var sent = stats.Sent;
+            var recv = stats.Received;
 
             double mbpsSentSpeed = 8 * (sent - _prevSent) / (1024.0 * 1024);
             double mbpsReceivedSpeed = 8 * (recv - _prevRecv) / (1024.0 * 1024);
@@ -92,12 +85,9 @@ namespace Vkm.Library.Heartbeat
 
                 using (var graphics = bitmap.CreateGraphics())
                 using (var pen = new Pen(color))
-                using (var brush = new SolidBrush(color))
                 {
                     graphics.DrawCurve(pen, points);
                 }
-
-                
             }
         }
 

@@ -1,16 +1,17 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
-using Vkm.Common.Win32.Win32;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Buttons
 {
-    internal class ButtonElement: ElementBase
+    public class ButtonElement: ElementBase
     {
         private string _text;
         
@@ -18,6 +19,8 @@ namespace Vkm.Library.Buttons
         private readonly byte? _key;
         
         private readonly FontFamily _fontFamily;
+
+        private IKeyboardService _keyboardService;
         
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
@@ -37,7 +40,14 @@ namespace Vkm.Library.Buttons
 
             _fontFamily = fontFamily;
         }
-        
+
+        public override void Init()
+        {
+            base.Init();
+
+            _keyboardService = GlobalContext.GetServices<IKeyboardService>().FirstOrDefault();
+        }
+
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             base.EnterLayout(layoutContext, previousLayout);
@@ -61,9 +71,9 @@ namespace Vkm.Library.Buttons
             if (isDown && location.X == 0 && location.Y == 0)
             {
                 if (_key == null)
-                    SendKeys.SendWait(_keys);
+                    _keyboardService.SendKeys(_keys);
                 else
-                    Win32.ButtonPress(_key.Value);
+                    _keyboardService.SendKeys(_key.Value);
                 
                 return true;
             }
