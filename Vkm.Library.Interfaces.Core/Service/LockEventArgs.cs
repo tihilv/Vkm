@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Vkm.Library.IdleTransition
+namespace Vkm.Library.Interfaces.Service
 {
-    class LockEventArgs : EventArgs
+    public class LockEventArgs : EventArgs
     {
         public bool Locked { get; private set; }
 

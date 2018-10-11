@@ -53,10 +53,6 @@
     <Compile Include="AudioSelect\AudioSelectElement.cs" />
     <Compile Include="AudioSelect\AudioSelectLayout.cs" />
     <Compile Include="AudioSelect\AudioSelectElementFactory.cs" />
-    <Compile Include="Power\PowerElementFactory.cs" />
-    <Compile Include="Power\PowerElement.cs" />
-    <Compile Include="Power\PowerLayout.cs" />
-    <Compile Include="Power\PowerOptions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -64,19 +60,16 @@
     </Compile>
     <Compile Include="Service\CachedBitmapDownloadService.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\PowerService.cs" />
     <Compile Include="Service\ProcessService.cs" />
     <Compile Include="Service\SystemStatusService.cs" />
     <Compile Include="Service\KeyboardService.cs" />
     <Compile Include="Service\Mail\OutlookService.cs" />
     <Compile Include="Config\LibraryConfig.cs" />
-    <Compile Include="IdleTransition\LockEventArgs.cs" />
-    <Compile Include="IdleTransition\WorkstationLockService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IdleTransition\SimpleIdleTransition.cs" />
-    <Compile Include="IdleTransition\SimpleIdleTransitionFactory.cs" />
-    <Compile Include="IdleTransition\IdleTransitionOptions.cs" />
     <Compile Include="Service\Weather\OpenWeatherOptions.cs" />
     <Compile Include="Service\Weather\WeatherService.cs" />
+    <Compile Include="Service\WorkstationLockService.cs" />
     <Compile Include="Volume\VolumeElement.cs" />
     <Compile Include="Volume\VolumeElementFactory.cs" />
   </ItemGroup>

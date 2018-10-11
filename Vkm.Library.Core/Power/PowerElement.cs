@@ -1,17 +1,20 @@
-﻿using Vkm.Api.Basic;
+﻿using System.Linq;
+using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Common;
-using Vkm.Common.Win32.Win32;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Power
 {
     class PowerElement: ElementBase, IOptionsProvider
     {
+        private IPowerService _powerService;
+        
         private PowerOptions _options;
         
         private readonly PowerAction? _overridenAction;
@@ -44,6 +47,12 @@ namespace Vkm.Library.Power
                 _timer.Elapsed += TimerElapsed;
                 _timer.AutoReset = false;
             }
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            _powerService = GlobalContext.GetServices<IPowerService>().First();
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -106,7 +115,8 @@ namespace Vkm.Library.Power
 
         private void ExecuteAction()
         {
-            Win32.DoExitWin((int)GetAction());
+            _powerService.DoPowerAction(GetAction());
+            
         }
     }
 }

@@ -16,6 +16,7 @@ using Vkm.Library.CompositeLayout;
 using Vkm.Library.Date;
 using Vkm.Library.Heartbeat;
 using Vkm.Library.IdleTransition;
+using Vkm.Library.Interfaces.Service;
 using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;

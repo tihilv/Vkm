@@ -3,13 +3,15 @@ using System.Linq;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
 using Vkm.Api.Transition;
-using Vkm.Common.Win32.Win32;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.IdleTransition
 {
     internal class SimpleIdleTransition: TransitionBase<IdleTransitionOptions>
     {
         private bool _transferred;
+
+        private IWorkstationLockService _workstationLockService;
 
         public SimpleIdleTransition(Identifier id) : base(id)
         {
@@ -22,22 +24,21 @@ namespace Vkm.Library.IdleTransition
 
         public override void Init()
         {
+            _workstationLockService = GlobalContext.GetServices<IWorkstationLockService>().First();
+            
             RegisterTimer(new TimeSpan(0,0,0,5), TimerOnElapsed);
         }
 
         private void TimerOnElapsed()
         {
-            Win32.LASTINPUTINFO lastInput = new Win32.LASTINPUTINFO();
-            lastInput.cbSize = (uint) System.Runtime.InteropServices.Marshal.SizeOf(lastInput);
-            if (Win32.GetLastInputInfo(ref lastInput))
+            var idleSpan = _workstationLockService.GetIdleTimeSpan();
+            if (idleSpan!= TimeSpan.Zero)
             {
-                var idleSpan = TimeSpan.FromMilliseconds((((Environment.TickCount & int.MaxValue) - (lastInput.dwTime & int.MaxValue)) & int.MaxValue));
-
                 if (idleSpan > TransitionOptions.IdleTimeout)
                     DoIdleTransfer();
                 else
                 {
-                    if (_transferred && !WorkstationLockService.Instance.Locked)
+                    if (_transferred && !_workstationLockService.Locked)
                     {
                         _transferred = false;
                         OnTransitionBack();

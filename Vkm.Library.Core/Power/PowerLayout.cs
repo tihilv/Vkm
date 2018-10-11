@@ -3,6 +3,7 @@ using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Power
 {

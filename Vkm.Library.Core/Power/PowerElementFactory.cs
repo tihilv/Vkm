@@ -3,7 +3,7 @@ using Vkm.Api.Identification;
 
 namespace Vkm.Library.Power
 {
-    class PowerElementFactory: IElementFactory
+    public class PowerElementFactory: IElementFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.PowerElement.Factory");
 
