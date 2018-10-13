@@ -3,7 +3,7 @@ using Vkm.Api.Identification;
 
 namespace Vkm.Library.AudioSelect
 {
-    class AudioSelectElementFactory: IElementFactory
+    public class AudioSelectElementFactory: IElementFactory
     {
         public static readonly Identifier Identifier = new Identifier("Vkm.AudioSelectElement.Factory");
 

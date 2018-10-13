@@ -50,9 +50,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioSelect\AudioSelectElement.cs" />
-    <Compile Include="AudioSelect\AudioSelectLayout.cs" />
-    <Compile Include="AudioSelect\AudioSelectElementFactory.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -60,6 +57,7 @@
     </Compile>
     <Compile Include="Service\CachedBitmapDownloadService.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\MediaDeviceService.cs" />
     <Compile Include="Service\PowerService.cs" />
     <Compile Include="Service\ProcessService.cs" />
     <Compile Include="Service\SystemStatusService.cs" />
@@ -70,8 +68,6 @@
     <Compile Include="Service\Weather\OpenWeatherOptions.cs" />
     <Compile Include="Service\Weather\WeatherService.cs" />
     <Compile Include="Service\WorkstationLockService.cs" />
-    <Compile Include="Volume\VolumeElement.cs" />
-    <Compile Include="Volume\VolumeElementFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj">

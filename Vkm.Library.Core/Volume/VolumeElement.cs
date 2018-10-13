@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Timers;
-using CoreAudioApi;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Volume
 {
@@ -17,8 +18,7 @@ namespace Vkm.Library.Volume
     {
         public override DeviceSize ButtonCount => new DeviceSize(1, 2);
 
-        private MMDeviceEnumerator _mmDeviceEnumerator;
-        private MMDevice _mmDevice;
+        private IMediaDeviceService _mediaDeviceService;
 
         private readonly System.Timers.Timer _buttonPressedTimer;
         private bool _increase;
@@ -27,6 +27,13 @@ namespace Vkm.Library.Volume
         {
             _buttonPressedTimer = new System.Timers.Timer();
             _buttonPressedTimer.Elapsed += ButtonPressedTimerOnElapsed;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
+            _mediaDeviceService = GlobalContext.GetServices<IMediaDeviceService>().First();
         }
 
         private void ButtonPressedTimerOnElapsed(object sender, ElapsedEventArgs e)
@@ -39,34 +46,30 @@ namespace Vkm.Library.Volume
         private void DoVolumeChange()
         {
             if (_increase)
-                _mmDevice?.AudioEndpointVolume.VolumeStepUp();
+                _mediaDeviceService.IncreaseVolume();
             else
-                _mmDevice?.AudioEndpointVolume.VolumeStepDown();
+                _mediaDeviceService.DecreaseVolume();
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             base.EnterLayout(layoutContext, previousLayout);
 
-            _mmDeviceEnumerator = new MMDeviceEnumerator();
-            _mmDevice = _mmDeviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia);
-
-            _mmDevice.AudioEndpointVolume.OnVolumeNotification += AudioEndpointVolume_OnVolumeNotification;
+            _mediaDeviceService.VolumeChanged += AudioEndpointVolume_OnVolumeNotification;
 
             Draw();
         }
 
-        private void AudioEndpointVolume_OnVolumeNotification(object sender, VolumeNotificationEventArgs e)
+        private void AudioEndpointVolume_OnVolumeNotification(object sender, EventArgs args)
         {
             Draw();
         }
 
         public override void LeaveLayout()
         {
-            base.LeaveLayout();
+            _mediaDeviceService.VolumeChanged -= AudioEndpointVolume_OnVolumeNotification;
             
-            DisposeHelper.DisposeAndNull(ref _mmDevice);
-            DisposeHelper.DisposeAndNull(ref _mmDeviceEnumerator);
+            base.LeaveLayout();
         }
         
         void Draw()
@@ -84,7 +87,7 @@ namespace Vkm.Library.Volume
             var bitmap = new BitmapEx(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
             bitmap.MakeTransparent();
 
-            var baseColor = (_mmDevice?.AudioEndpointVolume.Mute??false) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
+            var baseColor = (_mediaDeviceService.IsMuted) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
 
             var delta = 50;
             Color color1 = Color.FromArgb(baseColor.A, Math.Min(byte.MaxValue, baseColor.R + delta), Math.Min(byte.MaxValue, baseColor.G + delta), Math.Min(byte.MaxValue, baseColor.B + delta));
@@ -94,10 +97,10 @@ namespace Vkm.Library.Volume
             using (var brush = new LinearGradientBrush(new Point(0,0), new Point(0, bitmap.Height), color1, color2))
             using (var pen = new Pen(baseColor, 2))
             {
-                if (_mmDevice != null)
+                if (_mediaDeviceService.HasDevice)
                 {
-                    var top = (int) (bitmap.Height * (1 - _mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
-                    var left = (int) (bitmap.Width * (1 - _mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar));
+                    var top = (int) (bitmap.Height * (1 - _mediaDeviceService.Volume));
+                    var left = (int) (bitmap.Width * (1 - _mediaDeviceService.Volume));
 
                     var pointsCurrent = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)};
                     var pointsFull = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, 0), new Point(0, 0)};

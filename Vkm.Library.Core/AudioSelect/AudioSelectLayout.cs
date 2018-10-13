@@ -1,8 +1,5 @@
 ﻿using System.Drawing;
 using System.Linq;
-using CoreAudioApi;
-using CoreAudioApi.enumerations;
-using CoreAudioApi.ExtendedConfig;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -10,6 +7,7 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
 using Vkm.Library.Common;
+using Vkm.Library.Interfaces.Service;
 using Vkm.Library.Volume;
 
 namespace Vkm.Library.AudioSelect
@@ -20,9 +18,18 @@ namespace Vkm.Library.AudioSelect
 
         private AudioSelectOptions _options;
 
+        private IMediaDeviceService _mediaDeviceService;
+
         public AudioSelectLayout(Identifier identifier, AudioSelectOptions options) : base(identifier)
         {
             _options = options;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
+            _mediaDeviceService = GlobalContext.GetServices<IMediaDeviceService>().First();
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -45,26 +52,16 @@ namespace Vkm.Library.AudioSelect
             AddElement(new Location(width,LayoutContext.ButtonCount.Height-1), GlobalContext.InitializeEntity(new BackElement()));
             AddElement(new Location(width, 0), GlobalContext.InitializeEntity(new VolumeElement(new Identifier(Id.Value + ".Volume"))));
 
-            using (var mmDeviceEnumerator = new MMDeviceEnumerator())
-            {
-                _defaultDeviceId = mmDeviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia).Id;
+            _defaultDeviceId = _mediaDeviceService.GetDefaultDevice().Id;
+            var devices = _mediaDeviceService.GetDevices();
 
-                var devices = mmDeviceEnumerator.EnumerateAudioEndPoints(EDataFlow.eRender, DeviceState.DEVICE_STATE_ACTIVE);
-                for (int i = 0; i < devices.Count; i++)
+                for (var i = 0; i < devices.Length; i++)
                 {
-                    MMDevice device = devices[i];
+                    var device = devices[i];
                     AddElement(new Location(i % width, i / width), GlobalContext.InitializeEntity(new AudioDeviceElement(this, device)));
                 }
-            }
         }
         
-        void ClearElements()
-        {
-            foreach (ElementPlacement placement in Elements.ToArray())
-                RemoveElement(placement.Element);
-        }
-
-
         private void SetDefaultDevice(string deviceId)
         {
             _defaultDeviceId = deviceId;
@@ -73,24 +70,25 @@ namespace Vkm.Library.AudioSelect
             DrawElements();
         }
 
+        void ClearElements()
+        {
+            foreach (ElementPlacement placement in Elements.ToArray())
+                RemoveElement(placement.Element);
+        }
+
+
         class AudioDeviceElement : ElementBase
         {
             public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
             private readonly AudioSelectLayout _audioSelectLayout;
 
-            private readonly string _deviceId;
-            private readonly string _realName;
-            private readonly string _friendlyName;
-            private readonly DeviceIcon _icon;
+            private readonly MediaDeviceInfo _device;
 
-            public AudioDeviceElement(AudioSelectLayout audioSelectLayout, MMDevice device) : base(new Identifier($"ButtonValue.{device.Id}"))
+            public AudioDeviceElement(AudioSelectLayout audioSelectLayout, MediaDeviceInfo device) : base(new Identifier($"ButtonValue.{device.Id}"))
             {
                 _audioSelectLayout = audioSelectLayout;
-                _deviceId = device.Id;
-                _realName = device.RealName;
-                _friendlyName = device.FriendlyName;
-                _icon = device.Icon;
+                _device = device;
             }
 
             public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -108,24 +106,24 @@ namespace Vkm.Library.AudioSelect
 
                 string icon = null;
 
-                if (!_audioSelectLayout._options.Names.TryGetValue(_deviceId, out var combName))
+                if (!_audioSelectLayout._options.Names.TryGetValue(_device.Id, out var combName))
                 {
-                    combName = $"{_realName.Split(' ')[0]}\n{_friendlyName.Split(' ')[0]}";
+                    combName = $"{_device.RealName.Split(' ')[0]}\n{_device.FriendlyName.Split(' ')[0]}";
                 }
                 else
                 {
-                    switch (_icon)
+                    switch (_device.Type)
                     {
-                        case DeviceIcon.Speakers:
+                        case MediaDeviceType.Speakers:
                             icon = FontAwesomeRes.fa_volume_down;
                             break;
-                        case DeviceIcon.Phone:
+                        case MediaDeviceType.Phone:
                             icon = FontAwesomeRes.fa_phone;
                             break;
-                        case DeviceIcon.Digital:
+                        case MediaDeviceType.Digital:
                             icon = FontAwesomeRes.fa_usb;
                             break;
-                        case DeviceIcon.Monitor:
+                        case MediaDeviceType.Monitor:
                             icon = FontAwesomeRes.fa_tv;
                             break;
                     }
@@ -136,7 +134,7 @@ namespace Vkm.Library.AudioSelect
                 else
                     DefaultDrawingAlgs.DrawText(bitmap, fontFamily, combName, GlobalContext.Options.Theme.ForegroundColor);
 
-                if (_deviceId == _audioSelectLayout._defaultDeviceId)
+                if (_device.Id == _audioSelectLayout._defaultDeviceId)
                 {
                     using (var graphics = bitmap.CreateGraphics())
                     using (var pen = new Pen(GlobalContext.Options.Theme.ForegroundColor, 3))
@@ -152,8 +150,8 @@ namespace Vkm.Library.AudioSelect
             {
                 if (isDown && location.X == 0 && location.Y == 0)
                 {
-                    PolicyConfig.SetDefaultEndpoint(_deviceId, ERole.eMultimedia);
-                    _audioSelectLayout.SetDefaultDevice(_deviceId);
+                    _audioSelectLayout._mediaDeviceService.SetDefault(_device);
+                    _audioSelectLayout.SetDefaultDevice(_device.Id);
                     return true;
                 }
 
