@@ -19,6 +19,8 @@ namespace Vkm.Library.Interfaces.Service
         MediaDeviceInfo GetDefaultDevice();
         MediaDeviceInfo[] GetDevices();
         void SetDefault(MediaDeviceInfo device);
+
+        Single GetPeakVolumeValue();
     }
 
     public struct MediaDeviceInfo

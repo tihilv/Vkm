@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -10,6 +9,7 @@ using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Transition;
 using Vkm.Library.Interfaces.Service;
 
 namespace Vkm.Library.Volume
@@ -22,7 +22,9 @@ namespace Vkm.Library.Volume
 
         private readonly System.Timers.Timer _buttonPressedTimer;
         private bool _increase;
-        
+
+        private Tuple<bool, double, float> _lastValues;
+
         public VolumeElement(Identifier identifier) : base(identifier)
         {
             _buttonPressedTimer = new System.Timers.Timer();
@@ -32,6 +34,8 @@ namespace Vkm.Library.Volume
         public override void Init()
         {
             base.Init();
+
+            RegisterTimer(new TimeSpan(0,0,1), () => Draw());
 
             _mediaDeviceService = GlobalContext.GetServices<IMediaDeviceService>().First();
         }
@@ -68,28 +72,40 @@ namespace Vkm.Library.Volume
         public override void LeaveLayout()
         {
             _mediaDeviceService.VolumeChanged -= AudioEndpointVolume_OnVolumeNotification;
-            
             base.LeaveLayout();
+            _lastValues = null;
         }
         
         void Draw()
         {
-            List<LayoutDrawElement> drawElements = new List<LayoutDrawElement>();
-            using (var bitmap = DrawLevel())
-            {
-                DrawInvoke(BitmapHelpers.ExtractLayoutDrawElements(bitmap, ButtonCount, 0, 0, LayoutContext));
-            }
+            var muted = _mediaDeviceService.IsMuted;
+            var volume = _mediaDeviceService.Volume;
+            var peakValue = _mediaDeviceService.GetPeakVolumeValue();
 
+            var newValues = new Tuple<bool, double, float>(muted, volume, peakValue);
+            if (!newValues.Equals(_lastValues))
+            {
+                _lastValues = newValues;
+
+                using (var bitmap = DrawLevel(muted, volume, peakValue))
+                {
+                    DrawInvoke(BitmapHelpers.ExtractLayoutDrawElements(bitmap, ButtonCount, 0, 0, LayoutContext, new TransitionInfo(TransitionType.ElementUpdate, new TimeSpan(0, 0, 0, 0, 500))));
+                }
+            }
         }
 
-        private BitmapEx DrawLevel()
+        private BitmapEx DrawLevel(bool muted, double volume, float peakValue)
         {
             var bitmap = new BitmapEx(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
             bitmap.MakeTransparent();
 
-            var baseColor = (_mediaDeviceService.IsMuted) ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
-
             var delta = 50;
+            var volumePeakWidth = bitmap.Width / 3;
+            var selectorWidth = bitmap.Width - volumePeakWidth;
+
+            var baseColor = muted ? GlobalContext.Options.Theme.WarningColor : GlobalContext.Options.Theme.LevelColor;
+
+            
             Color color1 = Color.FromArgb(baseColor.A, Math.Min(byte.MaxValue, baseColor.R + delta), Math.Min(byte.MaxValue, baseColor.G + delta), Math.Min(byte.MaxValue, baseColor.B + delta));
             Color color2 = Color.FromArgb(baseColor.A, Math.Max(0, baseColor.R - delta), Math.Max(0, baseColor.G - delta), Math.Max(0, baseColor.B - delta));
 
@@ -99,14 +115,19 @@ namespace Vkm.Library.Volume
             {
                 if (_mediaDeviceService.HasDevice)
                 {
-                    var top = (int) (bitmap.Height * (1 - _mediaDeviceService.Volume));
-                    var left = (int) (bitmap.Width * (1 - _mediaDeviceService.Volume));
+                    var top = (int) (bitmap.Height * (1 - volume));
+                    var left = (int) (selectorWidth * (1 - volume));
 
-                    var pointsCurrent = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, top), new Point(left, top)};
-                    var pointsFull = new [] {new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, 0), new Point(0, 0)};
+                    var pointsCurrent = new [] {new Point(selectorWidth, bitmap.Height), new Point(selectorWidth, top), new Point(left, top)};
+                    var pointsFull = new [] {new Point(selectorWidth, bitmap.Height), new Point(selectorWidth, 0), new Point(0, 0)};
 
                     graphics.FillPolygon(brush, pointsCurrent);
                     graphics.DrawPolygon(pen, pointsFull);
+
+                    var selectorTop = (int) (bitmap.Height * (1 - peakValue));
+
+                    selectorWidth += bitmap.Width / 10;
+                    graphics.FillPolygon(brush, new [] {new Point(selectorWidth, bitmap.Height), new Point(bitmap.Width, bitmap.Height), new Point(bitmap.Width, selectorTop), new Point(selectorWidth, selectorTop)});
                 }
             }
 

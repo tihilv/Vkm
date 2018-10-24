@@ -96,6 +96,11 @@ namespace Vkm.Library.Service
             SetDevice();
         }
 
+        public float GetPeakVolumeValue()
+        {
+            return _mmDevice?.AudioMeterInformation.MasterPeakValue??0;
+        }
+
         public void InitContext(GlobalContext context)
         {
             

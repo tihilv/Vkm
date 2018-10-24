@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Layout;
+using Vkm.Api.Transition;
 
 namespace Vkm.Api.Common
 {
@@ -43,7 +44,7 @@ namespace Vkm.Api.Common
             }
         }
 
-        public static IEnumerable<LayoutDrawElement> ExtractLayoutDrawElements(BitmapEx source, DeviceSize deviceSize, byte left, byte top, LayoutContext layoutContext)
+        public static IEnumerable<LayoutDrawElement> ExtractLayoutDrawElements(BitmapEx source, DeviceSize deviceSize, byte left, byte top, LayoutContext layoutContext, TransitionInfo transitionInfo = default(TransitionInfo))
         {
             var itemWidth = source.Width / deviceSize.Width;
             var itemHeight = source.Height / deviceSize.Height;
@@ -58,7 +59,7 @@ namespace Vkm.Api.Common
                     grD.DrawImage(source.GetInternal(), new Rectangle(0, 0, itemWidth, itemHeight), new Rectangle(x * itemWidth, y * itemHeight, itemWidth, itemHeight), GraphicsUnit.Pixel);
                 }
 
-                yield return new LayoutDrawElement(new Location(left + x, top + y), part);
+                yield return new LayoutDrawElement(new Location(left + x, top + y), part, transitionInfo);
             }
         }
     }
