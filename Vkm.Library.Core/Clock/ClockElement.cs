@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -8,8 +7,6 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Common;
-using Vkm.Library.Common;
-using Vkm.Library.Timer;
 
 namespace Vkm.Library.Clock
 {

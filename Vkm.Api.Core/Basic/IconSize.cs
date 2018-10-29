@@ -11,10 +11,5 @@
             Width = width;
             Height = height;
         }
-
-        public static IconSize operator +(IconSize a, IconSize b)
-        {
-            return new IconSize(a.Width + b.Width, a.Height + b.Height);
-        }
     }
 }

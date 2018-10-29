@@ -11,7 +11,8 @@ namespace Vkm.Library.Interfaces.Service
         void DecreaseVolume();
 
         bool IsMuted { get; }
-
+        void SetMute(bool value);
+        
         bool HasDevice { get; }
 
         double Volume { get; }

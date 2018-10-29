@@ -37,6 +37,12 @@ namespace Vkm.Library.Service
             }
         }
 
+        public void SetMute(bool value)
+        {
+            if (_mmDevice != null)
+                _mmDevice.AudioEndpointVolume.Mute = value;
+        }
+
         public bool HasDevice => _mmDevice != null;
 
         public double Volume => _mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar;

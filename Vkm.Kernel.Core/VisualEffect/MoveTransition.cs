@@ -26,7 +26,7 @@ namespace Vkm.Kernel.VisualEffect
         public BitmapRepresentation Current
         {
             get => _current;
-            set
+            private set
             {
                 DisposeHelper.DisposeAndNull(ref _current);
                 _current = value;

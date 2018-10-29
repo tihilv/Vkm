@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Common.Core", "Vkm.Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.Library.Core", "Vkm.Library.Core\Vkm.Library.Core.csproj", "{76839D73-163A-4844-9C96-5384AFE4DC62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.TestProject", "Vkm.TestProject\Vkm.TestProject.csproj", "{74013210-F8CD-4D46-AED2-A80BB200AE6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,14 @@ Global
 		{76839D73-163A-4844-9C96-5384AFE4DC62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76839D73-163A-4844-9C96-5384AFE4DC62}.Release|x64.ActiveCfg = Release|Any CPU
 		{76839D73-163A-4844-9C96-5384AFE4DC62}.Release|x64.Build.0 = Release|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Debug|x64.Build.0 = Debug|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|x64.ActiveCfg = Release|Any CPU
+		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

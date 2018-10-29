@@ -23,6 +23,8 @@ namespace Vkm.Library.Volume
         private readonly System.Timers.Timer _buttonPressedTimer;
         private bool _increase;
 
+        private int _pressedCount;
+
         private Tuple<bool, double, float> _lastValues;
 
         public VolumeElement(Identifier identifier) : base(identifier)
@@ -141,6 +143,18 @@ namespace Vkm.Library.Volume
             _increase = location.Y == 0;
 
             if (isDown)
+                _pressedCount++;
+            else
+                _pressedCount--;
+
+            if (_pressedCount > 1)
+            {
+                if (isDown)
+                {
+                    _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted);
+                }
+            }
+            else if (isDown)
                 DoVolumeChange();
 
             return true;
