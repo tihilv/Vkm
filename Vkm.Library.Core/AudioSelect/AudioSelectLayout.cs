@@ -55,11 +55,8 @@ namespace Vkm.Library.AudioSelect
             _defaultDeviceId = _mediaDeviceService.GetDefaultDevice().Id;
             var devices = _mediaDeviceService.GetDevices();
 
-                for (var i = 0; i < devices.Length; i++)
-                {
-                    var device = devices[i];
-                    AddElement(new Location(i % width, i / width), GlobalContext.InitializeEntity(new AudioDeviceElement(this, device)));
-                }
+            var elements = devices.Select(device => GlobalContext.InitializeEntity(new AudioDeviceElement(this, device)));
+            AddElementsInRectangle(elements, 0,0,(byte)(LayoutContext.ButtonCount.Width - 2),(byte)(LayoutContext.ButtonCount.Height - 1));
         }
         
         private void SetDefaultDevice(string deviceId)

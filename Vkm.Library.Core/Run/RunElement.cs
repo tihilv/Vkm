@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
@@ -33,7 +36,7 @@ namespace Vkm.Library.Run
 
         public IOptions GetDefaultOptions()
         {
-            return new RunOptions();
+            return _options??new RunOptions();
         }
 
         public void InitOptions(IOptions options)
@@ -52,9 +55,21 @@ namespace Vkm.Library.Run
         {
             var bitmap = LayoutContext.CreateBitmap();
 
-            var fontFamily = FontService.Instance.AwesomeFontFamily;
-
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Symbol, GlobalContext.Options.Theme.ForegroundColor);
+            if (!string.IsNullOrEmpty(_options.Symbol))
+            {
+                var fontFamily = FontService.Instance.AwesomeFontFamily;
+                DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Symbol, GlobalContext.Options.Theme.ForegroundColor);
+            }
+            else
+            {
+                using (var icon = Icon.ExtractAssociatedIcon(_options.Executable))
+                using (var iconBmp = icon.ToBitmap())
+                using (var iconRepresentation = new BitmapRepresentation(iconBmp))
+                using (var iconBmpEx = iconRepresentation.CreateBitmap())
+                {
+                    BitmapHelpers.ResizeBitmap(iconBmpEx, bitmap);
+                }
+            }
 
             return bitmap;
         }
@@ -70,6 +85,11 @@ namespace Vkm.Library.Run
             }
 
             return base.ButtonPressed(location, isDown);
+        }
+
+        public void SetRunning(IntPtr handle)
+        {
+            _handle = handle;
         }
     }
 }

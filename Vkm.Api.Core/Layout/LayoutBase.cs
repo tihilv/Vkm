@@ -131,8 +131,7 @@ namespace Vkm.Api.Layout
             if (_inLayout)
                 DisconnectFromElement(placement);
         }
-
-
+        
         private void ElementOnDrawElement(object sender, DrawEventArgs e)
         {
             var placedElement = _elements.Values.FirstOrDefault(el=> el.Element == sender);
@@ -145,6 +144,23 @@ namespace Vkm.Api.Layout
                 DrawLayout?.Invoke(this, drawEventArgs);
             }
         }
+
+        protected void AddElementsInRectangle(IEnumerable<IElement> elements, byte fromX, byte fromY, byte toX, byte toY)
+        {
+            using (LayoutContext.PauseDrawing())
+            {
+                byte width = (byte) (toX - fromX + 1);
+
+                int i = 0;
+
+                foreach (var element in elements)
+                {
+                    AddElement(new Location(fromX + i % width, fromY + i / width), element);
+                    i++;
+                }
+            }
+        }
+
 
         public virtual void ButtonPressed(Location location, bool isDown)
         {

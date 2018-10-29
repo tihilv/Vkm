@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Vkm.Api.Service;
 
 namespace Vkm.Library.Interfaces.Service
@@ -7,5 +8,6 @@ namespace Vkm.Library.Interfaces.Service
     {
         IntPtr Start(string path);
         bool Activate(IntPtr handle);
+        List<ProcessInfo> GetProcessesWithWindows();
     }
 }

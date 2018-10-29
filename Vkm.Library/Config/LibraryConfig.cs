@@ -9,6 +9,7 @@ using Vkm.Api.Module;
 using Vkm.Api.Options;
 using Vkm.Library.ApplicationChangeTransition;
 using Vkm.Library.AudioSelect;
+using Vkm.Library.Buttons;
 using Vkm.Library.Clock;
 using Vkm.Library.Common;
 using Vkm.Library.CompositeLayout;
@@ -44,6 +45,7 @@ namespace Vkm.Library.Config
             Identifier VolumeIdentifier = new Identifier("Vkm.DesktopDefaults.Volume");
             Identifier WeatherIdentifier = new Identifier("Vkm.DesktopDefaults.Weather");
             Identifier MailIdentifier = new Identifier("Vkm.DesktopDefaults.Mail");
+            Identifier TaskbarIdentifier = new Identifier("Vkm.DesktopDefaults.Taskbar");
             Identifier CalcIdentifier = new Identifier("Vkm.DesktopDefaults.Calc");
             Identifier HeartbeatIdentifier = new Identifier("Vkm.DesktopDefaults.Heartbeat");
             Identifier DateIdentifier = new Identifier("Vkm.DesktopDefaults.Date");
@@ -60,6 +62,7 @@ namespace Vkm.Library.Config
             Identifier DefaultStartupTransition = new Identifier("Vkm.DefaultStartupTransition");
             Identifier DefaultNumpadLayout = new Identifier("Vkm.DefaultNumpad.Layout");
             Identifier DefaultScreenSaverLayout = new Identifier("Vkm.DefaultScreensaver.Layout");
+            Identifier DefaultTaskbarLayout = new Identifier("Vkm.DefaultTaskbar.Layout");
 
             var globalOptions = new GlobalOptions();
 
@@ -68,6 +71,7 @@ namespace Vkm.Library.Config
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(ClockLayoutFactory.Identifier, DefaultScreenSaverLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TimerLayoutFactory.Identifier, DefaultTimerLayout));
+            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TaskbarLayoutFactory.Identifier, DefaultTaskbarLayout));
 
             globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleStartupTransitionFactory.Identifier, DefaultStartupTransition));
             globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleIdleTransitionFactory.Identifier, DefaultIdleTransition));
@@ -110,6 +114,12 @@ namespace Vkm.Library.Config
             {
                 Location = new Location(2, 1),
                 ModuleInfo = new ModuleInitializationInfo(MailElementFactory.Identifier, MailIdentifier)
+            });
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(3, 1),
+                ModuleInfo = new ModuleInitializationInfo(MoveToLayoutElementFactory.Identifier, TaskbarIdentifier)
             });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
@@ -172,10 +182,10 @@ namespace Vkm.Library.Config
             applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
             optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionExcel, applicationTransitionOptions);
 
-            applicationTransitionOptions = new ApplicationChangeTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier());
-            applicationTransitionOptions.Process = "TOTALCMD64";
-            applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
-            optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionTotalCmd, applicationTransitionOptions);
+            //applicationTransitionOptions = new ApplicationChangeTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier());
+            //applicationTransitionOptions.Process = "TOTALCMD64";
+            //applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
+            //optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionTotalCmd, applicationTransitionOptions);
 
 
             var idleOptions = new IdleTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier()) {LayoutId = DefaultScreenSaverLayout};
@@ -199,6 +209,9 @@ namespace Vkm.Library.Config
             
             var lastFmOptions = new LastFmOptions() {Domain = "http://ws.audioscrobbler.com", ApiKey = "d1a52a26a6f62158fbd86090441f81fb"};
             optionsService.SetDefaultOptions(LastFmAlbumCoverService.Identifier, lastFmOptions);
+
+            var taskbarOptions = new MoveToElementOptions() {Text = "1", LayoutIdentifier = DefaultTaskbarLayout};
+            optionsService.SetDefaultOptions(TaskbarIdentifier, taskbarOptions);
 
             var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};
             optionsService.SetDefaultOptions(AmipPlayerService.Identifier, amipOptions);
