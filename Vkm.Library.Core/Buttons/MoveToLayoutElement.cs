@@ -6,6 +6,7 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Common;
+using Vkm.Library.Common;
 
 namespace Vkm.Library.Buttons
 {
@@ -30,7 +31,7 @@ namespace Vkm.Library.Buttons
         {
             var bitmap = LayoutContext.CreateBitmap();
 
-            var fontFamily = GlobalContext.Options.Theme.FontFamily;
+            var fontFamily = FontService.Instance.AwesomeFontFamily;
 
             DefaultDrawingAlgs.DrawText(bitmap, fontFamily, _options.Text, GlobalContext.Options.Theme.ForegroundColor);
 

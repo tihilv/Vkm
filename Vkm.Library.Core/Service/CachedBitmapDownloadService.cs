@@ -47,5 +47,27 @@ namespace Vkm.Library.Service
             
             return (await result).Clone();
         }
+
+        public async Task<BitmapRepresentation> GetBitmapForExecutable(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return (BitmapRepresentation)null;
+
+            var result = _cache.GetOrAdd(filePath, async s =>
+            {
+                using (var icon = Icon.ExtractAssociatedIcon(filePath))
+                using (var iconBmp = icon.ToBitmap())
+                    return new BitmapRepresentation(iconBmp);
+                
+            });
+
+            if (_cache.Count > CacheSize)
+            {
+                var victim = _cache.Keys.First(v => v != filePath);
+                _cache.TryRemove(victim, out _);
+            }
+            
+            return (await result).Clone();
+        }
     }
 }

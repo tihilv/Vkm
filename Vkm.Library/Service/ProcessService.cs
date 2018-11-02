@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,33 +12,26 @@ namespace Vkm.Library.Service
 {
     public class ProcessService: IProcessService
     {
-        private readonly ConcurrentDictionary<IntPtr, Process> _processes;
-
-        public ProcessService()
-        {
-            _processes = new ConcurrentDictionary<IntPtr, Process>();
-        }
-
         public Identifier Id => new Identifier("Vkm.ProcessService");
         public string Name => "Process Service";
 
-        public IntPtr Start(string path)
+        public int Start(string path)
         {
             var process = Process.Start(path);
             if (process != null)
             {
-                _processes[process.MainWindowHandle] = process;
-                return process.MainWindowHandle;
+                return process.Id;
             }
-            return IntPtr.Zero;
+            return 0;
         }
 
-        public bool Activate(IntPtr handle)
+        public bool Activate(int id)
         {
-            if (!_processes.TryGetValue(handle, out var process) || process.HasExited)
+            var process = Process.GetProcessById(id);
+            if (process.HasExited)
                 return false;
 
-            Win32.SwitchToThisWindow(handle, true);
+            Win32.SwitchToThisWindow(process.MainWindowHandle, true);
             return true;
         }
 
@@ -47,19 +39,16 @@ namespace Vkm.Library.Service
         {
             List<ProcessInfo> result = new List<ProcessInfo>();
 
-            var commandLines = GetCommandLines();
-
             foreach (var item in Process.GetProcesses())
             {
                 try
                 {
                     if (item.MainWindowTitle.Length > 0)
                     {
-                        commandLines.TryGetValue(item.Id, out var executable);
+                        string executable = GetCommandLine(item.Id);
                         if (File.Exists(executable))
                         {
-                            result.Add(new ProcessInfo(executable, item.ProcessName, item.Handle, item.MainWindowTitle, item.MainWindowHandle));
-                            _processes[item.MainWindowHandle] = item;
+                            result.Add(new ProcessInfo(item.Id, executable, item.ProcessName, item.Handle, item.MainWindowTitle, item.MainWindowHandle));
                         }
                     }
                 }
@@ -67,6 +56,25 @@ namespace Vkm.Library.Service
                 {
 
                 }
+            }
+
+            return result;
+        }
+
+        public void Stop(int id)
+        {
+            Process.GetProcessById(id).CloseMainWindow();
+        }
+
+        private Dictionary<int, string> _cachedCommandLines;
+        private string GetCommandLine(int processId)
+        {
+            string result;
+
+            if (_cachedCommandLines == null || !_cachedCommandLines.TryGetValue(processId, out result))
+            {
+                _cachedCommandLines = GetCommandLines();
+                _cachedCommandLines.TryGetValue(processId, out result);
             }
 
             return result;

@@ -6,14 +6,18 @@ using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Library.Common;
 using Vkm.Library.Interfaces.Service;
+using Vkm.Library.Interfaces.Services;
 
 namespace Vkm.Library.Run
 {
     internal class TaskbarLayout: LayoutBase
     {
-        private List<RunElement> _elements;
+        private readonly List<RunElement> _elements;
+
+        private int _currentProcessId;
 
         private IProcessService _processService;
+        private ICurrentProcessService _currentProcessService;
 
         public TaskbarLayout(Identifier identifier) : base(identifier)
         {
@@ -25,6 +29,7 @@ namespace Vkm.Library.Run
             base.Init();
 
             _processService = GlobalContext.GetServices<IProcessService>().First();
+            _currentProcessService = GlobalContext.GetServices<ICurrentProcessService>().First();
 
             AddElement(new Location(4, 2), GlobalContext.InitializeEntity(new BackElement()));
 
@@ -33,7 +38,20 @@ namespace Vkm.Library.Run
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             base.EnterLayout(layoutContext, previousLayout);
+            _currentProcessService.ProcessEnter += OnProcessEnter;
 
+            FillElements();
+        }
+
+        public override void LeaveLayout()
+        {
+            _currentProcessService.ProcessEnter -= OnProcessEnter;
+            base.LeaveLayout();
+        }
+
+        private void OnProcessEnter(object sender, ProcessEventArgs e)
+        {
+            _currentProcessId = e.ProcessId;
             FillElements();
         }
 
@@ -46,17 +64,17 @@ namespace Vkm.Library.Run
 
                 _elements.Clear();
 
-                var processes = _processService.GetProcessesWithWindows();
+                var processes = _processService.GetProcessesWithWindows().OrderBy(p=>p.MainWindowText);
 
                 foreach (var processInfo in processes)
                 {
                     var element = GlobalContext.InitializeEntity(new RunElement(new Identifier($"Vkm.RunProcess.N{processInfo.Handle}")));
                     element.InitOptions(new RunOptions() {Executable = processInfo.ExecutableFileName});
-                    element.SetRunning(processInfo.MainWindowHandle);
+                    element.SetRunning(processInfo.Id, processInfo.Id == _currentProcessId);
                     _elements.Add(element);
                 }
 
-                AddElementsInRectangle(_elements, 0, 0, (byte) (LayoutContext.IconSize.Width - 1), (byte) (LayoutContext.IconSize.Height - 1));
+                AddElementsInRectangle(_elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
             }
         }
     }

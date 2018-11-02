@@ -14,7 +14,8 @@ namespace Vkm.Library.Service
         private IntPtr _hook;
 
 
-        private string _lastProcess;
+        private string _lastProcessName;
+        private int? _lastProcessId;
 
         public event EventHandler<ProcessEventArgs> ProcessEnter;
         public event EventHandler<ProcessEventArgs> ProcessExit;
@@ -32,15 +33,17 @@ namespace Vkm.Library.Service
                 process = GetRealProcess(process);
 
             var processName = process?.ProcessName;
-            if (processName != null)
+            var processId = process?.Id;
+            if (processId != null)
             {
-                if (processName != _lastProcess)
+                if (processId != _lastProcessId)
                 {
-                    if (!string.IsNullOrEmpty(_lastProcess))
-                        ProcessExit?.Invoke(this, new ProcessEventArgs(_lastProcess));
+                    if (_lastProcessId != null)
+                        ProcessExit?.Invoke(this, new ProcessEventArgs(_lastProcessId.Value, _lastProcessName));
 
-                    _lastProcess = processName;
-                    ProcessEnter?.Invoke(this, new ProcessEventArgs(processName));
+                    _lastProcessId = processId;
+                    _lastProcessName = processName;
+                    ProcessEnter?.Invoke(this, new ProcessEventArgs(processId.Value, processName));
                 }
             }
         } 

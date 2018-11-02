@@ -8,6 +8,10 @@ namespace Vkm.Common.Win32.Win32
     public static class Win32
     {
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport("User32.dll")]

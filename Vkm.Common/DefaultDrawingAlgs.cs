@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Vkm.Api.Basic;
+using Vkm.Api.Options;
 
 namespace Vkm.Common
 {
@@ -108,6 +109,16 @@ namespace Vkm.Common
             }
 
             return text;
+        }
+
+        public static void SelectElement(BitmapEx bitmap, ThemeOptions themeOptions)
+        {
+            using (var graphics = bitmap.CreateGraphics())
+            using (var pen = new Pen(themeOptions.ForegroundColor, 3))
+            {
+                graphics.DrawRectangle(pen, 0, 0, bitmap.Width, bitmap.Height);
+            }
+
         }
     }
 

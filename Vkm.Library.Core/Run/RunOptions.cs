@@ -8,6 +8,12 @@ namespace Vkm.Library.Run
     {
         private string _executable;
         private string _symbol;
+        private TimeSpan _pressToActionTimeout;
+
+        public RunOptions()
+        {
+            _pressToActionTimeout = TimeSpan.FromMilliseconds(500);
+        }
 
         public string Executable
         {
@@ -19,6 +25,12 @@ namespace Vkm.Library.Run
         {
             get => _symbol;
             set => _symbol = value;
+        }
+
+        public TimeSpan PressToActionTimeout
+        {
+            get => _pressToActionTimeout;
+            set => _pressToActionTimeout = value;
         }
     }
 }

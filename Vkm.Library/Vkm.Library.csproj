@@ -56,7 +56,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Service\CachedBitmapDownloadService.cs" />
     <Compile Include="Service\CurrentProcessService.cs" />
     <Compile Include="Service\MediaDeviceService.cs" />
     <Compile Include="Service\PowerService.cs" />

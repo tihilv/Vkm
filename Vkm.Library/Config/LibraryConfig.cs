@@ -210,7 +210,7 @@ namespace Vkm.Library.Config
             var lastFmOptions = new LastFmOptions() {Domain = "http://ws.audioscrobbler.com", ApiKey = "d1a52a26a6f62158fbd86090441f81fb"};
             optionsService.SetDefaultOptions(LastFmAlbumCoverService.Identifier, lastFmOptions);
 
-            var taskbarOptions = new MoveToElementOptions() {Text = "1", LayoutIdentifier = DefaultTaskbarLayout};
+            var taskbarOptions = new MoveToElementOptions() {Text = FontAwesomeRes.fa_windows, LayoutIdentifier = DefaultTaskbarLayout};
             optionsService.SetDefaultOptions(TaskbarIdentifier, taskbarOptions);
 
             var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};

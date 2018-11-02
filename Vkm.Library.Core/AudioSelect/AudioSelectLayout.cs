@@ -132,13 +132,7 @@ namespace Vkm.Library.AudioSelect
                     DefaultDrawingAlgs.DrawText(bitmap, fontFamily, combName, GlobalContext.Options.Theme.ForegroundColor);
 
                 if (_device.Id == _audioSelectLayout._defaultDeviceId)
-                {
-                    using (var graphics = bitmap.CreateGraphics())
-                    using (var pen = new Pen(GlobalContext.Options.Theme.ForegroundColor, 3))
-                    {
-                        graphics.DrawRectangle(pen, 0, 0, bitmap.Width, bitmap.Height);
-                    }
-                }
+                    DefaultDrawingAlgs.SelectElement(bitmap, GlobalContext.Options.Theme);
 
                 return bitmap;
             }

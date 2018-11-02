@@ -7,5 +7,6 @@ namespace Vkm.Library.Interfaces.Services
     public interface IBitmapDownloadService: IService
     {
         Task<BitmapRepresentation> GetBitmap(string url);
+        Task<BitmapRepresentation> GetBitmapForExecutable(string filePath);
     }
 }

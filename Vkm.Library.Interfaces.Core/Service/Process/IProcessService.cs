@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Vkm.Api.Service;
 
 namespace Vkm.Library.Interfaces.Service
 {
     public interface IProcessService: IService
     {
-        IntPtr Start(string path);
-        bool Activate(IntPtr handle);
+        int Start(string path);
+        bool Activate(int id);
         List<ProcessInfo> GetProcessesWithWindows();
+        void Stop(int id);
     }
 }
