@@ -19,8 +19,6 @@ namespace Vkm.Library.Power
         
         private readonly PowerAction? _overridenAction;
 
-        private System.Timers.Timer _timer;
-
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
         public PowerElement(Identifier identifier) : base(identifier)
@@ -40,13 +38,6 @@ namespace Vkm.Library.Power
         public void InitOptions(IOptions options)
         {
             _options = (PowerOptions) options;
-
-            if (_options.PressToActionTimeout.TotalMilliseconds > 0)
-            {
-                _timer = new System.Timers.Timer(_options.PressToActionTimeout.TotalMilliseconds);
-                _timer.Elapsed += TimerElapsed;
-                _timer.AutoReset = false;
-            }
         }
 
         public override void Init()
@@ -83,34 +74,26 @@ namespace Vkm.Library.Power
             return _overridenAction ?? _options.Action;
         }
 
-        private bool _isDown;
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
-                _isDown = true;
-                if (_timer != null)
-                    _timer.Start();
-                else
+                if (!_options.CallLayout)
                     ExecuteAction();
             }
-            else
+            else if (buttonEvent == ButtonEvent.Up)
             {
-                if (_timer != null)
+                if (_options.CallLayout)
                 {
-                    _timer.Stop();
-                    if (_isDown)
-                        LayoutContext.SetLayout(GlobalContext.InitializeEntity(new PowerLayout(Id)));
+                    LayoutContext.SetLayout(GlobalContext.InitializeEntity(new PowerLayout(Id)));
                 }
-                _isDown = false;
+            }
+            else if (buttonEvent == ButtonEvent.LongPress)
+            {
+                ExecuteAction();
             }
 
-            return base.ButtonPressed(location, isDown);
-        }
-
-        private void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            ExecuteAction();
+            return base.ButtonPressed(location, buttonEvent);
         }
 
         private void ExecuteAction()

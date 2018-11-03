@@ -62,7 +62,7 @@ namespace Vkm.Api.Layout
             _layoutContext = layoutContext;
 
             foreach (var placement in _elements.Values)
-                ConnectToElement(placement.Element, previousLayout);
+                ConnectToElement(placement, previousLayout);
 
             foreach (var timer in _timers.Values)
                 timer.Start();
@@ -80,10 +80,13 @@ namespace Vkm.Api.Layout
                 DisconnectFromElement(placement);
         }
 
-        private void ConnectToElement(IElement element, ILayout previousLayout)
+        private void ConnectToElement(ElementPlacement placement, ILayout previousLayout)
         {
-            element.DrawElement += ElementOnDrawElement;
-            element.EnterLayout(_layoutContext, previousLayout);
+            if ((placement.Location.X + placement.Element.ButtonCount.Width > LayoutContext.ButtonCount.Width) ||(placement.Location.Y + placement.Element.ButtonCount.Height > LayoutContext.ButtonCount.Height))
+                throw new ArgumentException($"Element {placement.Element.Id.Value} of type {placement.Element.GetType().FullName} attempted to put out of the borders.");
+
+            placement.Element.DrawElement += ElementOnDrawElement;
+            placement.Element.EnterLayout(_layoutContext, previousLayout);
         }
 
         private void DisconnectFromElement(ElementPlacement placement)
@@ -109,7 +112,7 @@ namespace Vkm.Api.Layout
             _elements.TryAdd(placement, placement);
 
             if (_inLayout)
-                ConnectToElement(element, _previousLayout);
+                ConnectToElement(placement, _previousLayout);
         }
 
         protected void RemoveElement(IElement element)
@@ -162,14 +165,14 @@ namespace Vkm.Api.Layout
         }
 
 
-        public virtual void ButtonPressed(Location location, bool isDown)
+        public virtual void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
             var elementsToLook = _elements.Values.ToArray();
 
             foreach (ElementPlacement placement in elementsToLook)
             {
                 if (location.X >= placement.Location.X && location.X < placement.Location.X + placement.Element.ButtonCount.Width && location.Y >= placement.Location.Y && location.Y < placement.Location.Y + placement.Element.ButtonCount.Height)
-                    placement.Element.ButtonPressed(new Location((byte) (location.X - placement.Location.X), (byte) (location.Y - placement.Location.Y)), isDown);
+                    placement.Element.ButtonPressed(new Location((byte) (location.X - placement.Location.X), (byte) (location.Y - placement.Location.Y)), buttonEvent);
             }
         }
 

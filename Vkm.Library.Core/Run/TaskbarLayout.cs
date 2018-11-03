@@ -55,26 +55,30 @@ namespace Vkm.Library.Run
             FillElements();
         }
 
+        private object _fillLock = new object();
         void FillElements()
         {
-            using (LayoutContext.PauseDrawing())
+            lock (_fillLock)
             {
-                foreach (var element in _elements)
-                    RemoveElement(element);
-
-                _elements.Clear();
-
-                var processes = _processService.GetProcessesWithWindows().OrderBy(p=>p.MainWindowText);
-
-                foreach (var processInfo in processes)
+                using (LayoutContext.PauseDrawing())
                 {
-                    var element = GlobalContext.InitializeEntity(new RunElement(new Identifier($"Vkm.RunProcess.N{processInfo.Handle}")));
-                    element.InitOptions(new RunOptions() {Executable = processInfo.ExecutableFileName});
-                    element.SetRunning(processInfo.Id, processInfo.Id == _currentProcessId);
-                    _elements.Add(element);
-                }
+                    foreach (var element in _elements)
+                        RemoveElement(element);
 
-                AddElementsInRectangle(_elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
+                    _elements.Clear();
+
+                    var processes = _processService.GetProcessesWithWindows().OrderBy(p => p.MainWindowText).Take(LayoutContext.ButtonCount.Width * LayoutContext.ButtonCount.Height - 1);
+
+                    foreach (var processInfo in processes)
+                    {
+                        var element = GlobalContext.InitializeEntity(new RunElement(new Identifier($"Vkm.RunProcess.N{processInfo.Handle}")));
+                        element.InitOptions(new RunOptions() {Executable = processInfo.ExecutableFileName});
+                        element.SetRunning(processInfo.Id, processInfo.Id == _currentProcessId);
+                        _elements.Add(element);
+                    }
+
+                    AddElementsInRectangle(_elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
+                }
             }
         }
     }

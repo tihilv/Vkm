@@ -109,16 +109,16 @@ namespace Vkm.Library.Media
             base.LeaveLayout();
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 var mediaLayout = new MediaLayout(new Identifier(Id.Value + ".Layout"));
                 GlobalContext.InitializeEntity(mediaLayout);
 
                 LayoutContext.SetLayout(mediaLayout);
             }
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
 
     }

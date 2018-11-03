@@ -109,9 +109,9 @@ namespace Vkm.Library.Timer
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 if (location.X == 3)
                 {
@@ -135,7 +135,7 @@ namespace Vkm.Library.Timer
                 DrawStopwatch();
             }
 
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

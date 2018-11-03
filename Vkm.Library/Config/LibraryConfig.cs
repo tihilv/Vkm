@@ -182,10 +182,10 @@ namespace Vkm.Library.Config
             applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
             optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionExcel, applicationTransitionOptions);
 
-            //applicationTransitionOptions = new ApplicationChangeTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier());
-            //applicationTransitionOptions.Process = "TOTALCMD64";
-            //applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
-            //optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionTotalCmd, applicationTransitionOptions);
+            applicationTransitionOptions = new ApplicationChangeTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier());
+            applicationTransitionOptions.Process = "TOTALCMD64";
+            applicationTransitionOptions.LayoutId = DefaultNumpadLayout;
+            optionsService.SetDefaultOptions(DefaultApplicationChangeTransitionTotalCmd, applicationTransitionOptions);
 
 
             var idleOptions = new IdleTransitionOptions(Devices.FirstOrDefault()?.Id ?? new Identifier()) {LayoutId = DefaultScreenSaverLayout};
@@ -198,7 +198,7 @@ namespace Vkm.Library.Config
             var clockOptions = new ClockElementOptions() {TimerLayoutIdentifier = DefaultTimerLayout};
             optionsService.SetDefaultOptions(ClockIdentifier, clockOptions);
 
-            var powerOffOptions = new PowerOptions() {PressToActionTimeout = TimeSpan.FromSeconds(1), Action = PowerAction.PowerOff};
+            var powerOffOptions = new PowerOptions() {CallLayout = true, Action = PowerAction.PowerOff};
             optionsService.SetDefaultOptions(PowerOffIdentifier, powerOffOptions);
 
             var audioSelectOptions = new AudioSelectOptions();

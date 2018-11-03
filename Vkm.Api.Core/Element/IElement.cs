@@ -15,6 +15,6 @@ namespace Vkm.Api.Element
         void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
         void LeaveLayout();
 
-        bool ButtonPressed(Location location, bool isDown);
+        bool ButtonPressed(Location location, ButtonEvent buttonEvent);
     }
 }

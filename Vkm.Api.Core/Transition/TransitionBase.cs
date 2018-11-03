@@ -31,14 +31,14 @@ namespace Vkm.Api.Transition
             _transitionOptions = (T) options;
         }
 
-        public void OnTransition()
+        protected void OnTransition()
         {
             PerformTransition?.Invoke(this, new TransitionEventArgs(_transitionOptions.DeviceId, _transitionOptions.LayoutId));
         }
 
-        public void OnTransitionBack()
+        protected void OnTransitionBack()
         {
-            PerformTransition?.Invoke(this, new TransitionEventArgs(_transitionOptions.DeviceId, true));
+            PerformTransition?.Invoke(this, new TransitionEventArgs(_transitionOptions.DeviceId, _transitionOptions.LayoutId, true));
         }
 
         public virtual void InitContext(GlobalContext context)

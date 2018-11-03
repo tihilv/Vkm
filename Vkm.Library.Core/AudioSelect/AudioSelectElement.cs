@@ -41,13 +41,13 @@ namespace Vkm.Library.AudioSelect
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
                 LayoutContext.SetLayout(GlobalContext.InitializeEntity(new AudioSelectLayout(Id, _options)));
 
 
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
     }
 

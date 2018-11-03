@@ -21,8 +21,6 @@ namespace Vkm.Library.Run
         private int _processId;
         private bool _selected;
 
-        private System.Timers.Timer _timer;
-
         public override DeviceSize ButtonCount => new DeviceSize(1,1);
 
         public RunElement(Identifier identifier) : base(identifier)
@@ -45,10 +43,6 @@ namespace Vkm.Library.Run
         public void InitOptions(IOptions options)
         {
             _options = (RunOptions) options;
-
-            _timer = new System.Timers.Timer(_options.PressToActionTimeout.TotalMilliseconds);
-            _timer.Elapsed += TimerElapsed;
-            _timer.AutoReset = false;
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -56,6 +50,11 @@ namespace Vkm.Library.Run
             base.EnterLayout(layoutContext, previousLayout);
 
             DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), Draw())});
+        }
+
+        public override void LeaveLayout()
+        {
+            base.LeaveLayout();
         }
 
         private BitmapEx Draw()
@@ -81,34 +80,27 @@ namespace Vkm.Library.Run
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
-                _timer.Start();
-
                 if (_processId == 0 || !_processService.Activate(_processId))
                     _processId = _processService.Start(_options.Executable);
 
                 return true;
             }
-            else
+            else if (buttonEvent == ButtonEvent.LongPress)
             {
-                _timer.Stop();
+                _processService.Stop(_processId);
             }
 
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
 
         public void SetRunning(int processId, bool selected)
         {
             _processId = processId;
             _selected = selected;
-        }
-
-        private void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            _processService.Stop(_processId);
         }
     }
 }

@@ -80,9 +80,9 @@ namespace Vkm.Library.Weather
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 var forecastLayout = new DaysForecastLayout();
                 GlobalContext.InitializeEntity(forecastLayout);
@@ -90,7 +90,7 @@ namespace Vkm.Library.Weather
 
                 LayoutContext.SetLayout(forecastLayout);
             }
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

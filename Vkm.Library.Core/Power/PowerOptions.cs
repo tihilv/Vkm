@@ -7,19 +7,19 @@ namespace Vkm.Library.Power
     [Serializable]
     public class PowerOptions: IOptions
     {
-        private TimeSpan _pressToActionTimeout;
         private PowerAction _action;
-
-        public TimeSpan PressToActionTimeout
-        {
-            get => _pressToActionTimeout;
-            set => _pressToActionTimeout = value;
-        }
+        private bool _callLayout;
 
         public PowerAction Action
         {
             get => _action;
             set => _action = value;
+        }
+
+        public bool CallLayout
+        {
+            get => _callLayout;
+            set => _callLayout = value;
         }
     }
 

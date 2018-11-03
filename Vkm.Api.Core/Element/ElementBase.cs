@@ -45,7 +45,7 @@ namespace Vkm.Api.Element
                 timer.Stop();
         }
 
-        public virtual bool ButtonPressed(Location location, bool isDown)
+        public virtual bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
             return false;
         }

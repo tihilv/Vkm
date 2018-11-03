@@ -53,5 +53,11 @@ namespace Vkm.Library
 
             GlobalContext.InitializeEntity(_clockElement);
         }
+
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        {
+            if (buttonEvent == ButtonEvent.Down)
+                LayoutContext.SetPreviousLayout();
+        }
     }
 }

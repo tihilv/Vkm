@@ -41,7 +41,7 @@ namespace Vkm.TestProject.Entities
             _modulesService = new TestModulesService();
             _timerService = new TestTimerService();
             _globalServices = new GlobalServices(_optionsService, _modulesService, _timerService); 
-            _globalContext = new GlobalContext(_globalOptions, _globalServices, null, null, null);
+            _globalContext = new GlobalContext(_globalOptions, _globalServices, null, null, null, null);
             _device = _modulesService.GetModules<IDeviceFactory>().First().GetDevices().First();
             _layoutContext = new LayoutContext(_device, _globalContext, layout => {}, () => {}, () => { return null;});
         }

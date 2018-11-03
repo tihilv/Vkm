@@ -109,9 +109,9 @@ namespace Vkm.Library.Mail
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 foreach (var service in _mailServices)
                 {
@@ -120,7 +120,7 @@ namespace Vkm.Library.Mail
                 
                 return true;
             }
-            return base.ButtonPressed(location, isDown);
+            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

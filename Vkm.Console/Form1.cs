@@ -15,6 +15,7 @@ namespace Vkm.Console
         public Form1()
         {
             InitializeComponent();
+            var x = ShowInTaskbar;
         }
     }
 }

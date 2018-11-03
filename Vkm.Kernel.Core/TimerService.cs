@@ -14,9 +14,9 @@ namespace Vkm.Kernel
             _timers = new ConcurrentDictionary<TimerToken, Timer>();
         }
 
-        public ITimerToken RegisterTimer(TimeSpan interval, Action action)
+        public ITimerToken RegisterTimer(TimeSpan interval, Action action, bool executeOnce = false)
         {
-            return new TimerToken(this, interval.TotalMilliseconds, action);
+            return new TimerToken(this, interval.TotalMilliseconds, action, executeOnce);
         }
 
 
@@ -24,20 +24,22 @@ namespace Vkm.Kernel
         {
             private readonly double _intervalMs;
             private readonly Action _action;
+            private readonly bool _executeOnce;
 
             private readonly TimerService _timerService;
 
-            public TimerToken(TimerService timerService, double intervalMs, Action action)
+            public TimerToken(TimerService timerService, double intervalMs, Action action, bool executeOnce)
             {
                 _timerService = timerService;
                 _intervalMs = intervalMs;
                 _action = action;
+                _executeOnce = executeOnce;
             }
 
             public void Start()
             {
                 Timer timer = new Timer();
-                timer.AutoReset = true;
+                timer.AutoReset = !_executeOnce;
                 timer.Interval = _intervalMs;
                 timer.Elapsed += TimerOnElapsed;
 
@@ -48,6 +50,9 @@ namespace Vkm.Kernel
             private void TimerOnElapsed(object sender, ElapsedEventArgs e)
             {
                 _action();
+
+                if (_executeOnce)
+                    Stop();
             }
 
             public void Stop()

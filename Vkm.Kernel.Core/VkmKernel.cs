@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Vkm.Api.Configurator;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
+using Vkm.Api.Hook;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
@@ -19,10 +20,9 @@ namespace Vkm.Kernel
         private readonly GlobalContext _globalContext;
 
         private readonly ConcurrentDictionary<Identifier, DeviceManager> _deviceManagers;
-
         private readonly ConcurrentDictionary<Identifier, ILayout> _layouts;
-
         private readonly ConcurrentDictionary<Identifier, ITransition> _transitions;
+        private readonly ConcurrentDictionary<Identifier, IDeviceHook> _deviceHooks;
 
         public VkmKernel()
         {
@@ -45,11 +45,12 @@ namespace Vkm.Kernel
                     new TimerService()
                 );
 
-            _globalContext = new GlobalContext(_coreOptions, globalServices, () => devices, () => _layouts, ()=>_transitions);
+            _globalContext = new GlobalContext(_coreOptions, globalServices, () => devices, () => _layouts, () => _transitions, () => _deviceHooks);
 
             _deviceManagers = InitDeviceManagers(devices);
             _layouts = InitLayouts();
             _transitions = InitTransitions();
+            _deviceHooks = InitDeviceHooks();
         }
 
         private ConcurrentDictionary<Identifier, DeviceManager> InitDeviceManagers(IDevice[] devices)
@@ -90,6 +91,19 @@ namespace Vkm.Kernel
             return result;
         }
 
+        private ConcurrentDictionary<Identifier, IDeviceHook> InitDeviceHooks()
+        {
+            var result = new ConcurrentDictionary<Identifier, IDeviceHook>();
+
+            foreach (var deviceHook in _globalContext.Services.ModulesService.GetModules<IDeviceHook>())
+            {
+                _globalContext.InitializeEntity(deviceHook);
+                result[deviceHook.Id] = deviceHook;
+            }
+
+            return result;
+        }
+
         private void TransitionOnPerformTransition(object sender, TransitionEventArgs e)
         {
             var deviceManagers = GetDeviceManagers(e.DeviceId);
@@ -97,7 +111,7 @@ namespace Vkm.Kernel
             if (e.Back)
             {
                 foreach (var deviceManager in deviceManagers)
-                    deviceManager.SetPreviousLayout();
+                    deviceManager.SetPreviousLayout(e.LayoutId);
             }
             else
             {

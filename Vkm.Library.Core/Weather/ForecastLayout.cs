@@ -51,7 +51,7 @@ namespace Vkm.Library.Weather
             
         }
 
-        public abstract void ButtonPressed(Location location, bool isDown);
+        public abstract void ButtonPressed(Location location, ButtonEvent buttonEvent);
 
         protected abstract Task<WeatherInfo[]> GetData();
 
@@ -107,9 +107,9 @@ namespace Vkm.Library.Weather
 
     class DaysForecastLayout : ForecastLayout
     {
-        public override void ButtonPressed(Location location, bool isDown)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 if (location.Y == 0)
                 {
@@ -147,12 +147,10 @@ namespace Vkm.Library.Weather
             _dateTime = dateTime;
         }
 
-        public override void ButtonPressed(Location location, bool isDown)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
-            {
+            if (buttonEvent == ButtonEvent.Down)
                 _layoutContext.SetPreviousLayout();
-            }
         }
 
         protected override async Task<WeatherInfo[]> GetData()

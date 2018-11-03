@@ -136,25 +136,25 @@ namespace Vkm.Library.Volume
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
             _buttonPressedTimer.Interval = 400;
-            _buttonPressedTimer.Enabled = isDown;
+            _buttonPressedTimer.Enabled = buttonEvent == ButtonEvent.Down;
             _increase = location.Y == 0;
 
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
                 _pressedCount++;
-            else
+            else if (buttonEvent == ButtonEvent.Up)
                 _pressedCount--;
 
             if (_pressedCount > 1)
             {
-                if (isDown)
+                if (buttonEvent == ButtonEvent.Down)
                 {
                     _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted);
                 }
             }
-            else if (isDown)
+            else if (buttonEvent == ButtonEvent.Down)
                 DoVolumeChange();
 
             return true;

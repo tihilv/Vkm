@@ -38,9 +38,9 @@ namespace Vkm.Library.Buttons
             DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
-        public override bool ButtonPressed(Location location, bool isDown)
+        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown && location.X == 0 && location.Y == 0)
+            if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
             {
                 LayoutContext.SetLayout(_options.LayoutIdentifier);
 

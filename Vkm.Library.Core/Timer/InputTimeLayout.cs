@@ -93,9 +93,9 @@ namespace Vkm.Library.Timer
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, bool isDown)
+            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
             {
-                if (isDown && location.X == 0 && location.Y == 0)
+                if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
                 {
                     _inputTimeLayout.SetValue(_value);
                     return true;

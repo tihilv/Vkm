@@ -154,13 +154,13 @@ namespace Vkm.Library.Media
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, bool isDown)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
             if (location.Y != 2)
-                if (isDown)
+                if (buttonEvent == ButtonEvent.Down)
                     LayoutContext.SetPreviousLayout();
             
-            base.ButtonPressed(location, isDown);
+            base.ButtonPressed(location, buttonEvent);
         }
     }
 }

@@ -17,9 +17,10 @@ namespace Vkm.Api.Transition
             Back = false;
         }
 
-        public TransitionEventArgs(Identifier deviceId, bool back)
+        public TransitionEventArgs(Identifier deviceId, Identifier layoutId, bool back)
         {
             DeviceId = deviceId;
+            LayoutId = layoutId;
             Back = back;
         }
     }

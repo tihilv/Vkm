@@ -44,9 +44,9 @@ namespace Vkm.Library.Timer
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, bool isDown)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            base.ButtonPressed(location, isDown);
+            base.ButtonPressed(location, buttonEvent);
 
             LayoutContext.SetPreviousLayout();
         }

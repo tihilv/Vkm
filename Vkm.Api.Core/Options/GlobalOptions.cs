@@ -19,11 +19,15 @@ namespace Vkm.Api.Options
 
         private readonly TransitionLoadOptions _transitionLoadOptions;
 
+        private TimeSpan _longPressTimeout;
+
         public LayoutLoadOptions LayoutLoadOptions => _layoutLoadOptions;
 
         public TransitionLoadOptions TransitionLoadOptions => _transitionLoadOptions;
 
         public List<Identifier> DiabledServices => _diabledServices;
+
+        public ThemeOptions Theme => _theme;
 
         public GlobalOptions()
         {
@@ -33,6 +37,7 @@ namespace Vkm.Api.Options
             _diabledServices = new List<Identifier>();
 
             _brightness = 50;
+            _longPressTimeout = TimeSpan.FromMilliseconds(500);
         }
 
         public byte Brightness
@@ -41,6 +46,10 @@ namespace Vkm.Api.Options
             set => _brightness = value;
         }
 
-        public ThemeOptions Theme => _theme;
+        public TimeSpan LongPressTimeout
+        {
+            get => _longPressTimeout;
+            set => _longPressTimeout = value;
+        }
     }
 }

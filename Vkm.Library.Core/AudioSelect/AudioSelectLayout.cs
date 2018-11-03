@@ -137,9 +137,9 @@ namespace Vkm.Library.AudioSelect
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, bool isDown)
+            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
             {
-                if (isDown && location.X == 0 && location.Y == 0)
+                if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
                 {
                     _audioSelectLayout._mediaDeviceService.SetDefault(_device);
                     _audioSelectLayout.SetDefaultDevice(_device.Id);

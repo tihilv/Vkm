@@ -14,6 +14,13 @@ namespace Vkm.Api.Layout
         void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
         void LeaveLayout();
 
-        void ButtonPressed(Location location, bool isDown);
+        void ButtonPressed(Location location, ButtonEvent isDown);
+    }
+
+    public enum ButtonEvent
+    {
+        Down = 0,
+        Up = 1,
+        LongPress = 2
     }
 }

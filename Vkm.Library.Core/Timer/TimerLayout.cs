@@ -92,9 +92,9 @@ namespace Vkm.Library.Timer
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, bool isDown)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            if (isDown)
+            if (buttonEvent == ButtonEvent.Down)
             {
                 if (location.Y == 2)
                 {
@@ -107,7 +107,7 @@ namespace Vkm.Library.Timer
                 }
             }
 
-            base.ButtonPressed(location, isDown);
+            base.ButtonPressed(location, buttonEvent);
         }
 
         
