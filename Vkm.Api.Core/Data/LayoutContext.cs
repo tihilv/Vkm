@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Vkm.Api.Basic;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
@@ -11,7 +12,8 @@ namespace Vkm.Api.Data
     {
         private readonly Action<ILayout> _setLayoutAction;
         private readonly Action _setPreviousLayoutAction;
-        private Func<IDisposable> _pauseDrawingFunc;
+        private readonly Func<IDisposable> _pauseDrawingFunc;
+        private readonly Func<IEnumerable<ILayout>> _activeLayoutsFunc;
         private readonly GlobalContext _globalContext;
         private readonly IDevice _device;
         
@@ -20,13 +22,14 @@ namespace Vkm.Api.Data
 
         public GlobalOptions Options => _globalContext.Options;
 
-        public LayoutContext(IDevice device, GlobalContext globalContext, Action<ILayout> setLayoutAction, Action setPreviousLayoutAction, Func<IDisposable> pauseDrawingFunc)
+        public LayoutContext(IDevice device, GlobalContext globalContext, Action<ILayout> setLayoutAction, Action setPreviousLayoutAction, Func<IDisposable> pauseDrawingFunc, Func<IEnumerable<ILayout>> activeLayoutsFunc)
         {
             _device = device;
             IconSize = device.IconSize;
             ButtonCount = device.ButtonCount;
             _globalContext = globalContext;
             _pauseDrawingFunc = pauseDrawingFunc;
+            _activeLayoutsFunc = activeLayoutsFunc;
 
             _setLayoutAction = setLayoutAction;
             _setPreviousLayoutAction = setPreviousLayoutAction;
@@ -55,6 +58,11 @@ namespace Vkm.Api.Data
         public BitmapEx CreateBitmap()
         {
             return _device.CreateBitmap(Options.Theme);
+        }
+
+        public IEnumerable<ILayout> GetActiveLayouts()
+        {
+            return _activeLayoutsFunc();
         }
     }
 }

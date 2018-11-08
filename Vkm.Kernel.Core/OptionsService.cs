@@ -52,7 +52,9 @@ namespace Vkm.Kernel
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception at options deserialization: {ex.ToString()}");
+                var error = $"Exception at options deserialization: {ex.ToString()}";
+                Debug.WriteLine(error);
+                Debug.Assert(false, error);
             }
 
             return new Dictionary<string, IOptions>();

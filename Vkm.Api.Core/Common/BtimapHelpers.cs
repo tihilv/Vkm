@@ -23,6 +23,12 @@ namespace Vkm.Api.Common
 
         public static void ResizeBitmap(BitmapEx source, BitmapEx destination, ColorMatrix colorMatrix = null)
         {
+            var destRect = new Rectangle(0, 0, destination.Width, destination.Height);
+            ResizeBitmap(source, destination, destRect, colorMatrix);
+        }
+
+        public static void ResizeBitmap(BitmapEx source, BitmapEx destination, Rectangle destRectangle, ColorMatrix colorMatrix = null)
+        {
             using (var graphics = destination.CreateGraphics())
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
@@ -34,12 +40,11 @@ namespace Vkm.Api.Common
                 using (var wrapMode = new ImageAttributes())
                 {
                     wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    
+
                     if (colorMatrix != null)
                         wrapMode.SetColorMatrix(colorMatrix);
-                    
-                    var destRect = new Rectangle(0, 0, destination.Width, destination.Height);
-                    graphics.DrawImage(source.GetInternal(), destRect, 0, 0, source.Width, source.Height, GraphicsUnit.Pixel, wrapMode);
+
+                    graphics.DrawImage(source.GetInternal(), destRectangle, 0, 0, source.Width, source.Height, GraphicsUnit.Pixel, wrapMode);
                 }
             }
         }

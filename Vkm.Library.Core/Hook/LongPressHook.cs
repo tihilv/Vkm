@@ -1,11 +1,13 @@
 ﻿using Vkm.Api.Basic;
+using Vkm.Api.Data;
 using Vkm.Api.Hook;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
+using Vkm.Api.Options;
 
 namespace Vkm.Library.Hook
 {
-    public class LayoutManagerHook: IDeviceHook
+    public class LongPressHook: IDeviceHook, IInitializable, IOptionsProvider
     {
         public static Identifier Identifier = new Identifier("Vkm.Hook.LayoutManager");
 
@@ -13,10 +15,13 @@ namespace Vkm.Library.Hook
 
         public string Name => "Layout Manager Hook";
 
+        private LongPressHookOptions _options;
+        
         private bool _longPress;
-        public bool OnKeyEventHook(Location location, ButtonEvent buttonEvent, ILayout layout)
+
+        public bool OnKeyEventHook(Location location, ButtonEvent buttonEvent, ILayout layout, LayoutContext layoutContext)
         {
-            if (location == new Location(4, 2))
+            if (location == _options.Location)
             {
                 if (buttonEvent == ButtonEvent.Down)
                 {
@@ -38,10 +43,31 @@ namespace Vkm.Library.Hook
                 if (buttonEvent == ButtonEvent.LongPress)
                 {
                     _longPress = true;
+                    layoutContext.SetLayout(_options.LayoutIdentifier);
                 }
             }
 
             return false;
+        }
+
+        public void InitContext(GlobalContext context)
+        {
+            
+        }
+
+        public void Init()
+        {
+            
+        }
+
+        public IOptions GetDefaultOptions()
+        {
+            return new LongPressHookOptions();
+        }
+
+        public void InitOptions(IOptions options)
+        {
+            _options = (LongPressHookOptions) options;
         }
     }
 }

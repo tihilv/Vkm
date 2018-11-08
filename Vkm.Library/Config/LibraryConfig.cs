@@ -15,8 +15,10 @@ using Vkm.Library.Common;
 using Vkm.Library.CompositeLayout;
 using Vkm.Library.Date;
 using Vkm.Library.Heartbeat;
+using Vkm.Library.Hook;
 using Vkm.Library.IdleTransition;
 using Vkm.Library.Interfaces.Service;
+using Vkm.Library.LayoutSwitch;
 using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;
@@ -63,6 +65,7 @@ namespace Vkm.Library.Config
             Identifier DefaultNumpadLayout = new Identifier("Vkm.DefaultNumpad.Layout");
             Identifier DefaultScreenSaverLayout = new Identifier("Vkm.DefaultScreensaver.Layout");
             Identifier DefaultTaskbarLayout = new Identifier("Vkm.DefaultTaskbar.Layout");
+            Identifier DefaultLayoutSwitchLayout = new Identifier("Vkm.DefaultLayoutSwitch.Layout");
 
             var globalOptions = new GlobalOptions();
 
@@ -72,6 +75,7 @@ namespace Vkm.Library.Config
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TimerLayoutFactory.Identifier, DefaultTimerLayout));
             globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TaskbarLayoutFactory.Identifier, DefaultTaskbarLayout));
+            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(LayoutSwitchLayoutFactory.Identifier, DefaultLayoutSwitchLayout));
 
             globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleStartupTransitionFactory.Identifier, DefaultStartupTransition));
             globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleIdleTransitionFactory.Identifier, DefaultIdleTransition));
@@ -215,6 +219,9 @@ namespace Vkm.Library.Config
 
             var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};
             optionsService.SetDefaultOptions(AmipPlayerService.Identifier, amipOptions);
+            
+            var layoutManagementHoolOptions = new LongPressHookOptions() {Location = new Location(4,2), LayoutIdentifier = DefaultLayoutSwitchLayout};
+            optionsService.SetDefaultOptions(LongPressHook.Identifier, layoutManagementHoolOptions);
         }
 
     }

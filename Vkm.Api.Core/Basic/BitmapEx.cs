@@ -93,5 +93,11 @@ namespace Vkm.Api.Basic
                 g.Clear(Color.FromArgb(0, Color.White));
             }
         }
+
+        public BitmapEx Clone()
+        {
+            using (var rep = new BitmapRepresentation(this))
+                return rep.CreateBitmap();
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace Vkm.Kernel
 
             device.Init();
             _drawingEngine = new DrawingEngine(device, _globalContext.Options.Theme);
-            _layoutContext = new LayoutContext(device, globalContext, SetLayout, () => SetPreviousLayout(), () => _drawingEngine.PauseDrawing());
+            _layoutContext = new LayoutContext(device, globalContext, SetLayout, () => SetPreviousLayout(), () => _drawingEngine.PauseDrawing(), GetAvailableLayouts);
 
         }
 
@@ -70,7 +70,7 @@ namespace Vkm.Kernel
         void DoButtonPressed(Location location, ButtonEvent buttonEvent)
         {
             using (_drawingEngine.PauseDrawing())
-                if (_globalContext.DeviceHooks.Values.All(h => !h.OnKeyEventHook(location, buttonEvent, _layout)))
+                if (_globalContext.DeviceHooks.Values.All(h => !h.OnKeyEventHook(location, buttonEvent, _layout, _layoutContext)))
                     _layout?.ButtonPressed(location, buttonEvent);
         }
 
@@ -96,6 +96,11 @@ namespace Vkm.Kernel
             }
         }
 
+        private IEnumerable<ILayout> GetAvailableLayouts()
+        {
+            return _layouts.Union(_globalContext.Layouts.Values).Distinct();
+        }
+        
         public void SetLayout(ILayout layout)
         {
             using (_drawingEngine.PauseDrawing())

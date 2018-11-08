@@ -77,7 +77,7 @@ namespace Vkm.Library.Run
                         _elements.Add(element);
                     }
 
-                    AddElementsInRectangle(_elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
+                    AddElementsInRectangle(_elements);
                 }
             }
         }

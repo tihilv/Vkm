@@ -148,6 +148,11 @@ namespace Vkm.Api.Layout
             }
         }
 
+        protected void AddElementsInRectangle(IEnumerable<IElement> elements)
+        {
+            AddElementsInRectangle(elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
+        }
+
         protected void AddElementsInRectangle(IEnumerable<IElement> elements, byte fromX, byte fromY, byte toX, byte toY)
         {
             using (LayoutContext.PauseDrawing())

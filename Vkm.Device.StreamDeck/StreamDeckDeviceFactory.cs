@@ -1,4 +1,4 @@
-﻿//#define VIRTUAL
+﻿#define VIRTUAL
 using System.Linq;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
@@ -17,6 +17,9 @@ namespace Vkm.Device.StreamDeck
 
         public IDevice[] GetDevices()
         {
+#if VIRTUAL
+            return new IDevice[0];
+#endif
             return StreamDeckSharp.StreamDeck.EnumerateDevices().Select(d => new StreamDeckDevice(d)).ToArray();
         }
     }
