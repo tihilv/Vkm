@@ -1,4 +1,4 @@
-﻿#define VIRTUAL
+﻿//#define VIRTUAL
 
 using Vkm.Api.Device;
 using Vkm.Api.Identification;

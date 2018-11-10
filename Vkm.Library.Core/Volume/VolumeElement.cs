@@ -138,26 +138,31 @@ namespace Vkm.Library.Volume
 
         public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
         {
-            _buttonPressedTimer.Interval = 400;
-            _buttonPressedTimer.Enabled = buttonEvent == ButtonEvent.Down;
-            _increase = location.Y == 0;
-
-            if (buttonEvent == ButtonEvent.Down)
-                _pressedCount++;
-            else if (buttonEvent == ButtonEvent.Up)
-                _pressedCount--;
-
-            if (_pressedCount > 1)
+            if (buttonEvent == ButtonEvent.Down || buttonEvent == ButtonEvent.Up)
             {
-                if (buttonEvent == ButtonEvent.Down)
-                {
-                    _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted);
-                }
-            }
-            else if (buttonEvent == ButtonEvent.Down)
-                DoVolumeChange();
+                _buttonPressedTimer.Interval = 400;
+                _buttonPressedTimer.Enabled = buttonEvent == ButtonEvent.Down;
+                _increase = location.Y == 0;
 
-            return true;
+                if (buttonEvent == ButtonEvent.Down)
+                    _pressedCount++;
+                else
+                    _pressedCount--;
+
+                if (_pressedCount > 1)
+                {
+                    if (buttonEvent == ButtonEvent.Down)
+                    {
+                        _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted);
+                    }
+                }
+                else if (buttonEvent == ButtonEvent.Down)
+                    DoVolumeChange();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
