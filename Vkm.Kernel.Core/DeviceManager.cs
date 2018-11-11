@@ -9,6 +9,7 @@ using Vkm.Api.Device;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Time;
+using Vkm.Api.Transition;
 
 namespace Vkm.Kernel
 {
@@ -25,6 +26,8 @@ namespace Vkm.Kernel
 
         private readonly ConcurrentDictionary<Location, ITimerToken> _pressedButtons;
 
+        public bool IsAllDrawn => _drawingEngine.IsAllDrawn;
+        
         public DeviceManager(GlobalContext globalContext, IDevice device)
         {
             _globalContext = globalContext;
@@ -35,7 +38,7 @@ namespace Vkm.Kernel
             device.ButtonEvent += DeviceOnKeyEvent;
 
             device.Init();
-            _drawingEngine = new DrawingEngine(device, _globalContext.Options.Theme);
+            _drawingEngine = new DrawingEngine(device, _globalContext.Options.Theme, globalContext.Services.ModulesService.GetModules<IVisualTransitionFactory>().First());
             _layoutContext = new LayoutContext(device, globalContext, SetLayout, () => SetPreviousLayout(), () => _drawingEngine.PauseDrawing(), GetAvailableLayouts);
 
         }
@@ -92,6 +95,10 @@ namespace Vkm.Kernel
                 {
                     _layouts.Pop();
                     SetLayout(_layouts.Pop());
+                } else if (_layouts.Count == 1)
+                {
+                    _layouts.Pop();
+                    SetLayout(null);
                 }
             }
         }
@@ -105,11 +112,14 @@ namespace Vkm.Kernel
         {
             using (_drawingEngine.PauseDrawing())
             {
-                if (_layouts.Contains(layout))
-                    while (_layouts.Peek() != layout)
-                        _layouts.Pop();
-                else
-                    _layouts.Push(layout);
+                if (layout != null)
+                {
+                    if (_layouts.Contains(layout))
+                        while (_layouts.Peek() != layout)
+                            _layouts.Pop();
+                    else
+                        _layouts.Push(layout);
+                }
 
                 if (layout != _layout)
                 {

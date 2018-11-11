@@ -18,6 +18,7 @@ namespace Vkm.Api.Transition
         protected GlobalContext GlobalContext => _globalContext;
 
         public event EventHandler<TransitionEventArgs> PerformTransition;
+        public abstract void Run();
 
         protected TransitionBase(Identifier id)
         {
@@ -46,7 +47,10 @@ namespace Vkm.Api.Transition
             _globalContext = context;
         }
 
-        public abstract void Init();
+        public virtual void Init()
+        {
+
+        }
 
         protected void RegisterTimer(TimeSpan interval, Action action)
         {

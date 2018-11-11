@@ -4,6 +4,7 @@ using Vkm.Api.Device;
 using Vkm.Api.Module;
 using Vkm.Api.Options;
 using Vkm.Api.Time;
+using Vkm.Kernel;
 
 namespace Vkm.TestProject.Entities
 {
@@ -15,7 +16,7 @@ namespace Vkm.TestProject.Entities
         private readonly GlobalServices _globalServices;
         private readonly GlobalOptions _globalOptions;
         private readonly GlobalContext _globalContext;
-        private readonly IDevice _device;
+        private readonly TestDevice _device;
         private readonly LayoutContext _layoutContext;
 
         public IOptionsService OptionsService => _optionsService;
@@ -32,17 +33,17 @@ namespace Vkm.TestProject.Entities
 
         public LayoutContext LayoutContext => _layoutContext;
 
-        public IDevice Device => _device;
+        public TestDevice Device => _device;
 
         public Initializer()
         {
             _globalOptions = new GlobalOptions();
             _optionsService = new TestOptionsService();
             _modulesService = new TestModulesService();
-            _timerService = new TestTimerService();
+            _timerService = new TimerService();
             _globalServices = new GlobalServices(_optionsService, _modulesService, _timerService); 
-            _globalContext = new GlobalContext(_globalOptions, _globalServices, null, null, null, null);
-            _device = _modulesService.GetModules<IDeviceFactory>().First().GetDevices().First();
+            _globalContext = new GlobalContext(_globalServices);
+            _device = (TestDevice)_modulesService.GetModules<IDeviceFactory>().First().GetDevices().First();
             _layoutContext = new LayoutContext(_device, _globalContext, (layout) => {}, () => {}, () => { return null;}, () => null);
         }
     }

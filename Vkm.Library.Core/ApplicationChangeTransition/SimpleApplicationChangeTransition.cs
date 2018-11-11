@@ -20,7 +20,7 @@ namespace Vkm.Library.ApplicationChangeTransition
 
         private bool _entered;
 
-        public override void Init()
+        public override void Run()
         {
             var service = GlobalContext.GetServices<ICurrentProcessService>().FirstOrDefault();
             if (service == null)

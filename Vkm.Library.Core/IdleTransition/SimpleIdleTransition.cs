@@ -22,7 +22,7 @@ namespace Vkm.Library.IdleTransition
             return new IdleTransitionOptions(GlobalContext.Devices.FirstOrDefault()?.Id??new Identifier());
         }
 
-        public override void Init()
+        public override void Run()
         {
             _workstationLockService = GlobalContext.GetServices<IWorkstationLockService>().First();
             

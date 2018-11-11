@@ -11,6 +11,11 @@ namespace Vkm.TestProject.Entities
     internal class TestDevice: IDevice
     {
         public Identifier Id { get; }
+
+        public int DrawnCycles { get; private set; }
+
+        public event EventHandler<IEnumerable<LayoutDrawElement>> BitmapsSet; 
+        
         public void InitContext(GlobalContext context)
         {
             
@@ -31,7 +36,8 @@ namespace Vkm.TestProject.Entities
         
         public void SetBitmaps(IEnumerable<LayoutDrawElement> elements)
         {
-            
+            DrawnCycles++;
+            BitmapsSet?.Invoke(this, elements);
         }
 
         public void SetBrightness(byte valuePercent)
@@ -40,6 +46,11 @@ namespace Vkm.TestProject.Entities
         }
 
         public event EventHandler<ButtonEventArgs> ButtonEvent;
+
+        public void PressButton(Location location, bool isDown)
+        {
+            ButtonEvent?.Invoke(this, new ButtonEventArgs(location, isDown));
+        }
     }
 
     internal class TestDeviceFactory : IDeviceFactory

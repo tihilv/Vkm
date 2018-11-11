@@ -17,4 +17,8 @@
       <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Options\" />
+    </ItemGroup>
+
 </Project>

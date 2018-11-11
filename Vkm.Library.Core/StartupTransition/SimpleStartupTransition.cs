@@ -18,7 +18,7 @@ namespace Vkm.Library.StartupTransition
         }
 
         
-        public override void Init()
+        public override void Run()
         {
             OnTransition();
         }

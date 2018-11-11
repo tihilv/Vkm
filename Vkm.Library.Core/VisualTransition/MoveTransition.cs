@@ -2,7 +2,7 @@
 using Vkm.Api.Basic;
 using Vkm.Api.VisualEffect;
 
-namespace Vkm.Kernel.VisualEffect
+namespace Vkm.Library.VisualTransition
 {
     internal class MoveTransition : IVisualTransition
     {

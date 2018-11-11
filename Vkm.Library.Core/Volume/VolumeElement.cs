@@ -149,6 +149,9 @@ namespace Vkm.Library.Volume
                 else
                     _pressedCount--;
 
+                if (_pressedCount < 0)
+                    _pressedCount = 0;
+
                 if (_pressedCount > 1)
                 {
                     if (buttonEvent == ButtonEvent.Down)

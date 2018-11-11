@@ -1,9 +1,8 @@
 ﻿using Vkm.Api.Basic;
-using Vkm.Api.VisualEffect;
 
-namespace Vkm.Kernel.VisualEffect
+namespace Vkm.Api.VisualEffect
 {
-    internal class InstantTransition : IVisualTransition
+    public class InstantTransition : IVisualTransition
     {
         private bool _first = true;
         private BitmapRepresentation _current;

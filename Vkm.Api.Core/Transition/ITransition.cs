@@ -7,5 +7,7 @@ namespace Vkm.Api.Transition
     public interface ITransition: IIdentifiable, IInitializable
     {
         event EventHandler<TransitionEventArgs> PerformTransition;
+
+        void Run();
     }
 }

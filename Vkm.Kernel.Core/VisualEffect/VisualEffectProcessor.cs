@@ -18,8 +18,9 @@ namespace Vkm.Kernel.VisualEffect
         private const double DefaultDuration = 0.5;
 
         private readonly IDevice _device;
+        private readonly IVisualTransitionFactory _visualTransitionFactory;
 
-        private static AutoResetEvent _transitionsAdded;
+        private readonly AutoResetEvent _transitionsAdded;
         private readonly ConcurrentDictionary<Location, VisualEffectInfo> _currentTransitions;
 
         private readonly ConcurrentQueue<LayoutDrawElement> _scheduledTransitions;
@@ -30,9 +31,12 @@ namespace Vkm.Kernel.VisualEffect
 
         private readonly object _disposeLock;
 
-        public VisualEffectProcessor(IDevice device)
+        internal bool IsAllDrawn => _scheduledTransitions.IsEmpty && !_currentDrawElementsCache.Any();
+        
+        public VisualEffectProcessor(IDevice device, IVisualTransitionFactory visualTransitionFactory)
         {
             _device = device;
+            _visualTransitionFactory = visualTransitionFactory;
 
             _disposeLock = new object();
             _cts = new CancellationTokenSource();
@@ -59,16 +63,7 @@ namespace Vkm.Kernel.VisualEffect
 
         IVisualTransition GetTransition(LayoutDrawElement drawElement)
         {
-            if (drawElement.TransitionInfo.Type == TransitionType.Instant)
-                return new InstantTransition();
-
-            if (drawElement.TransitionInfo.Type == TransitionType.ElementUpdate)
-                return new FadeTransition();
-
-            if (drawElement.TransitionInfo.Type == TransitionType.LayoutChange)
-                return new MoveTransition();
-
-            return new InstantTransition();
+            return _visualTransitionFactory.CreateVisualTransition(drawElement.TransitionInfo.Type);
         }
 
         void DrawCycle(CancellationToken ctsToken)
@@ -134,7 +129,8 @@ namespace Vkm.Kernel.VisualEffect
                 _currentDrawElementsCache.Add(new LayoutDrawElement(effectInfo.Location, effectInfo.Transition.Current));
             }
 
-            _device.SetBitmaps(_currentDrawElementsCache);
+            if (_currentDrawElementsCache.Any())
+                _device.SetBitmaps(_currentDrawElementsCache);
 
             return _currentDrawElementsCache.Any();
         }

@@ -27,7 +27,7 @@ namespace Vkm.Api.Basic
             _height = height;
         }
 
-        public BitmapRepresentation(BitmapEx bitmap): this(bitmap.GetInternal())
+        public BitmapRepresentation(BitmapEx bitmap): this(bitmap?.GetInternal())
         {
 
         }

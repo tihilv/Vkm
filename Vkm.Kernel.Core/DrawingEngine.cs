@@ -27,14 +27,16 @@ namespace Vkm.Kernel
         private byte _brightness;
         private byte _brightnessSet;
 
-        public DrawingEngine(IDevice device, ThemeOptions themeOptions)
+        internal bool IsAllDrawn => _visualEffectProcessor.IsAllDrawn;
+        
+        public DrawingEngine(IDevice device, ThemeOptions themeOptions, IVisualTransitionFactory visualTransitionFactory)
         {
             _device = device;
             _themeOptions = themeOptions;
 
             _imagesToDevice = new ConcurrentDictionary<Location, LayoutDrawElement>();
             _switchedLocations = new ConcurrentDictionary<Location, Location>();
-            _visualEffectProcessor = new VisualEffectProcessor(_device);
+            _visualEffectProcessor = new VisualEffectProcessor(_device, visualTransitionFactory);
         }
 
         public IDisposable PauseDrawing()
