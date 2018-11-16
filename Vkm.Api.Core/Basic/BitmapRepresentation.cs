@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace Vkm.Api.Basic
 {
@@ -41,7 +42,21 @@ namespace Vkm.Api.Basic
             _pixelFormat = bitmap.PixelFormat;
         }
 
-        public BitmapRepresentation Clone()
+        public BitmapRepresentation(byte[] data)
+        {
+            using (var stream = new MemoryStream(data))
+            using (var bitmap = (Bitmap)Bitmap.FromStream(stream))
+            {
+              _bitmapInternal = Array1DFromBitmap(bitmap);
+
+              _width = bitmap.Width;
+              _height = bitmap.Height;
+              _pixelFormat = bitmap.PixelFormat;
+            }
+        }
+
+
+      public BitmapRepresentation Clone()
         {
             var array = GetNewArray(_bitmapInternal.Length);
             Array.Copy(_bitmapInternal, array, _bitmapInternal.Length);

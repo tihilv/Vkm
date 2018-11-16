@@ -5,7 +5,7 @@ using Vkm.Api.Options;
 
 namespace Vkm.Api.Transition
 {
-    public abstract class TransitionBase<T> : ITransition, IOptionsProvider where T: TransitionOptions
+    public abstract class TransitionBase<T> : ITransition, IInitializable, IOptionsProvider where T: TransitionOptions
     {
         private T _transitionOptions;
 

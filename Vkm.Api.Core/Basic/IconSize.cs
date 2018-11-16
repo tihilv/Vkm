@@ -1,5 +1,8 @@
-﻿namespace Vkm.Api.Basic
+﻿using System;
+
+namespace Vkm.Api.Basic
 {
+    [Serializable]
     public struct IconSize
     {
         public readonly int Width;

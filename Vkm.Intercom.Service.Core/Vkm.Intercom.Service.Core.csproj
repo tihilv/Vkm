@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>Vkm.Intercom.Service</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <OutputPath>..\out\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
+      <ProjectReference Include="..\Vkm.Intercom\Vkm.Intercom.Core.csproj" />
+    </ItemGroup>
+
+</Project>

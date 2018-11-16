@@ -50,5 +50,10 @@ namespace Vkm.Api.Basic
                 return (X.GetHashCode() * 397) ^ Y.GetHashCode();
             }
         }
+
+        public override string ToString()
+        {
+            return $"[{X}, {Y}]";
+        }
     }
 }

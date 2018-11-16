@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Vkm.Intercom;
 
 namespace Vkm.Console
 {
@@ -19,7 +20,7 @@ namespace Vkm.Console
 
         public static void Test()
         {
-
+            
         }
     }
 }

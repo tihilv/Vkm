@@ -20,6 +20,8 @@ namespace Vkm.Api.Data
     {
         public Identifier Id => new Identifier("CoreContext.Options");
 
+        public event EventHandler<EventArgs> LayoutRemoved; 
+
         private readonly IDevice[] _devices;
         private GlobalOptions _globalOptions;
         private readonly ConcurrentDictionary<Identifier, ILayout> _layouts;
@@ -44,8 +46,12 @@ namespace Vkm.Api.Data
             
             _devices = services.ModulesService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
             var configurators = services.ModulesService.GetModules<IConfigurator>().ToArray();
+            var tempGlobalOptions = new GlobalOptions();
             foreach (IConfigurator configurator in configurators)
+            {
+                configurator.GlobalOptions = tempGlobalOptions;
                 configurator.Devices = _devices;
+            }
 
             services.OptionsService.InitOptions(configurators);
             services.OptionsService.InitEntity(this);
@@ -172,6 +178,13 @@ namespace Vkm.Api.Data
         public void InitOptions(IOptions options)
         {
             _globalOptions = (GlobalOptions) options;
+        }
+
+        public void RemoveLayout(Identifier layoutId)
+        {
+            Layouts.TryRemove(layoutId, out var layout);
+            
+            LayoutRemoved?.Invoke(layout, EventArgs.Empty);
         }
     }
 }

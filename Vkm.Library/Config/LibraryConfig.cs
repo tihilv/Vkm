@@ -39,6 +39,7 @@ namespace Vkm.Library.Config
         public Identifier Id => new Identifier("Vkm.Library.Configurator");
         public string Name => "Default Library Configurator";
         public IDevice[] Devices { get; set; }
+        public GlobalOptions GlobalOptions { get; set; }
 
 
         public void Configure(IOptionsService optionsService)
@@ -67,24 +68,22 @@ namespace Vkm.Library.Config
             Identifier DefaultTaskbarLayout = new Identifier("Vkm.DefaultTaskbar.Layout");
             Identifier DefaultLayoutSwitchLayout = new Identifier("Vkm.DefaultLayoutSwitch.Layout");
 
-            var globalOptions = new GlobalOptions();
+            GlobalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.BackgroundBitmap);
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(NumpadLayoutFactory.Identifier, DefaultNumpadLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(ClockLayoutFactory.Identifier, DefaultScreenSaverLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TimerLayoutFactory.Identifier, DefaultTimerLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TaskbarLayoutFactory.Identifier, DefaultTaskbarLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(LayoutSwitchLayoutFactory.Identifier, DefaultLayoutSwitchLayout));
 
-            globalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.BackgroundBitmap);
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(NumpadLayoutFactory.Identifier, DefaultNumpadLayout));
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(ClockLayoutFactory.Identifier, DefaultScreenSaverLayout));
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TimerLayoutFactory.Identifier, DefaultTimerLayout));
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TaskbarLayoutFactory.Identifier, DefaultTaskbarLayout));
-            globalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(LayoutSwitchLayoutFactory.Identifier, DefaultLayoutSwitchLayout));
+            GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleStartupTransitionFactory.Identifier, DefaultStartupTransition));
+            GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleIdleTransitionFactory.Identifier, DefaultIdleTransition));
 
-            globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleStartupTransitionFactory.Identifier, DefaultStartupTransition));
-            globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleIdleTransitionFactory.Identifier, DefaultIdleTransition));
+            GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionCalc));
+            GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionExcel));
+            GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionTotalCmd));
 
-            globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionCalc));
-            globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionExcel));
-            globalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleApplicationChangeTransitionFactory.Identifier, DefaultApplicationChangeTransitionTotalCmd));
-
-            optionsService.SetDefaultOptions(GlobalOptions.Identifier, globalOptions);
+            optionsService.SetDefaultOptions(GlobalOptions.Identifier, GlobalOptions);
 
 
 

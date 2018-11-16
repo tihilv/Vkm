@@ -4,7 +4,7 @@ using Vkm.Api.Identification;
 
 namespace Vkm.Api.Transition
 {
-    public interface ITransition: IIdentifiable, IInitializable
+    public interface ITransition: IIdentifiable
     {
         event EventHandler<TransitionEventArgs> PerformTransition;
 

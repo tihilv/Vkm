@@ -31,6 +31,7 @@ namespace Vkm.Kernel
         public DeviceManager(GlobalContext globalContext, IDevice device)
         {
             _globalContext = globalContext;
+            _globalContext.LayoutRemoved += OnLayoutRemoved;
             
             _layouts = new Stack<ILayout>();
             _pressedButtons = new ConcurrentDictionary<Location, ITimerToken>();
@@ -108,6 +109,26 @@ namespace Vkm.Kernel
             return _layouts.Union(_globalContext.Layouts.Values).Distinct();
         }
         
+        private void OnLayoutRemoved(object sender, EventArgs e)
+        {
+            ILayout layout = (ILayout) sender;
+            
+            if (_layouts.Peek() == layout)
+                SetPreviousLayout(layout.Id);
+            else if (_layouts.Contains(layout))
+            {
+                Stack<ILayout> temp = new Stack<ILayout>();
+                do
+                {
+                    temp.Push(_layouts.Pop());
+                } while (temp.Peek() != layout);
+
+                temp.Pop();
+                while (temp.Any())
+                    _layouts.Push(temp.Pop());
+            }
+        }
+        
         public void SetLayout(ILayout layout)
         {
             using (_drawingEngine.PauseDrawing())
@@ -177,6 +198,8 @@ namespace Vkm.Kernel
 
         public void Dispose()
         {
+            _globalContext.LayoutRemoved -= OnLayoutRemoved;
+            
             _drawingEngine.Brightness = 0;
             SetLayout(null);
             DisposeHelper.DisposeAndNull(ref _drawingEngine);

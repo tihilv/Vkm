@@ -2,9 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
+using Vkm.Api.Service;
 using Vkm.Api.Transition;
 
 namespace Vkm.Kernel
@@ -14,6 +16,8 @@ namespace Vkm.Kernel
         private readonly GlobalContext _globalContext;
 
         private readonly ConcurrentDictionary<Identifier, DeviceManager> _deviceManagers;
+
+        private readonly ISelfHostedService[] _selfHostedServices;
 
         public VkmKernel()
         {
@@ -33,7 +37,9 @@ namespace Vkm.Kernel
             _globalContext = new GlobalContext(globalServices);
 
             _deviceManagers = InitDeviceManagers(_globalContext.Devices);
-
+            
+            _selfHostedServices = _globalContext.GetServices<ISelfHostedService>().ToArray();
+            
             StartTransitions();
         }
 

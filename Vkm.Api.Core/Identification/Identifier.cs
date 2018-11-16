@@ -37,5 +37,10 @@ namespace Vkm.Api.Identification
         {
             return Value.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }

@@ -10,6 +10,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.Manager", "Vkm.Manager\Vkm.Manager.csproj", "{20345943-3550-4CD4-A42B-FCA90AA78116}"
 	ProjectSection(ProjectDependencies) = postProject
 		{603F023B-B30F-4CF4-A368-7477C2B1B61C} = {603F023B-B30F-4CF4-A368-7477C2B1B61C}
+		{4600F8BF-E610-4458-8EFB-399DF78453E3} = {4600F8BF-E610-4458-8EFB-399DF78453E3}
 		{887C5BD3-B957-4A20-928E-8101C9AF1C15} = {887C5BD3-B957-4A20-928E-8101C9AF1C15}
 		{6444C9E9-8DC1-4C0B-97A5-7123767C7904} = {6444C9E9-8DC1-4C0B-97A5-7123767C7904}
 	EndProjectSection
@@ -30,9 +31,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Kernel.Core", "Vkm.Kern
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Common.Core", "Vkm.Common\Vkm.Common.Core.csproj", "{CB44E93A-BE9B-48CD-8CEE-942B25E49121}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.Library.Core", "Vkm.Library.Core\Vkm.Library.Core.csproj", "{76839D73-163A-4844-9C96-5384AFE4DC62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Library.Core", "Vkm.Library.Core\Vkm.Library.Core.csproj", "{76839D73-163A-4844-9C96-5384AFE4DC62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.TestProject", "Vkm.TestProject\Vkm.TestProject.csproj", "{74013210-F8CD-4D46-AED2-A80BB200AE6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.TestProject", "Vkm.TestProject\Vkm.TestProject.csproj", "{74013210-F8CD-4D46-AED2-A80BB200AE6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Intercom.Core", "Vkm.Intercom\Vkm.Intercom.Core.csproj", "{940BE671-1CA5-40BA-9C56-5E95006AA913}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Intercom.Service.Core", "Vkm.Intercom.Service.Core\Vkm.Intercom.Service.Core.csproj", "{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.Intercom.Service", "Vkm.Intercom.Service\Vkm.Intercom.Service.csproj", "{4600F8BF-E610-4458-8EFB-399DF78453E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -146,6 +153,30 @@ Global
 		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|x64.ActiveCfg = Release|Any CPU
 		{74013210-F8CD-4D46-AED2-A80BB200AE6B}.Release|x64.Build.0 = Release|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Debug|x64.Build.0 = Debug|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Release|x64.ActiveCfg = Release|Any CPU
+		{940BE671-1CA5-40BA-9C56-5E95006AA913}.Release|x64.Build.0 = Release|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Debug|x64.Build.0 = Debug|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Release|x64.ActiveCfg = Release|Any CPU
+		{681E7AD1-594C-4E63-AC64-A5D1BFF59DD8}.Release|x64.Build.0 = Release|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Debug|x64.Build.0 = Debug|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|x64.ActiveCfg = Release|Any CPU
+		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

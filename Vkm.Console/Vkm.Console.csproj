@@ -76,6 +76,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Vkm.Intercom\Vkm.Intercom.Core.csproj">
+      <Project>{940be671-1ca5-40ba-9c56-5e95006aa913}</Project>
+      <Name>Vkm.Intercom.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vkm.Library\Vkm.Library.csproj">
       <Project>{603F023B-B30F-4CF4-A368-7477C2B1B61C}</Project>
       <Name>Vkm.Library</Name>
