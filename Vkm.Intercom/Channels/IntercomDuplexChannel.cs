@@ -33,12 +33,13 @@ namespace Vkm.Intercom.Channels
 
         private void OnConnectionClosed(object sender, EventArgs e)
         {
-            ConnectionClosed?.Invoke(this, EventArgs.Empty);
+
             Dispose();
         }
 
         public void Dispose()
         {
+            _intercomServer.ConnectionClosed -= OnConnectionClosed;
             ConnectionClosed?.Invoke(this, EventArgs.Empty);
             _intercomClient?.Dispose();
             _intercomServer?.Dispose();
