@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vkm.Intercom.Channels;
 
 namespace Vkm.Intercom.Dispatchers
@@ -51,7 +52,7 @@ namespace Vkm.Intercom.Dispatchers
 
         public void Dispose()
         {
-            foreach (var duplexChannel in _dispatchedChannels)
+            foreach (var duplexChannel in _dispatchedChannels.ToArray())
                 duplexChannel.Dispose();
             
             _serverChannel?.Dispose();

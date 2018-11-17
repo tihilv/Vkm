@@ -39,6 +39,7 @@ namespace Vkm.Intercom.Channels
 
         public void Dispose()
         {
+            ConnectionClosed?.Invoke(this, EventArgs.Empty);
             _intercomClient?.Dispose();
             _intercomServer?.Dispose();
         }
