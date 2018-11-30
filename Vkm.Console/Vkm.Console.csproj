@@ -43,6 +43,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp.clone, Version=1.0.2.39869, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\websocket-sharp.clone.3.0.0\lib\net45\websocket-sharp.clone.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -62,6 +65,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -76,6 +80,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Harmony.NET\Harmony.NET.csproj">
+      <Project>{023baf7c-8e03-4831-9032-70ca21694687}</Project>
+      <Name>Harmony.NET</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vkm.Intercom\Vkm.Intercom.Core.csproj">
       <Project>{940be671-1ca5-40ba-9c56-5e95006aa913}</Project>
       <Name>Vkm.Intercom.Core</Name>
