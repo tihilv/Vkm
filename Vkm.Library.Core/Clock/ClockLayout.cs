@@ -3,9 +3,8 @@ using Vkm.Api.Basic;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
-using Vkm.Library.Clock;
 
-namespace Vkm.Library
+namespace Vkm.Library.Clock
 {
     internal class ClockLayout: LayoutBase
     {

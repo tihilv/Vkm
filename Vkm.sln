@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vkm.Intercom.Service.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vkm.Intercom.Service", "Vkm.Intercom.Service\Vkm.Intercom.Service.csproj", "{4600F8BF-E610-4458-8EFB-399DF78453E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony.NET", "Harmony.NET\Harmony.NET.csproj", "{023BAF7C-8E03-4831-9032-70CA21694687}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarmonyHub", "HarmonyHub\HarmonyHub.csproj", "{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,14 +179,14 @@ Global
 		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|x64.ActiveCfg = Release|Any CPU
 		{4600F8BF-E610-4458-8EFB-399DF78453E3}.Release|x64.Build.0 = Release|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Debug|x64.Build.0 = Debug|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Release|Any CPU.Build.0 = Release|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Release|x64.ActiveCfg = Release|Any CPU
-		{023BAF7C-8E03-4831-9032-70CA21694687}.Release|x64.Build.0 = Release|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Debug|x64.Build.0 = Debug|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Release|x64.ActiveCfg = Release|Any CPU
+		{561D5F22-2CCF-4D84-A677-EB54CC39AFBF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

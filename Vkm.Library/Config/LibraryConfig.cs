@@ -24,6 +24,7 @@ using Vkm.Library.Media;
 using Vkm.Library.Numpad;
 using Vkm.Library.Power;
 using Vkm.Library.Properties;
+using Vkm.Library.RemoteControl;
 using Vkm.Library.Run;
 using Vkm.Library.Service.Player;
 using Vkm.Library.Service.Weather;
@@ -55,6 +56,7 @@ namespace Vkm.Library.Config
             Identifier MediaIdentifier = new Identifier("Vkm.DesktopDefaults.Media");
             Identifier PowerOffIdentifier = new Identifier("Vkm.DesktopDefaults.PowerOff");
             Identifier AudioSelectIdentifier = new Identifier("Vkm.DesktopDefaults.AudioSelect");
+            Identifier RemoteIdentifier = new Identifier("Vkm.DesktopDefaults.Remote");
             
             Identifier DefaultCompositeLayout = new Identifier("Vkm.DefaultCompositeLayout.Desktop");
             Identifier DefaultTimerLayout = new Identifier("Vkm.TimerLayout.Default");
@@ -67,6 +69,7 @@ namespace Vkm.Library.Config
             Identifier DefaultScreenSaverLayout = new Identifier("Vkm.DefaultScreensaver.Layout");
             Identifier DefaultTaskbarLayout = new Identifier("Vkm.DefaultTaskbar.Layout");
             Identifier DefaultLayoutSwitchLayout = new Identifier("Vkm.DefaultLayoutSwitch.Layout");
+            Identifier DefaultRemoteControlLayout = new Identifier("Vkm.DefaultRemoteControl.Layout");
 
             GlobalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.BackgroundBitmap);
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(NumpadLayoutFactory.Identifier, DefaultNumpadLayout));
@@ -75,6 +78,7 @@ namespace Vkm.Library.Config
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TimerLayoutFactory.Identifier, DefaultTimerLayout));
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(TaskbarLayoutFactory.Identifier, DefaultTaskbarLayout));
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(LayoutSwitchLayoutFactory.Identifier, DefaultLayoutSwitchLayout));
+            GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(RemoteControlLayoutFactory.Identifier, DefaultRemoteControlLayout));
 
             GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleStartupTransitionFactory.Identifier, DefaultStartupTransition));
             GlobalOptions.TransitionLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(SimpleIdleTransitionFactory.Identifier, DefaultIdleTransition));
@@ -125,6 +129,13 @@ namespace Vkm.Library.Config
                 ModuleInfo = new ModuleInitializationInfo(MoveToLayoutElementFactory.Identifier, TaskbarIdentifier)
             });
 
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(1, 2),
+                ModuleInfo = new ModuleInitializationInfo(MoveToLayoutElementFactory.Identifier, RemoteIdentifier)
+            });
+
+            
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
                 Location = new Location(2, 2),
@@ -216,6 +227,10 @@ namespace Vkm.Library.Config
             var taskbarOptions = new MoveToElementOptions() {Text = FontAwesomeRes.fa_windows, LayoutIdentifier = DefaultTaskbarLayout};
             optionsService.SetDefaultOptions(TaskbarIdentifier, taskbarOptions);
 
+            var remoteOptions = new MoveToElementOptions() {Text = FontAwesomeRes.fa_building, LayoutIdentifier = DefaultRemoteControlLayout};
+            optionsService.SetDefaultOptions(RemoteIdentifier, remoteOptions);
+
+            
             var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};
             optionsService.SetDefaultOptions(AmipPlayerService.Identifier, amipOptions);
             

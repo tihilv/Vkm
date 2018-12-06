@@ -57,6 +57,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Service\CurrentProcessService.cs" />
+    <Compile Include="Service\Harmony\DiscoveryService.cs" />
+    <Compile Include="Service\Harmony\HarmonyControlService.cs" />
+    <Compile Include="Service\Harmony\HubInfo.cs" />
     <Compile Include="Service\MediaDeviceService.cs" />
     <Compile Include="Service\PowerService.cs" />
     <Compile Include="Service\ProcessService.cs" />
@@ -73,6 +76,10 @@
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj">
       <Project>{BC339D74-1608-4C64-A2D8-6133041BF144}</Project>
       <Name>CoreAudioApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HarmonyHub\HarmonyHub.csproj">
+      <Project>{561d5f22-2ccf-4d84-a677-eb54cc39afbf}</Project>
+      <Name>HarmonyHub</Name>
     </ProjectReference>
     <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj">
       <Project>{b1766ac5-85ea-473b-b4a7-7553c6d4ece4}</Project>
@@ -106,5 +113,6 @@
   <ItemGroup>
     <None Include="Resources\background.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
