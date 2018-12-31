@@ -123,9 +123,17 @@ namespace Vkm.Api.Data
             var layoutFactory = Services.ModulesService.GetModules<ILayoutFactory>().FirstOrDefault(f => f.Id == initInfo.FactoryId);
             if (layoutFactory != null)
             {
-                var layout = layoutFactory.CreateLayout(initInfo.ChildId);
-                InitializeEntity(layout);
-                return layout;
+                try
+                {
+                    var layout = layoutFactory.CreateLayout(initInfo.ChildId);
+                    InitializeEntity(layout);
+                    return layout;
+                }
+                catch
+                {
+                    // nothing to do
+
+                }
             }
 
             return null;

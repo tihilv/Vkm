@@ -190,6 +190,7 @@ namespace Vkm.Library.Service.Harmony
 			this.Listener.Start();
 
 			this.ListenThread = new Thread(this.Listen);
+            this.ListenThread.IsBackground = true;
 			this.ListenThread.Start();
 		}
 	}

@@ -23,7 +23,7 @@ namespace Vkm.Api.Layout
         private ILayout _previousLayout;
 
         public Identifier Id { get; private set; }
-        private readonly ConcurrentDictionary<ElementPlacement, ElementPlacement> _elements;
+        private readonly ElementKeeper _elements;
 
         public virtual byte? PreferredBrightness => null;
 
@@ -38,7 +38,7 @@ namespace Vkm.Api.Layout
         {
             Id = identifier;
 
-            _elements = new ConcurrentDictionary<ElementPlacement, ElementPlacement>();
+            _elements = new ElementKeeper();
             _timers = new ConcurrentDictionary<ITimerToken, ITimerToken>();
         }
 
@@ -109,7 +109,7 @@ namespace Vkm.Api.Layout
         protected void AddElement(Location location, IElement element)
         {
             var placement = new ElementPlacement(location, element);
-            _elements.TryAdd(placement, placement);
+            _elements.Add(placement);
 
             if (_inLayout)
                 ConnectToElement(placement, _previousLayout);
@@ -117,9 +117,7 @@ namespace Vkm.Api.Layout
 
         protected void RemoveElement(IElement element)
         {
-            var placement = _elements.Values.Single(e => e.Element == element);
-
-            _elements.TryRemove(placement, out _);
+            var placement = _elements.Remove(element);
 
             if (_inLayout)
                 DisconnectFromElement(placement);
@@ -127,9 +125,7 @@ namespace Vkm.Api.Layout
 
         protected void RemoveElement(Location location)
         {
-            var placement = _elements.Values.Single(e => e.Location == location);
-
-            _elements.TryRemove(placement, out _);
+            var placement = _elements.Remove(location);
 
             if (_inLayout)
                 DisconnectFromElement(placement);
@@ -192,5 +188,50 @@ namespace Vkm.Api.Layout
             DrawLayout?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
         }
 
+        class ElementKeeper
+        {
+            private readonly ConcurrentDictionary<Location, IElement> _elementPlacements;
+            private readonly ConcurrentDictionary<IElement, Location> _elements;
+
+            public ElementKeeper()
+            {
+                _elementPlacements = new ConcurrentDictionary<Location, IElement>();
+                _elements = new ConcurrentDictionary<IElement, Location>();
+            }
+
+            public IEnumerable<ElementPlacement> Values
+            {
+                get
+                {
+                    foreach (var pair in _elementPlacements)
+                    {
+                        yield return new ElementPlacement(pair.Key, pair.Value);
+                    }
+                }
+            }
+
+            public void Add(ElementPlacement placement)
+            {
+                _elementPlacements[placement.Location] = placement.Element;
+                _elements[placement.Element] = placement.Location;
+            }
+
+            public ElementPlacement Remove(IElement element)
+            {
+                if (_elements.TryRemove(element, out var location))
+                    _elementPlacements.TryRemove(location, out _);
+
+                return new ElementPlacement(location, element);
+            }
+
+            public ElementPlacement Remove(Location location)
+            {
+                if (_elementPlacements.TryRemove(location, out var element))
+                    _elements.TryRemove(element, out _);
+
+                return new ElementPlacement(location, element);
+
+            }
+        }
     }
 }

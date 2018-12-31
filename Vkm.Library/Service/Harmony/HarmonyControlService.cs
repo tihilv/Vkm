@@ -34,14 +34,20 @@ namespace Vkm.Library.Service.Harmony
             service.HubFound += async (sender, e) => {
                 // stop discovery once we've found one hub
                 //service.StopDiscovery();
+                try
+                {
+                    _harmonyHub = new HarmonyHub.Client(e.HubInfo.IP);
+                    _harmonyHub.OnActivityChanged += CurrentActivityUpdated;
+                    await _harmonyHub.OpenAsync();
 
-                _harmonyHub = new HarmonyHub.Client(e.HubInfo.IP);
-                _harmonyHub.OnActivityChanged += CurrentActivityUpdated;
-                await _harmonyHub.OpenAsync();
-                
-                _config = await _harmonyHub.GetConfigAsync();
-                
-                _currentActivityId = await _harmonyHub.GetCurrentActivityAsync();
+                    _config = await _harmonyHub.GetConfigAsync();
+
+                    _currentActivityId = await _harmonyHub.GetCurrentActivityAsync();
+                }
+                catch
+                {
+                    // nothing to fix
+                }
             };
             service.StartDiscovery();
         }
