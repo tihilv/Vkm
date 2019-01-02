@@ -16,7 +16,7 @@ namespace Vkm.Kernel
         private IDevice _device;
         private readonly ThemeOptions _themeOptions;
 
-        private readonly ConcurrentDictionary<Location, LayoutDrawElement> _imagesToDevice;
+        private readonly ConcurrentDictionary<Location, Lazy<LayoutDrawElement>> _imagesToDevice;
 
         private readonly ConcurrentDictionary<Location, Location> _switchedLocations;
 
@@ -34,7 +34,7 @@ namespace Vkm.Kernel
             _device = device;
             _themeOptions = themeOptions;
 
-            _imagesToDevice = new ConcurrentDictionary<Location, LayoutDrawElement>();
+            _imagesToDevice = new ConcurrentDictionary<Location, Lazy<LayoutDrawElement>>();
             _switchedLocations = new ConcurrentDictionary<Location, Location>();
             _visualEffectProcessor = new VisualEffectProcessor(_device, visualTransitionFactory);
         }
@@ -46,12 +46,13 @@ namespace Vkm.Kernel
 
         public void DrawBitmap(LayoutDrawElement drawElement)
         {
-            _imagesToDevice.AddOrUpdate(drawElement.Location, drawElement, (l, b) =>
-            {
-                b.BitmapRepresentation.Dispose();
+            var value = _imagesToDevice.AddOrUpdate(drawElement.Location, new Lazy<LayoutDrawElement>(() => drawElement), (l, b) =>
+                new Lazy<LayoutDrawElement>(() =>
+                {
+                    b.Value.BitmapRepresentation.Dispose();
 
-                return drawElement;
-            });
+                    return drawElement;
+                })).Value;
 
             if (_counter == 0)
                 PerformDraw();
@@ -87,9 +88,12 @@ namespace Vkm.Kernel
                     }
 
                     if (newSwitch)
-                        drawElement = new LayoutDrawElement(drawElement.Location, drawElement.BitmapRepresentation, new TransitionInfo(TransitionType.LayoutChange, drawElement.TransitionInfo.Duration));
+                    {
+                        var de = drawElement.Value;
+                        drawElement = new Lazy<LayoutDrawElement>(() => new LayoutDrawElement(de.Location, de.BitmapRepresentation, new TransitionInfo(TransitionType.LayoutChange, de.TransitionInfo.Duration)));
+                    }
 
-                    currentDrawElementsCache.Add(drawElement);
+                    currentDrawElementsCache.Add(drawElement.Value);
                 }
             }
             

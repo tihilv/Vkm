@@ -24,7 +24,7 @@ namespace Vkm.Kernel
 
         private readonly Stack<ILayout> _layouts;
 
-        private readonly ConcurrentDictionary<Location, ITimerToken> _pressedButtons;
+        private readonly ConcurrentDictionary<Location, Lazy<ITimerToken>> _pressedButtons;
 
         public bool IsAllDrawn => _drawingEngine.IsAllDrawn;
         
@@ -34,7 +34,7 @@ namespace Vkm.Kernel
             _globalContext.LayoutRemoved += OnLayoutRemoved;
             
             _layouts = new Stack<ILayout>();
-            _pressedButtons = new ConcurrentDictionary<Location, ITimerToken>();
+            _pressedButtons = new ConcurrentDictionary<Location, Lazy<ITimerToken>>();
 
             device.ButtonEvent += DeviceOnKeyEvent;
 
@@ -48,7 +48,7 @@ namespace Vkm.Kernel
         {
             if (e.IsDown)
             {
-                _pressedButtons.AddOrUpdate(e.Location, l =>
+                var value = _pressedButtons.AddOrUpdate(e.Location, l => new Lazy<ITimerToken>(()=> 
                     {
                         var result = _globalContext.Services.TimerService.RegisterTimer(_globalContext.Options.LongPressTimeout, () =>
                         {
@@ -60,13 +60,13 @@ namespace Vkm.Kernel
                         result.Start();
 
                         return result;
-                    }, 
-                    (l, d) => d);
+                    }), 
+                    (l, d) => d).Value;
             }
             else
             {
                 if (_pressedButtons.TryRemove(e.Location, out var token))
-                    token.Stop();
+                    token.Value.Stop();
             }
             DoButtonPressed(e.Location, e.IsDown?ButtonEvent.Down:ButtonEvent.Up);
         }
@@ -84,7 +84,7 @@ namespace Vkm.Kernel
             foreach (var location in keys)
             {
                 if (_pressedButtons.TryRemove(location, out var token))
-                    token.Stop();
+                    token.Value.Stop();
             }
         }
 

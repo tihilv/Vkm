@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -15,13 +16,13 @@ namespace Vkm.Library.CompositeLayout
     {
         private CompositeLayoutOptions _compositeLayoutOptions;
 
-        private readonly ConcurrentDictionary<CompositeLayoutElementInfo, IElement> _initedElements;
+        private readonly ConcurrentDictionary<CompositeLayoutElementInfo, Lazy<IElement>> _initedElements;
 
         readonly object _layoutSwitchLock = new object();
 
         public CompositeLayout(Identifier identifier) : base(identifier)
         {
-            _initedElements = new ConcurrentDictionary<CompositeLayoutElementInfo, IElement>();
+            _initedElements = new ConcurrentDictionary<CompositeLayoutElementInfo, Lazy<IElement>>();
         }
 
         public IOptions GetDefaultOptions()
@@ -95,8 +96,7 @@ namespace Vkm.Library.CompositeLayout
 
         private void PlaceElement(CompositeLayoutElementInfo elementInfo)
         {
-            AddElement(elementInfo.Location,  
-                _initedElements.GetOrAdd(elementInfo, info => GlobalContext.CreateElement(info.ModuleInfo)));
+            AddElement(elementInfo.Location, _initedElements.GetOrAdd(elementInfo, info =>  new Lazy<IElement>(()=>GlobalContext.CreateElement(info.ModuleInfo))).Value);
         }
 
         private void DeleteElement(CompositeLayoutElementInfo elementInfo, bool forever)

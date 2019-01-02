@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Vkm.Library.Properties;
 
@@ -18,21 +17,21 @@ namespace Vkm.Library.Common
 
         private readonly FontFamily _awesomeFontFamily;
 
-        private readonly ConcurrentDictionary<string, FontFamily> _fontFamilies;
+        private readonly ConcurrentDictionary<string, Lazy<FontFamily>> _fontFamilies;
 
         public FontFamily AwesomeFontFamily => _awesomeFontFamily;
 
         private FontService()
         {
             _fontCollection = new PrivateFontCollection();
-            _fontFamilies = new ConcurrentDictionary<string, FontFamily>();
+            _fontFamilies = new ConcurrentDictionary<string, Lazy<FontFamily>>();
 
             _awesomeFontFamily = GetFontFamilyByResourceName("Vkm.Library.Resources.FontAwesome.ttf", Resources.FontAwesome);
         }
 
         internal FontFamily GetFontFamilyByResourceName(string resourceName, byte[] resource)
         {
-            return _fontFamilies.GetOrAdd(resourceName, s =>
+            return _fontFamilies.GetOrAdd(resourceName, s => new Lazy<FontFamily>(() =>
             {
                 using (Stream fontStream = new MemoryStream(resource))
                 {
@@ -45,7 +44,7 @@ namespace Vkm.Library.Common
                 }
 
                 return _fontCollection.Families.Last();
-            });
+            })).Value;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Vkm.Api.Data
         private readonly ConcurrentDictionary<Identifier, ILayout> _layouts;
         private readonly ConcurrentDictionary<Identifier, ITransition> _transitions;
         private readonly ConcurrentDictionary<Identifier, IDeviceHook> _deviceHooks;
-        private readonly ConcurrentDictionary<Type, IService[]> _initedServices;
+        private readonly ConcurrentDictionary<Type, Lazy<IService[]>> _initedServices;
 
         public GlobalOptions Options => _globalOptions;
 
@@ -42,7 +42,7 @@ namespace Vkm.Api.Data
         {
             Services = services;
 
-            _initedServices = new ConcurrentDictionary<Type, IService[]>();
+            _initedServices = new ConcurrentDictionary<Type, Lazy<IService[]>>();
             
             _devices = services.ModulesService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
             var configurators = services.ModulesService.GetModules<IConfigurator>().ToArray();
@@ -154,14 +154,15 @@ namespace Vkm.Api.Data
 
         public IEnumerable<T> GetServices<T>() where T : IService
         {
-            return _initedServices.GetOrAdd(typeof(T), type =>
+            return _initedServices.GetOrAdd(typeof(T), type => new Lazy<IService[]>(() =>
             {
-                var services = Services.ModulesService.GetModules<T>().Where(s => !Options.DiabledServices.Contains(s.Id)).Cast<IService>().ToArray();
+                var services = Services.ModulesService.GetModules<T>()
+                    .Where(s => !Options.DiabledServices.Contains(s.Id)).Cast<IService>().ToArray();
                 foreach (var service in services)
                     InitializeEntity(service);
 
                 return services;
-            }).OfType<T>();
+            })).Value.OfType<T>();
         }
 
         public T InitializeEntity<T>(T entity, Action<T> beforeInit = null)
