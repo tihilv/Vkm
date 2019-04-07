@@ -36,7 +36,7 @@ namespace Vkm.Library.Clock
                 Location newLocation;
                 do
                 {
-                    newLocation = new Location((byte) _random.Next(LayoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width), (byte) _random.Next(LayoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height));
+                    newLocation = new Location((byte) _random.Next(LayoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width + 1), (byte) _random.Next(LayoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height + 1));
                 } while (newLocation == _prevLocation);
 
                 AddElement(newLocation, _clockElement);

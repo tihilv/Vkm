@@ -33,10 +33,10 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="OpenMacroBoard.SDK, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenMacroBoard.SDK.0.2.1\lib\net40\OpenMacroBoard.SDK.dll</HintPath>
+      <HintPath>..\packages\OpenMacroBoard.SDK.0.3.0\lib\net40\OpenMacroBoard.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="StreamDeckSharp, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamDeckSharp.0.2.0\lib\net40\StreamDeckSharp.dll</HintPath>
+    <Reference Include="StreamDeckSharp, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamDeckSharp.0.3.1\lib\net40\StreamDeckSharp.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
       <HintPath>..\packages\System.Drawing.Common.4.5.0\lib\net461\System.Drawing.Common.dll</HintPath>
