@@ -37,7 +37,7 @@ namespace Vkm.Library.Timer
                 _stopwatchElements[i] = GlobalContext.InitializeEntity(new StopwatchElement(new Identifier($"Vkm.Stopwatch.N{i}")));
             }
 
-            AddElement(new Location(4, 2), GlobalContext.InitializeEntity(new BackElement()));
+            AddElement(new Location(TimersCount, 2), GlobalContext.InitializeEntity(new BackElement()));
         }
 
         public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -96,14 +96,9 @@ namespace Vkm.Library.Timer
         {
             if (buttonEvent == ButtonEvent.Down)
             {
-                if (location.Y == 2)
+                if (location.Y == 2 && location.X < TimersCount)
                 {
-                    if (location.X == 4)
-                    {
-                        LayoutContext.SetPreviousLayout();
-                    }
-                    else
-                        ReplaceTimers(location.X);
+                    ReplaceTimers(location.X);
                 }
             }
 
