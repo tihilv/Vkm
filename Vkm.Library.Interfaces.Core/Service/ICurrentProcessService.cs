@@ -6,6 +6,6 @@ namespace Vkm.Library.Interfaces.Services
     public interface ICurrentProcessService: IService
     {
         event EventHandler<ProcessEventArgs> ProcessEnter;
-        event EventHandler<ProcessEventArgs> ProcessExit;
+        event EventHandler<ProcessEventArgs> ProcessLeave;
     }
 }

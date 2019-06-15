@@ -4,11 +4,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 
 namespace Vkm.Api.Basic
 {
     [Serializable]
-    public class BitmapRepresentation: IDisposable
+    public class BitmapRepresentation : IDisposable
     {
         private static readonly ConcurrentDictionary<int, ConcurrentStack<byte[]>> _pool = new ConcurrentDictionary<int, ConcurrentStack<byte[]>>();
 
@@ -28,7 +29,7 @@ namespace Vkm.Api.Basic
             _height = height;
         }
 
-        public BitmapRepresentation(BitmapEx bitmap): this(bitmap?.GetInternal())
+        public BitmapRepresentation(BitmapEx bitmap) : this(bitmap?.GetInternal())
         {
 
         }
@@ -36,7 +37,7 @@ namespace Vkm.Api.Basic
         public BitmapRepresentation(Bitmap bitmap)
         {
             _bitmapInternal = Array1DFromBitmap(bitmap);
-            
+
             _width = bitmap.Width;
             _height = bitmap.Height;
             _pixelFormat = bitmap.PixelFormat;
@@ -45,18 +46,18 @@ namespace Vkm.Api.Basic
         public BitmapRepresentation(byte[] data)
         {
             using (var stream = new MemoryStream(data))
-            using (var bitmap = (Bitmap)Bitmap.FromStream(stream))
+            using (var bitmap = (Bitmap) Bitmap.FromStream(stream))
             {
-              _bitmapInternal = Array1DFromBitmap(bitmap);
+                _bitmapInternal = Array1DFromBitmap(bitmap);
 
-              _width = bitmap.Width;
-              _height = bitmap.Height;
-              _pixelFormat = bitmap.PixelFormat;
+                _width = bitmap.Width;
+                _height = bitmap.Height;
+                _pixelFormat = bitmap.PixelFormat;
             }
         }
 
 
-      public BitmapRepresentation Clone()
+        public BitmapRepresentation Clone()
         {
             var array = GetNewArray(_bitmapInternal.Length);
             Array.Copy(_bitmapInternal, array, _bitmapInternal.Length);
@@ -70,7 +71,7 @@ namespace Vkm.Api.Basic
             if (pool.TryPop(out var v))
                 return v;
 
-            
+
             return new byte[length];
         }
 

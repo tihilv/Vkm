@@ -25,7 +25,6 @@ namespace Vkm.Library.Weather
         {
             var result = new Dictionary<string, string>();
 
-            string resource = "Vkm.Library.Resources.weathericons.xml";
             using (Stream stream = new MemoryStream(Resources.weathericons_xml))
             {
                 XDocument doc = XDocument.Load(stream);

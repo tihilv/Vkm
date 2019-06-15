@@ -34,7 +34,7 @@ namespace Vkm.Library.ApplicationChangeTransition
                     OnTransition();
                 }
             };
-            service.ProcessExit += (sender, args) =>
+            service.ProcessLeave += (sender, args) =>
             {
                 if (_entered && args.ProcessName == TransitionOptions.Process)
                 {

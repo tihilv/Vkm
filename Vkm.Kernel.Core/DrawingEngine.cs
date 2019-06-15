@@ -87,13 +87,13 @@ namespace Vkm.Kernel
                         _switchedLocations[location] = location;
                     }
 
+                    var de = drawElement.Value;
                     if (newSwitch)
                     {
-                        var de = drawElement.Value;
-                        drawElement = new Lazy<LayoutDrawElement>(() => new LayoutDrawElement(de.Location, de.BitmapRepresentation, new TransitionInfo(TransitionType.LayoutChange, de.TransitionInfo.Duration)));
+                        de = new LayoutDrawElement(de.Location, de.BitmapRepresentation, new TransitionInfo(TransitionType.LayoutChange, de.TransitionInfo.Duration));
                     }
 
-                    currentDrawElementsCache.Add(drawElement.Value);
+                    currentDrawElementsCache.Add(de);
                 }
             }
             

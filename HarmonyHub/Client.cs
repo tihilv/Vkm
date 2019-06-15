@@ -190,7 +190,6 @@ namespace HarmonyHub
             }
         }
         /// Close connection with Harmony Hub
-        /// </summary>
         public async Task CloseAsync()
         {
             Trace.WriteLine("Harmony: Close");

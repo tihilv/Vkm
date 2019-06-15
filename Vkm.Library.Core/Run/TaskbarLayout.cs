@@ -65,9 +65,9 @@ namespace Vkm.Library.Run
                     foreach (var element in _elements)
                         RemoveElement(element);
 
-                    _elements.Clear();
-
                     var processes = _processService.GetProcessesWithWindows().OrderBy(p => p.MainWindowText).Take(LayoutContext.ButtonCount.Width * LayoutContext.ButtonCount.Height - 1);
+
+                    _elements.Clear();
 
                     foreach (var processInfo in processes)
                     {

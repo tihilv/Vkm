@@ -82,7 +82,10 @@ namespace Vkm.Library.LayoutSwitch
                 {
                     var destRect = new Rectangle(_buttonShift.Width + element.Location.X * _individualButtonSize.Width, _buttonShift.Height + element.Location.Y * _individualButtonSize.Height, _individualButtonSize.Width, _individualButtonSize.Height);
                     using (var sourceBitmap = element.BitmapRepresentation.CreateBitmap())
+                    {
                         BitmapHelpers.ResizeBitmap(sourceBitmap, currentBitmap, destRect);
+                        element.BitmapRepresentation.Dispose();
+                    }
                 }
 
                 DisposeHelper.DisposeAndNull(ref _currentRepresentation);
