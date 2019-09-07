@@ -33,7 +33,7 @@ namespace Vkm.Library.Service.Harmony
             DiscoveryService service = new DiscoveryService();
             service.HubFound += async (sender, e) => {
                 // stop discovery once we've found one hub
-                //service.StopDiscovery();
+                service.StopDiscovery();
                 try
                 {
                     _harmonyHub = new HarmonyHub.Client(e.HubInfo.IP);
