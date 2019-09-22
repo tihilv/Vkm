@@ -74,20 +74,9 @@ namespace Vkm.Library.Heartbeat
 
             if (queue.Count > 1)
             {
-
                 var array = queue.ToArray();
 
-                Point[] points = new Point[array.Length];
-                for (int i = 0; i < array.Length; i++)
-                {
-                    points[i] = new Point(i, bitmap.Height - bitmap.Height * array[i] / 100);
-                }
-
-                using (var graphics = bitmap.CreateGraphics())
-                using (var pen = new Pen(color))
-                {
-                    graphics.DrawCurve(pen, points);
-                }
+                DefaultDrawingAlgs.DrawPlot(bitmap, color, array, 0, bitmap.Height, minValue: 0, maxValue: 100);
             }
         }
 

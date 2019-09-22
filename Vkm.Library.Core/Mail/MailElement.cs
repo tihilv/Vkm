@@ -15,8 +15,6 @@ namespace Vkm.Library.Mail
 {
     class MailElement: ElementBase
     {
-        
-
         private IMailService[] _mailServices;
 
         private int? _cachedCount=-1;
@@ -35,8 +33,6 @@ namespace Vkm.Library.Mail
 
             _mailServices = GlobalContext.GetServices<IMailService>().ToArray();
         }
-
-
 
         int? GetUnreadMessages()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Options;
 
@@ -86,14 +87,64 @@ namespace Vkm.Common
             using (var font = new Font(fontFamily, height, GraphicsUnit.Pixel))
             {
                 var size = graphics.MeasureString(text, font);
-                if (size.Width / size.Height > 10)
-                    DrawText(bitmap, fontFamily, SplitText(text), color);
-                else
-                    graphics.DrawString(text, font, whiteBrush, (bitmap.Width - size.Width) / 2, (bitmap.Height - size.Height) / 2);
-            }
+                if (size.Width / size.Height > 5)
+                {
+                    var splittedText = SplitText(text);
+                    if (splittedText != text)
+                    {
+                        DrawText(bitmap, fontFamily, splittedText, color);
+                        return;
+                    }
+                }
 
+                graphics.DrawString(text, font, whiteBrush, (bitmap.Width - size.Width) / 2, (bitmap.Height - size.Height) / 2);
+            }
         }
 
+        public static void DrawPlot(BitmapEx bitmap, Color color, int[] values, int fromY, int toY, int startIndex = 0, double? minValue = null, double? maxValue = null)
+        {
+            DrawPlot(bitmap, color, values.Select(v=>(double)v).ToArray(), fromY, toY, startIndex, minValue, maxValue);
+        }
+        
+        public static void DrawPlot(BitmapEx bitmap, Color color, double[] values, int fromY, int toY, int startIndex = 0, double? minValue = null, double? maxValue = null)
+        {
+            var min = double.MaxValue;
+            var max = double.MinValue;
+
+            if (minValue == null || maxValue == null)
+            {
+                for (int i = startIndex; i < values.Length; i++)
+                {
+                    if (min > values[i])
+                        min = values[i];
+            
+                    if (max < values[i])
+                        max = values[i];
+                }
+            }
+            
+            min = minValue ?? min;
+            max = maxValue ?? max;
+
+            var coef = (max != min) ? ((toY - fromY) / ((max - min))) : 0;
+
+            var midY = (toY + fromY) / 2;
+            var midValue = (max + min) / 2.0;
+            
+            Point[] points = new Point[values.Length - startIndex];
+            for (int i = startIndex; i < values.Length; i++)
+            {
+                points[i-startIndex] = new Point(i-startIndex, (int)(midY - (values[i]-midValue)*coef));
+            }
+
+            using (var graphics = bitmap.CreateGraphics())
+            using (var pen = new Pen(color))
+            {
+                graphics.DrawCurve(pen, points);
+            }
+        }
+
+        
         private static string SplitText(string text)
         {
             int pos = 0;
@@ -105,7 +156,7 @@ namespace Vkm.Common
 
             if (pos > 0)
             {
-                text = text.Substring(0, pos - 1) + "\n" + text.Substring(pos + 1);
+                text = text.Substring(0, pos) + "\n" + text.Substring(pos + 1);
             }
 
             return text;

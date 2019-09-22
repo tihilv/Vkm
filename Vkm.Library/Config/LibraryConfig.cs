@@ -26,12 +26,14 @@ using Vkm.Library.Power;
 using Vkm.Library.Properties;
 using Vkm.Library.RemoteControl;
 using Vkm.Library.Run;
+using Vkm.Library.Service.Netatmo;
 using Vkm.Library.Service.Player;
 using Vkm.Library.Service.Weather;
 using Vkm.Library.StartupTransition;
 using Vkm.Library.Timer;
 using Vkm.Library.Volume;
 using Vkm.Library.Weather;
+using Vkm.Library.WeatherStation;
 
 namespace Vkm.Library.Config
 {
@@ -49,8 +51,9 @@ namespace Vkm.Library.Config
             Identifier VolumeIdentifier = new Identifier("Vkm.DesktopDefaults.Volume");
             Identifier WeatherIdentifier = new Identifier("Vkm.DesktopDefaults.Weather");
             Identifier MailIdentifier = new Identifier("Vkm.DesktopDefaults.Mail");
+            Identifier WeatherStationIdentifier = new Identifier("Vkm.DesktopDefaults.WeatherStation");
             Identifier TaskbarIdentifier = new Identifier("Vkm.DesktopDefaults.Taskbar");
-            Identifier CalcIdentifier = new Identifier("Vkm.DesktopDefaults.Calc");
+            //Identifier CalcIdentifier = new Identifier("Vkm.DesktopDefaults.Calc");
             Identifier HeartbeatIdentifier = new Identifier("Vkm.DesktopDefaults.Heartbeat");
             Identifier DateIdentifier = new Identifier("Vkm.DesktopDefaults.Date");
             Identifier MediaIdentifier = new Identifier("Vkm.DesktopDefaults.Media");
@@ -105,22 +108,28 @@ namespace Vkm.Library.Config
                 ModuleInfo = new ModuleInitializationInfo(VolumeElementFactory.Identifier, VolumeIdentifier)
             });
 
-            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
-            {
-                Location = new Location(0, 1),
-                ModuleInfo = new ModuleInitializationInfo(RunElementFactory.Identifier, CalcIdentifier)
-            });
+            //desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            //{
+            //    Location = new Location(0, 1),
+            //    ModuleInfo = new ModuleInitializationInfo(RunElementFactory.Identifier, CalcIdentifier)
+            //});
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
-                Location = new Location(1, 1),
+                Location = new Location(0, 1),
                 ModuleInfo = new ModuleInitializationInfo(MediaElementFactory.Identifier, MediaIdentifier)
             });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
-                Location = new Location(2, 1),
+                Location = new Location(1, 1),
                 ModuleInfo = new ModuleInitializationInfo(MailElementFactory.Identifier, MailIdentifier)
+            });
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(2, 1),
+                ModuleInfo = new ModuleInitializationInfo(WeatherStationFactory.Identifier, WeatherStationIdentifier)
             });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
@@ -173,12 +182,10 @@ namespace Vkm.Library.Config
 
 
 
-            var runOptions = new RunOptions();
-
-            runOptions.Executable = "calc.exe";
-            runOptions.Symbol = FontAwesomeRes.fa_calculator;
-
-            optionsService.SetDefaultOptions(CalcIdentifier, runOptions);
+            //var runOptions = new RunOptions();
+            //runOptions.Executable = "calc.exe";
+            //runOptions.Symbol = FontAwesomeRes.fa_calculator;
+            //optionsService.SetDefaultOptions(CalcIdentifier, runOptions);
 
             var weatherServiceOptions = new OpenWeatherOptions { OpenWeatherApiKey = "3e1cbac94caf82e428a662bc15b2fe9e" };
             optionsService.SetDefaultOptions(OpenWeatherService.Identifier, weatherServiceOptions);
@@ -236,6 +243,10 @@ namespace Vkm.Library.Config
             
             var layoutManagementHoolOptions = new LongPressHookOptions() {Location = new Location(4,2), LayoutIdentifier = DefaultLayoutSwitchLayout};
             optionsService.SetDefaultOptions(LongPressHook.Identifier, layoutManagementHoolOptions);
+
+            var netatmoOptions = new NetatmoOptions() { ClientId = "5d7e3403c52009c91e692291", Secret = "lUfYpj3y9WYFGvvw09lE9gZetdNbxgwxFgfWzaHe", Login = "tihilv_atmo@mail.ru", Password = "netAtmoStation0_", HistoryRefreshSpan = TimeSpan.FromMinutes(2), MaxMeasureCount = 200};
+            optionsService.SetDefaultOptions(NetatmoWeatherStationService.Identifier, netatmoOptions);
+
         }
 
     }

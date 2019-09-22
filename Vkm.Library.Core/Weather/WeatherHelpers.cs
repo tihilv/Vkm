@@ -46,6 +46,11 @@ namespace Vkm.Library.Weather
             var temperatureStr = (temperature < 0) ? temperature.ToString() : $"+{temperature}";
             return temperatureStr;
         }
+        public static string TempToDecStr(double temp)
+        {
+            var temperatureStr = (temp < 0) ? (temp).ToString("F1") : $"+{temp:F1}";
+            return temperatureStr;
+        }
 
         public static string GetWeatherSymbol(string weatherSymbol)
         {

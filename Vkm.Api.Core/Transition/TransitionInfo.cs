@@ -14,7 +14,7 @@ namespace Vkm.Api.Transition
         }
     }
 
-    public enum TransitionType
+    public enum TransitionType: byte
     {
         Instant, 
         ElementUpdate,

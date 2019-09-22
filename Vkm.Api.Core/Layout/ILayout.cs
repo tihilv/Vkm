@@ -17,7 +17,7 @@ namespace Vkm.Api.Layout
         void ButtonPressed(Location location, ButtonEvent isDown);
     }
 
-    public enum ButtonEvent
+    public enum ButtonEvent: byte
     {
         Down = 0,
         Up = 1,

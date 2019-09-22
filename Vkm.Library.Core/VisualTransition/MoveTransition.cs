@@ -124,7 +124,7 @@ namespace Vkm.Library.VisualTransition
         }
     }
 
-    public enum MoveFromDirection
+    public enum MoveFromDirection: byte
     {
         Left, Right, Top, Bottom
     }

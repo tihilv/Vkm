@@ -40,7 +40,7 @@ namespace Vkm.Library.Interfaces.Service
         }
     }
 
-    public enum MediaDeviceType
+    public enum MediaDeviceType: byte
     {
         Unknown,
         Speakers,
