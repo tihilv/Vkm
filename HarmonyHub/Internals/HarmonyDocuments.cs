@@ -106,7 +106,6 @@ namespace HarmonyHub.Internals
         /// <summary>
         ///     Create a "pair" document, this is a bit different from the others
         /// </summary>
-        /// <param name="token">Token</param>
         /// <returns>Document</returns>
         public static Document LogitechPairDocument()
         {

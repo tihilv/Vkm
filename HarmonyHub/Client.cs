@@ -661,7 +661,6 @@ namespace HarmonyHub
         /// <summary>
         ///     Send message to HarmonyHub with UserAuthToken, wait for SessionToken
         /// </summary>
-        /// <param name="userAuthToken"></param>
         /// <returns></returns>
         private async Task<string> PairAsync()
         {

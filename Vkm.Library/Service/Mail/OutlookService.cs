@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using Microsoft.Office.Interop.Outlook;
-using Vkm.Api;
 using Vkm.Api.Identification;
 using Vkm.Common.Win32.Win32;
 using Vkm.Library.Interfaces.Service.Mail;

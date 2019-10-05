@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -89,23 +90,30 @@ namespace Vkm.Library.WeatherStation
 
         private async void ProcessDraw()
         {
-            var weather = await _weatherStationService.GetHistorical();
-
-            LayoutDrawElement[] result = (new LayoutDrawElement[_elements.Count]);
-
-            for (int i = 0; i < _elements.Count; i++)
+            try
             {
-                var element = _elements[i];
+                var weather = await _weatherStationService.GetHistorical();
 
-                var values = weather.Union(new [] {await _weatherStationService.GetData()}).Select(m => element.GetFunc(m)).ToArray();
-                
-                var currentValue = values.Last();
-                var currentString = element.TransformFunc(currentValue);
+                LayoutDrawElement[] result = (new LayoutDrawElement[_elements.Count]);
 
-                result[i] = new LayoutDrawElement(element.Location, DrawTexts(currentString, element.Suffix, values, _layoutContext));
+                for (int i = 0; i < _elements.Count; i++)
+                {
+                    var element = _elements[i];
+
+                    var values = weather.Union(new[] {await _weatherStationService.GetData()}).Select(m => element.GetFunc(m)).ToArray();
+
+                    var currentValue = values.Last();
+                    var currentString = element.TransformFunc(currentValue);
+
+                    result[i] = new LayoutDrawElement(element.Location, DrawTexts(currentString, element.Suffix, values, _layoutContext));
+                }
+
+                DrawLayout?.Invoke(this, new DrawEventArgs(result));
             }
-            
-            DrawLayout?.Invoke(this, new DrawEventArgs(result));
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception during weather station layout drawing: {ex}");
+            }
         }
 
         private static BitmapEx DrawTexts(string l1, string l2, double[] values, LayoutContext layoutContext)
@@ -118,7 +126,7 @@ namespace Vkm.Library.WeatherStation
 
             var startIndex = 0;
             if (values.Length > bitmap.Width)
-                startIndex = bitmap.Width - values.Length;
+                startIndex = values.Length - bitmap.Width;
 
             DefaultDrawingAlgs.DrawPlot(bitmap, layoutContext.Options.Theme.ForegroundColor, values, bitmap.Height / 2, bitmap.Height, startIndex);
 

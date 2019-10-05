@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Netatmo;
@@ -130,10 +131,17 @@ namespace Vkm.Library.Service.Netatmo
 
         private async void RegisterHistoryValue()
         {
-            _historyData.Enqueue(await GetData());
+            try
+            {
+                _historyData.Enqueue(await GetData());
 
-            while (_historyData.Count > _options.MaxMeasureCount)
-                _historyData.Dequeue();
+                while (_historyData.Count > _options.MaxMeasureCount)
+                    _historyData.Dequeue();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Netatmo service error: {ex}");
+            }
         }
     }
 }
