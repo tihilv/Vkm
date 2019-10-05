@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vkm.Device.Virtual</RootNamespace>
-    <AssemblyName>Vkm.Device.Virtual</AssemblyName>
+    <AssemblyName>Vkm.Device.Virtual.vkmext</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
