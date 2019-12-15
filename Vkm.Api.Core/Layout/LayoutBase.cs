@@ -15,6 +15,8 @@ namespace Vkm.Api.Layout
     {
         private GlobalContext _globalContext;
         private LayoutContext _layoutContext;
+        
+        readonly object _layoutSwitchLock = new object();
 
         private readonly ConcurrentDictionary<ITimerToken, ITimerToken> _timers;
 
@@ -52,32 +54,66 @@ namespace Vkm.Api.Layout
 
         }
 
-        public virtual void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected virtual void OnEnteringLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            Debug.Assert(!_inLayout, "Already in layout");
+            
+        }
+        
+        protected virtual void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
+        {
+            
+        }
+        
+        public void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        {
+            lock (_layoutSwitchLock)
+            {
+                OnEnteringLayout(layoutContext, previousLayout);
 
-            _previousLayout = previousLayout;
-            _inLayout = true;
+                Debug.Assert(!_inLayout, "Already in layout");
 
-            _layoutContext = layoutContext;
+                _previousLayout = previousLayout;
+                _inLayout = true;
 
-            foreach (var placement in _elements.Values)
-                ConnectToElement(placement, previousLayout);
+                _layoutContext = layoutContext;
 
-            foreach (var timer in _timers.Values)
-                timer.Start();
+                foreach (var placement in _elements.Values)
+                    ConnectToElement(placement, previousLayout);
+
+                foreach (var timer in _timers.Values)
+                    timer.Start();
+
+                OnEnteredLayout(layoutContext, previousLayout);
+            }
         }
 
-        public virtual void LeaveLayout()
+        protected virtual void OnLeavingLayout()
         {
-            Debug.Assert(_inLayout, "Not in layout");
-            _inLayout = false;
+            
+        }
 
-            foreach (var timer in _timers.Values)
-                timer.Stop();
+        protected virtual void OnLeavedLayout()
+        {
+            
+        }
+        
+        public void LeaveLayout()
+        {
+            lock (_layoutSwitchLock)
+            {
+                OnLeavingLayout();
+                
+                Debug.Assert(_inLayout, "Not in layout");
+                _inLayout = false;
 
-            foreach (var placement in _elements.Values)
-                DisconnectFromElement(placement);
+                foreach (var timer in _timers.Values)
+                    timer.Stop();
+
+                foreach (var placement in _elements.Values)
+                    DisconnectFromElement(placement);
+                
+                OnLeavedLayout();
+            }
         }
 
         private void ConnectToElement(ElementPlacement placement, ILayout previousLayout)
