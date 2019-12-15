@@ -20,10 +20,8 @@ namespace Vkm.Library.Buttons
         {
         }
         
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             DrawKey();
         }
         

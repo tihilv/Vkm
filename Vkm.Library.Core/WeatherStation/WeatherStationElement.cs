@@ -33,9 +33,8 @@ namespace Vkm.Library.WeatherStation
             RegisterTimer(new TimeSpan(0,0,5,0), ProcessDraw);
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
             ProcessDraw();
         }
 

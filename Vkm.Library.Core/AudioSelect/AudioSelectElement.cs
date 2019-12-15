@@ -32,10 +32,8 @@ namespace Vkm.Library.AudioSelect
         }
 
         
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             var bitmap = LayoutContext.CreateBitmap();
             DefaultDrawingAlgs.DrawText(bitmap, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_volume_up, GlobalContext.Options.Theme.ForegroundColor);
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});

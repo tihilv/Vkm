@@ -12,10 +12,8 @@ namespace Vkm.Library.LayoutSwitch
         {
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             var elements = new List<LayoutSwitchElement>();
 
             var layouts = layoutContext.GetActiveLayouts().Where(l => l != this);
@@ -29,11 +27,9 @@ namespace Vkm.Library.LayoutSwitch
             AddElementsInRectangle(elements);
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavedLayout()
         {
-            base.LeaveLayout();
-            
-            foreach(var element in this.Elements.Select(e=>e.Location))
+            foreach(var element in Elements.Select(e=>e.Location))
                 RemoveElement(element);
         }
     }

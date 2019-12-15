@@ -35,18 +35,16 @@ namespace Vkm.Library.Run
 
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
             _currentProcessService.ProcessEnter += OnProcessEnter;
 
             FillElements();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _currentProcessService.ProcessEnter -= OnProcessEnter;
-            base.LeaveLayout();
         }
 
         private void OnProcessEnter(object sender, ProcessEventArgs e)

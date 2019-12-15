@@ -41,17 +41,13 @@ namespace Vkm.Library.Clock
             RegisterTimer(new TimeSpan(0,0,0,1), () =>  DrawInvoke(ProvideTime()));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             DrawInvoke(ProvideTime());
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavedLayout()
         {
-            base.LeaveLayout();
-
             _hours = 99;
             _minutes = 99;
             _seconds = 99;

@@ -12,7 +12,6 @@ namespace Vkm.Library.RemoteControl
 {
     internal class RemoteControlLayout: LayoutBase
     {
-        private List<IElement> _elements = new List<IElement>();
         private IRemoteControlService _service;
         
         public RemoteControlLayout(Identifier identifier): base(identifier)
@@ -29,19 +28,16 @@ namespace Vkm.Library.RemoteControl
             AddElement(new Location(4, 2), GlobalContext.InitializeEntity(new BackElement()));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-            
             _service.ActiveActionChanged += ServiceOnActiveActionChanged;
 
             FillData();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _service.ActiveActionChanged -= ServiceOnActiveActionChanged;
-            base.LeaveLayout();
         }
 
         private void ServiceOnActiveActionChanged(object sender, ActionEventArgs e)
@@ -51,11 +47,6 @@ namespace Vkm.Library.RemoteControl
 
         async void FillData()
         {
-            foreach (var element in _elements)
-                RemoveElement(element);
-
-            _elements.Clear();
-            
             var actions = await _service.GetActions();
 
             var elements = actions.Select(a => GlobalContext.InitializeEntity(new RemoteDefaultElement(new Identifier($"{Id.Value}_{a.Id}"), a, _service))).Take(LayoutContext.ButtonCount.Width * LayoutContext.ButtonCount.Height - 1);

@@ -32,17 +32,45 @@ namespace Vkm.Api.Element
             _timers = new List<ITimerToken>();
         }
 
-        public virtual void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected virtual void OnEnteringLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
+            
+        }
+
+        protected virtual void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
+        {
+            
+        }
+        
+        public void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        {
+            OnEnteringLayout(layoutContext, previousLayout);
+            
             _layoutContext = layoutContext;
             foreach (var timer in _timers)
                 timer.Start();
+            
+            OnEnteredLayout(layoutContext, previousLayout);
         }
 
-        public virtual void LeaveLayout()
+        protected virtual void OnLeavingLayout()
         {
+            
+        }
+
+        protected virtual void OnLeavedLayout()
+        {
+            
+        }
+        
+        public void LeaveLayout()
+        {
+            OnLeavingLayout();
+            
             foreach (var timer in _timers)
                 timer.Stop();
+            
+            OnLeavedLayout();
         }
 
         public virtual bool ButtonPressed(Location location, ButtonEvent buttonEvent)

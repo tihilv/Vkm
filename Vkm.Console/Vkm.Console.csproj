@@ -55,6 +55,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -79,13 +82,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj">
+      <Project>{b1766ac5-85ea-473b-b4a7-7553c6d4ece4}</Project>
+      <Name>Vkm.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vkm.Intercom.Service.Core\Vkm.Intercom.Service.Core.csproj">
+      <Project>{681e7ad1-594c-4e63-ac64-a5d1bff59dd8}</Project>
+      <Name>Vkm.Intercom.Service.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vkm.Intercom\Vkm.Intercom.Core.csproj">
       <Project>{940be671-1ca5-40ba-9c56-5e95006aa913}</Project>
       <Name>Vkm.Intercom.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vkm.Library\Vkm.Library.csproj">
-      <Project>{603F023B-B30F-4CF4-A368-7477C2B1B61C}</Project>
-      <Name>Vkm.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

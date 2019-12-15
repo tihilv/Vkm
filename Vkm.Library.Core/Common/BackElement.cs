@@ -15,10 +15,8 @@ namespace Vkm.Library.Common
 
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             var bitmap = LayoutContext.CreateBitmap();
             DefaultDrawingAlgs.DrawText(bitmap, FontService.Instance.AwesomeFontFamily, FontAwesomeRes.fa_arrow_left, GlobalContext.Options.Theme.ForegroundColor);
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});

@@ -41,10 +41,8 @@ namespace Vkm.Library.Timer
 
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             if (_timeRequested && previousLayout is InputTimeLayout itl)
             {
                 _originalSpan = new TimeSpan(0, 0, itl.Values[0] * 10 + itl.Values[1], itl.Values[2] * 10 + itl.Values[3]);
@@ -56,13 +54,11 @@ namespace Vkm.Library.Timer
             DrawStopwatch();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _hours = 99;
             _minutes = 99;
             _seconds = 99;
-
-            base.LeaveLayout();
         }
 
         private void DrawCommon()

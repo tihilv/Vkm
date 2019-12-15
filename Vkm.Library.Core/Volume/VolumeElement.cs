@@ -57,10 +57,8 @@ namespace Vkm.Library.Volume
                 _mediaDeviceService.DecreaseVolume();
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             _mediaDeviceService.VolumeChanged += AudioEndpointVolume_OnVolumeNotification;
 
             Draw();
@@ -71,10 +69,13 @@ namespace Vkm.Library.Volume
             Draw();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _mediaDeviceService.VolumeChanged -= AudioEndpointVolume_OnVolumeNotification;
-            base.LeaveLayout();
+        }
+
+        protected override void OnLeavedLayout()
+        {
             _lastValues = null;
         }
         

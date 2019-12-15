@@ -46,10 +46,8 @@ namespace Vkm.Library.Power
             _powerService = GlobalContext.GetServices<IPowerService>().First();
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             string symbol = "";
             switch (GetAction())
             {

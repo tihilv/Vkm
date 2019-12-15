@@ -40,10 +40,8 @@ namespace Vkm.Library.Timer
             AddElement(new Location(TimersCount, 2), GlobalContext.InitializeEntity(new BackElement()));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             if (_currentPage == -1)
                 ReplaceTimers(0);
             else

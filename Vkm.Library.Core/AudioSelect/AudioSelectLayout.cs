@@ -32,17 +32,13 @@ namespace Vkm.Library.AudioSelect
             _mediaDeviceService = GlobalContext.GetServices<IMediaDeviceService>().First();
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             DrawElements();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavedLayout()
         {
-            base.LeaveLayout();
-
             ClearElements();
         }
 
@@ -88,10 +84,8 @@ namespace Vkm.Library.AudioSelect
                 _device = device;
             }
 
-            public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+            protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
             {
-                base.EnterLayout(layoutContext, previousLayout);
-
                 DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
             }
 

@@ -39,20 +39,16 @@ namespace Vkm.Library.Media
             AddElement(new Location(3, 2), GlobalContext.InitializeEntity(new ButtonElement(FontAwesomeRes.fa_forward, FontService.Instance.AwesomeFontFamily, keyboardService.NextTrack)));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-            
             DrawNow();
 
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged += PlayerServiceOnPlayingInfoChanged;
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavedLayout()
         {
-            base.LeaveLayout();
-
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged -= PlayerServiceOnPlayingInfoChanged;
 

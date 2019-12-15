@@ -21,10 +21,8 @@ namespace Vkm.Library.RemoteControl
             _service = service;
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-            
             Draw();
         }
 

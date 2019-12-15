@@ -38,22 +38,18 @@ namespace Vkm.Library.Timer
 
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             DrawCommon();
 
             DrawStopwatch();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _minutes = 99;
             _seconds = 99;
             _secondsPart = 99;
-
-            base.LeaveLayout();
         }
 
         private void DrawCommon()

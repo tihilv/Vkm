@@ -48,10 +48,8 @@ namespace Vkm.Library.LayoutSwitch
                 (LayoutContext.IconSize.Height - LayoutContext.ButtonCount.Height * _individualButtonSize.Height) / 2);
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             _individualButtonSize = CalculateIndividualButtonSize();
             _buttonShift = CalculateButtonShift();
             using (var bitmap = layoutContext.CreateBitmap())
@@ -60,12 +58,14 @@ namespace Vkm.Library.LayoutSwitch
             _layoutToManage.EnterLayout(layoutContext, _previousLayout);
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             _layoutToManage.LeaveLayout();
             _layoutToManage.DrawLayout -= OnDrawLayout;
-            base.LeaveLayout();
-            
+        }
+
+        protected override void OnLeavedLayout()
+        {
             DisposeHelper.DisposeAndNull(ref _currentRepresentation);
         }
 

@@ -53,16 +53,13 @@ namespace Vkm.Library.Mail
             return result;
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             ProcessDraw();
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavedLayout()
         {
-            base.LeaveLayout();
             _cachedCount = -1;
         }
 

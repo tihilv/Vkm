@@ -35,10 +35,8 @@ namespace Vkm.Library.Media
             _playerServices = GlobalContext.GetServices<IPlayerService>().ToArray();
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             DrawNow();
 
             foreach (IPlayerService playerService in _playerServices)
@@ -99,14 +97,12 @@ namespace Vkm.Library.Media
             }
         }
 
-        public override void LeaveLayout()
+        protected override void OnLeavingLayout()
         {
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged -= PlayerServiceOnPlayingInfoChanged;
 
             _previousRepresentation = DefaultBitmapRepresentation;
-            
-            base.LeaveLayout();
         }
 
         public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)

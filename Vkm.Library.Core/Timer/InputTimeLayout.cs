@@ -39,10 +39,8 @@ namespace Vkm.Library.Timer
             AddElement(new Location(3,2), GlobalContext.InitializeEntity(new InputButtonElement(this, 0)));
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             _currentIndex = 0;
         }
 
@@ -75,10 +73,8 @@ namespace Vkm.Library.Timer
                 _value = value;
             }
 
-            public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+            protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
             {
-                base.EnterLayout(layoutContext, previousLayout);
-
                 DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), DrawKey())});
             }
 

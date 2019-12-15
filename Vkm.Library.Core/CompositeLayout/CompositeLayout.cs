@@ -19,8 +19,6 @@ namespace Vkm.Library.CompositeLayout
 
         private readonly LazyDictionary<CompositeLayoutElementInfo, IElement> _initedElements;
 
-        readonly object _layoutSwitchLock = new object();
-
         public CompositeLayout(Identifier identifier) : base(identifier)
         {
             _initedElements = new LazyDictionary<CompositeLayoutElementInfo, IElement>();
@@ -36,37 +34,34 @@ namespace Vkm.Library.CompositeLayout
             _compositeLayoutOptions = (CompositeLayoutOptions)options;
         }
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteringLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            lock (_layoutSwitchLock)
-            {
-                Debug.Assert(!base.Elements.Any(), "Has elements before initialization");
-
-                base.EnterLayout(layoutContext, previousLayout);
-
-                _compositeLayoutOptions.CompositeLayoutElementInfos.CollectionChanged += CompositeLayoutElementInfosOnCollectionChanged;
-
-                Parallel.ForEach(_compositeLayoutOptions.CompositeLayoutElementInfos, PlaceElement);
-
-                Debug.Assert(base.Elements.Count() == _compositeLayoutOptions.CompositeLayoutElementInfos.Count, "Wrong number of elements after initialization");
-            }
+            Debug.Assert(!base.Elements.Any(), "Has elements before initialization");            
         }
 
-        public override void LeaveLayout()
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            lock (_layoutSwitchLock)
-            {
-                Debug.Assert(base.Elements.Count() == _compositeLayoutOptions.CompositeLayoutElementInfos.Count, "Wrong number of elements before leaving");
+            _compositeLayoutOptions.CompositeLayoutElementInfos.CollectionChanged += CompositeLayoutElementInfosOnCollectionChanged;
 
-                _compositeLayoutOptions.CompositeLayoutElementInfos.CollectionChanged -= CompositeLayoutElementInfosOnCollectionChanged;
+            Parallel.ForEach(_compositeLayoutOptions.CompositeLayoutElementInfos, PlaceElement);
 
-                foreach (var item in _compositeLayoutOptions.CompositeLayoutElementInfos)
-                    DeleteElement(item, false);
+            Debug.Assert(base.Elements.Count() == _compositeLayoutOptions.CompositeLayoutElementInfos.Count, "Wrong number of elements after initialization");
+        }
 
-                base.LeaveLayout();
 
-                Debug.Assert(!base.Elements.Any(), "Has elements after leaving");
-            }
+        protected override void OnLeavingLayout()
+        {
+            Debug.Assert(base.Elements.Count() == _compositeLayoutOptions.CompositeLayoutElementInfos.Count, "Wrong number of elements before leaving");
+
+            _compositeLayoutOptions.CompositeLayoutElementInfos.CollectionChanged -= CompositeLayoutElementInfosOnCollectionChanged;
+
+            foreach (var item in _compositeLayoutOptions.CompositeLayoutElementInfos)
+                DeleteElement(item, false);
+        }
+
+        protected override void OnLeavedLayout()
+        {
+            Debug.Assert(!base.Elements.Any(), "Has elements after leaving");
         }
 
         private void CompositeLayoutElementInfosOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

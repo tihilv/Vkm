@@ -18,10 +18,8 @@ namespace Vkm.Intercom.Service.Visual
 
         public override DeviceSize ButtonCount => new DeviceSize(1, 1);
 
-        public override void EnterLayout(LayoutContext layoutContext, ILayout previousLayout)
+        protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            base.EnterLayout(layoutContext, previousLayout);
-
             Draw();
         }
 
