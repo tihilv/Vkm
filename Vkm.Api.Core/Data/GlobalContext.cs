@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Vkm.Api.Common;
 using Vkm.Api.Configurator;
 using Vkm.Api.Device;
 using Vkm.Api.Element;
@@ -28,7 +29,7 @@ namespace Vkm.Api.Data
         private readonly ConcurrentDictionary<Identifier, ILayout> _layouts;
         private readonly ConcurrentDictionary<Identifier, ITransition> _transitions;
         private readonly ConcurrentDictionary<Identifier, IDeviceHook> _deviceHooks;
-        private readonly ConcurrentDictionary<Type, Lazy<IService[]>> _initedServices;
+        private readonly LazyDictionary<Type, IService[]> _initedServices;
         private readonly ConcurrentDictionary<IService, IService> _initedServiceInstances;
         
         public GlobalOptions Options => _globalOptions;
@@ -44,7 +45,7 @@ namespace Vkm.Api.Data
         {
             Services = services;
 
-            _initedServices = new ConcurrentDictionary<Type, Lazy<IService[]>>();
+            _initedServices = new LazyDictionary<Type, IService[]>();
             _initedServiceInstances = new ConcurrentDictionary<IService, IService>();
             
             _devices = services.ModulesService.GetModules<IDeviceFactory>().SelectMany(d => d.GetDevices()).ToArray();
@@ -157,7 +158,7 @@ namespace Vkm.Api.Data
 
         public IEnumerable<T> GetServices<T>() where T : IService
         {
-            return _initedServices.GetOrAdd(typeof(T), type => new Lazy<IService[]>(() =>
+            return _initedServices.GetOrAdd(typeof(T), type => 
             {
                 var services = Services.ModulesService.GetModules<T>()
                     .Where(s => !Options.DiabledServices.Contains(s.Id)).Cast<IService>().ToArray();
@@ -167,7 +168,7 @@ namespace Vkm.Api.Data
                         InitializeEntity(service);
 
                 return services;
-            })).Value.OfType<T>();
+            }).OfType<T>();
         }
 
         public T InitializeEntity<T>(T entity, Action<T> beforeInit = null)

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
@@ -16,7 +17,7 @@ namespace Vkm.Kernel
         private IDevice _device;
         private readonly ThemeOptions _themeOptions;
 
-        private readonly ConcurrentDictionary<Location, Lazy<LayoutDrawElement>> _imagesToDevice;
+        private readonly LazyDictionary<Location, LayoutDrawElement> _imagesToDevice;
 
         private readonly ConcurrentDictionary<Location, Location> _switchedLocations;
 
@@ -34,7 +35,7 @@ namespace Vkm.Kernel
             _device = device;
             _themeOptions = themeOptions;
 
-            _imagesToDevice = new ConcurrentDictionary<Location, Lazy<LayoutDrawElement>>();
+            _imagesToDevice = new LazyDictionary<Location, LayoutDrawElement>();
             _switchedLocations = new ConcurrentDictionary<Location, Location>();
             _visualEffectProcessor = new VisualEffectProcessor(_device, visualTransitionFactory);
         }
@@ -46,13 +47,11 @@ namespace Vkm.Kernel
 
         public void DrawBitmap(LayoutDrawElement drawElement)
         {
-            var value = _imagesToDevice.AddOrUpdate(drawElement.Location, new Lazy<LayoutDrawElement>(() => drawElement), (l, b) =>
-                new Lazy<LayoutDrawElement>(() =>
+            var value = _imagesToDevice.AddOrUpdate(drawElement.Location, (l) => drawElement, (l, b) =>
                 {
-                    b.Value.BitmapRepresentation.Dispose();
-
+                    b.BitmapRepresentation.Dispose();
                     return drawElement;
-                })).Value;
+                });
 
             if (_counter == 0)
                 PerformDraw();

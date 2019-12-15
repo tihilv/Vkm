@@ -16,9 +16,7 @@ namespace Vkm.Kernel
         {
             _modules = new List<IModule>();
 
-            AppDomain.CurrentDomain.AppendPrivatePath(path);
-
-            foreach (var filename in Directory.EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly))
+            foreach (var filename in Directory.EnumerateFiles(path, "*.vkmext.dll", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
@@ -47,10 +45,9 @@ namespace Vkm.Kernel
                     module = (IModule) constructorInfo.Invoke(new object[] { });
                 }
 
-                string filename = Path.GetFileName(path);
                 if (module != null)
                 {
-                    Debug.WriteLine($"Module '{module.Name}' from file '{filename}' is loaded.");
+                    Debug.WriteLine($"Module '{module.Name}' from file '{Path.GetFileName(path)}' is loaded.");
                     yield return module;
                 }
             }

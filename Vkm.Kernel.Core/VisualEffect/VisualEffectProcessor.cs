@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Device;
 using Vkm.Api.Layout;
 using Vkm.Api.Transition;
@@ -21,7 +22,7 @@ namespace Vkm.Kernel.VisualEffect
         private readonly IVisualTransitionFactory _visualTransitionFactory;
 
         private readonly AutoResetEvent _transitionsAdded;
-        private readonly ConcurrentDictionary<Location, Lazy<VisualEffectInfo>> _currentTransitions;
+        private readonly LazyDictionary<Location, VisualEffectInfo> _currentTransitions;
 
         private readonly ConcurrentQueue<LayoutDrawElement> _scheduledTransitions;
 
@@ -41,7 +42,7 @@ namespace Vkm.Kernel.VisualEffect
             _disposeLock = new object();
             _cts = new CancellationTokenSource();
             _transitionsAdded = new AutoResetEvent(false);
-            _currentTransitions = new ConcurrentDictionary<Location, Lazy<VisualEffectInfo>>();
+            _currentTransitions = new LazyDictionary<Location, VisualEffectInfo>();
             _scheduledTransitions = new ConcurrentQueue<LayoutDrawElement>();
 
             _drawTask = Task.Run(() => DrawCycle(_cts.Token), _cts.Token);
@@ -97,33 +98,34 @@ namespace Vkm.Kernel.VisualEffect
                     secs = DefaultDuration;
 
                 int steps = (int) (secs * FPS);
+                var localElement = drawElement;
                 var value = _currentTransitions.AddOrUpdate(drawElement.Location, location =>
                     {
                         var transition = new InstantTransition();
-                        return new Lazy<VisualEffectInfo>(() => new VisualEffectInfo(drawElement.Location, transition, null, drawElement.BitmapRepresentation, steps));
+                        return new VisualEffectInfo(localElement.Location, transition, null, localElement.BitmapRepresentation, steps);
                     },
-                    (location, info) => new Lazy<VisualEffectInfo>(()=>
+                    (location, info) => 
                     {
-                        if (info.Value.Transition.HasNext && drawElement.TransitionInfo.Type == TransitionType.Instant)
+                        if (info.Transition.HasNext && localElement.TransitionInfo.Type == TransitionType.Instant)
                         {
-                            info.Value.ReplaceLastBitmap(drawElement.BitmapRepresentation);
-                            return info.Value;
+                            info.ReplaceLastBitmap(localElement.BitmapRepresentation);
+                            return info;
                         }
                         else
                         {
-                            var transition = GetTransition(drawElement);
-                            var result = new VisualEffectInfo(drawElement.Location, transition, info.Value.Transition?.Current.Clone(), drawElement.BitmapRepresentation, steps);
-                            info.Value.Dispose();
+                            var transition = GetTransition(localElement);
+                            var result = new VisualEffectInfo(localElement.Location, transition, info.Transition?.Current.Clone(), localElement.BitmapRepresentation, steps);
+                            info.Dispose();
                             return result;
                         }
-                    })).Value;
+                    });
             }
 
-            var effectInfos = _currentTransitions.Values.Where(t => t.Value.Transition.HasNext);
+            var effectInfos = _currentTransitions.Values.Where(t => t.Transition.HasNext);
 
             _currentDrawElementsCache.Clear();
 
-            foreach (var effectInfo in effectInfos.Select(e=>e.Value))
+            foreach (var effectInfo in effectInfos)
             {
                 effectInfo.Transition.Next();
                 _currentDrawElementsCache.Add(new LayoutDrawElement(effectInfo.Location, effectInfo.Transition.Current));
@@ -144,7 +146,7 @@ namespace Vkm.Kernel.VisualEffect
                 while (_scheduledTransitions.TryDequeue(out var layoutDrawElement))
                     layoutDrawElement.BitmapRepresentation.Dispose();
 
-                foreach (var effectInfo in _currentTransitions.Values.Select(v=>v.Value))
+                foreach (var effectInfo in _currentTransitions.Values)
                     effectInfo.Dispose();
 
                 _currentTransitions.Clear();

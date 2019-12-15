@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
 using Vkm.Api.Identification;
@@ -24,7 +24,7 @@ namespace Vkm.Kernel
 
         private readonly Stack<ILayout> _layouts;
 
-        private readonly ConcurrentDictionary<Location, Lazy<ITimerToken>> _pressedButtons;
+        private readonly LazyDictionary<Location, ITimerToken> _pressedButtons;
 
         public bool IsAllDrawn => _drawingEngine.IsAllDrawn;
         
@@ -34,7 +34,7 @@ namespace Vkm.Kernel
             _globalContext.LayoutRemoved += OnLayoutRemoved;
             
             _layouts = new Stack<ILayout>();
-            _pressedButtons = new ConcurrentDictionary<Location, Lazy<ITimerToken>>();
+            _pressedButtons = new LazyDictionary<Location, ITimerToken>();
 
             device.ButtonEvent += DeviceOnKeyEvent;
 
@@ -48,7 +48,7 @@ namespace Vkm.Kernel
         {
             if (e.IsDown)
             {
-                var value = _pressedButtons.AddOrUpdate(e.Location, l => new Lazy<ITimerToken>(()=> 
+                var value = _pressedButtons.AddOrUpdate(e.Location, l =>
                     {
                         var result = _globalContext.Services.TimerService.RegisterTimer(_globalContext.Options.LongPressTimeout, () =>
                         {
@@ -60,8 +60,8 @@ namespace Vkm.Kernel
                         result.Start();
 
                         return result;
-                    }), 
-                    (l, d) => d).Value;
+                    },
+                    null);
             }
             else
             {

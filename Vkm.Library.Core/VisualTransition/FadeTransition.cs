@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.VisualEffect;
 
 namespace Vkm.Library.VisualTransition
 {
     internal class FadeTransition : IVisualTransition
     {
-        private static readonly ConcurrentDictionary<float, Lazy<ImageAttributes>> _transformData = new ConcurrentDictionary<float, Lazy<ImageAttributes>>();
+        private static readonly LazyDictionary<float, ImageAttributes> _transformData = new LazyDictionary<float, ImageAttributes>();
         
         private int _steps;
 
@@ -35,14 +34,14 @@ namespace Vkm.Library.VisualTransition
 
         private static ImageAttributes GetTransformData(float value)
         {
-            return _transformData.GetOrAdd(value, f => new Lazy<ImageAttributes>(()=>
+            return _transformData.GetOrAdd(value, f =>
             {
                 ColorMatrix colorMatrix = new ColorMatrix {Matrix33 = f};
                 ImageAttributes imgAttribute = new ImageAttributes();
                 imgAttribute.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
                 return imgAttribute;
                 
-            })).Value;
+            });
         }
 
         public void Init(BitmapRepresentation first, BitmapRepresentation last, int steps)

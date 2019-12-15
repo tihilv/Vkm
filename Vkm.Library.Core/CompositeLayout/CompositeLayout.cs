@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
@@ -16,13 +17,13 @@ namespace Vkm.Library.CompositeLayout
     {
         private CompositeLayoutOptions _compositeLayoutOptions;
 
-        private readonly ConcurrentDictionary<CompositeLayoutElementInfo, Lazy<IElement>> _initedElements;
+        private readonly LazyDictionary<CompositeLayoutElementInfo, IElement> _initedElements;
 
         readonly object _layoutSwitchLock = new object();
 
         public CompositeLayout(Identifier identifier) : base(identifier)
         {
-            _initedElements = new ConcurrentDictionary<CompositeLayoutElementInfo, Lazy<IElement>>();
+            _initedElements = new LazyDictionary<CompositeLayoutElementInfo, IElement>();
         }
 
         public IOptions GetDefaultOptions()
@@ -96,7 +97,7 @@ namespace Vkm.Library.CompositeLayout
 
         private void PlaceElement(CompositeLayoutElementInfo elementInfo)
         {
-            AddElement(elementInfo.Location, _initedElements.GetOrAdd(elementInfo, info =>  new Lazy<IElement>(()=>GlobalContext.CreateElement(info.ModuleInfo))).Value);
+            AddElement(elementInfo.Location, _initedElements.GetOrAdd(elementInfo, info => GlobalContext.CreateElement(info.ModuleInfo)));
         }
 
         private void DeleteElement(CompositeLayoutElementInfo elementInfo, bool forever)

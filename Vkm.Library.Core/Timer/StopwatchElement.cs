@@ -129,7 +129,7 @@ namespace Vkm.Library.Timer
                         _stopwatch.Start();
                 }
             }
-            else if (location.X == 4)
+            else if (location.X == 4 &&  buttonEvent != ButtonEvent.LongPress)
             {
                 _stopwatch.Stop();
                 DrawStopwatch();

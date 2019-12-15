@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Concurrent;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Vkm.Api.Basic;
+using Vkm.Api.Common;
 using Vkm.Api.Identification;
 using Vkm.Library.Interfaces.Services;
 
@@ -17,19 +16,19 @@ namespace Vkm.Library.Service
         public Identifier Id => new Identifier("Vkm.BitmapDownloadService");
         public string Name => "Bitmap Download Service";
 
-        private readonly ConcurrentDictionary<string, Lazy<Task<BitmapRepresentation>>> _cache;
+        private readonly LazyDictionary<string, Task<BitmapRepresentation>> _cache;
 
         public CachedBitmapDownloader()
         {
-            _cache = new ConcurrentDictionary<string, Lazy<Task<BitmapRepresentation>>>();
+            _cache = new LazyDictionary<string, Task<BitmapRepresentation>>();
         }
 
         public async Task<BitmapRepresentation> GetBitmap(string url)
         {
             if (string.IsNullOrEmpty(url))
-                return (BitmapRepresentation)null;
+                return null;
 
-            var result = _cache.GetOrAdd(url, s => new Lazy<Task<BitmapRepresentation>>(async ()=>
+            var result = _cache.GetOrAdd(url, async s => 
             {
                 using (var client = new HttpClient())
 
@@ -38,7 +37,7 @@ namespace Vkm.Library.Service
 
                     return new BitmapRepresentation(bitmap);
                 
-            }));
+            });
 
             if (_cache.Count > CacheSize)
             {
@@ -46,7 +45,7 @@ namespace Vkm.Library.Service
                 _cache.TryRemove(victim, out _);
             }
             
-            return (await result.Value).Clone();
+            return (await result).Clone();
         }
 
         public async Task<BitmapRepresentation> GetBitmapForExecutable(string filePath)
@@ -54,13 +53,13 @@ namespace Vkm.Library.Service
             if (string.IsNullOrEmpty(filePath))
                 return (BitmapRepresentation)null;
 
-            var result = _cache.GetOrAdd(filePath, s => new Lazy<Task<BitmapRepresentation>>(async ()=>
+            var result = _cache.GetOrAdd(filePath, async s =>
             {
                 using (var icon = Icon.ExtractAssociatedIcon(filePath))
                 using (var iconBmp = icon.ToBitmap())
                     return new BitmapRepresentation(iconBmp);
                 
-            }));
+            });
 
             if (_cache.Count > CacheSize)
             {
@@ -68,7 +67,7 @@ namespace Vkm.Library.Service
                 _cache.TryRemove(victim, out _);
             }
             
-            return (await result.Value).Clone();
+            return (await result).Clone();
         }
     }
 }

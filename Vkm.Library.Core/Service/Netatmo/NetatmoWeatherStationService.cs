@@ -21,7 +21,7 @@ namespace Vkm.Library.Service.Netatmo
         private const string TemperatureId = "Temperature";
         private const string HumidityId = "Humidity";
         
-        public static readonly Identifier Identifier = new Identifier("Vkm.LastFmCoverService");
+        public static readonly Identifier Identifier = new Identifier("Vkm.NetatmoWeatherStationService");
 
         private NetatmoOptions _options;
         private ITimerToken _netatmoTimerToken;
@@ -94,9 +94,11 @@ namespace Vkm.Library.Service.Netatmo
             _timerService = context.Services.TimerService;
         }
 
-        private void RefreshToken()
+        private async void RefreshToken()
         {
             _initializationTask = _netatmoClient.RefreshToken();
+            await _initializationTask;
+            RegisterTokenRefresh();
         }
 
         public void Init()
