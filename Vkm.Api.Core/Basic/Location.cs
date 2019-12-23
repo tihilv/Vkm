@@ -6,13 +6,13 @@ namespace Vkm.Api.Basic
     [Serializable]
     public struct Location
     {
+        public readonly byte X;
+        public readonly byte Y;
+
         public bool Equals(Location other)
         {
             return X == other.X && Y == other.Y;
         }
-
-        public readonly byte X;
-        public readonly byte Y;
 
         public Location(int x, int y)
         {

@@ -45,11 +45,11 @@ namespace Vkm.Kernel
 
         private void StartTransitions()
         {
-            foreach (var transition in _globalContext.Transitions.Values)
+            _globalContext.Transitions.Values.AsParallel().ForAll(transition =>
             {
                 transition.PerformTransition += TransitionOnPerformTransition;
                 transition.Run();
-            }
+            });
         }
 
         private ConcurrentDictionary<Identifier, DeviceManager> InitDeviceManagers(IDevice[] devices)
