@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
@@ -22,11 +23,11 @@ namespace Vkm.Library.Service.Player
         private IAlbumCoverService _albumCoverService;
         
         private Task _updateTask;
-        private readonly AutoResetEvent _updateSync;
+        private readonly AsyncAutoResetEvent _updateSync;
         
         public AmipPlayerService()
         {
-            _updateSync = new AutoResetEvent(false);
+            _updateSync = new AsyncAutoResetEvent();
         }
 
         public event EventHandler<PlayingEventArgs> PlayingInfoChanged;
@@ -127,7 +128,7 @@ namespace Vkm.Library.Service.Player
 
                     await Task.Delay(UpdateTimeoutMs);
 
-                    _updateSync.WaitOne();
+                    await _updateSync.WaitAsync();
                 }
                 catch
                 {

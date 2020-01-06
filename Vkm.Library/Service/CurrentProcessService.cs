@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Vkm.Api.Common;
 using Vkm.Api.Identification;
 using Vkm.Common.Win32.Win32;
 using Vkm.Library.Interfaces.Services;
@@ -22,7 +23,7 @@ namespace Vkm.Library.Service
         private readonly ConcurrentQueue<ProcessEventArgs> _notifyArgs;
         private readonly Task _notifyTask;
         private readonly CancellationTokenSource _cts;
-        private readonly AutoResetEvent _processEventAdded;
+        private readonly AsyncAutoResetEvent _processEventAdded;
 
         public event EventHandler<ProcessEventArgs> ProcessEnter;
         public event EventHandler<ProcessEventArgs> ProcessLeave;
@@ -34,9 +35,9 @@ namespace Vkm.Library.Service
             _hook = Win32.SetWinEventHook(Win32.EVENT_SYSTEM_FOREGROUND, Win32.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, _delegate, 0, 0, Win32.WINEVENT_OUTOFCONTEXT);
 
             _cts = new CancellationTokenSource();
-            _processEventAdded = new AutoResetEvent(false);
+            _processEventAdded = new AsyncAutoResetEvent();
             _notifyArgs = new ConcurrentQueue<ProcessEventArgs>();
-            _notifyTask = Task.Run(() => NotifyCycle(_cts.Token), _cts.Token);
+            _notifyTask = NotifyCycle(_cts.Token);
         }
 
         private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -63,12 +64,11 @@ namespace Vkm.Library.Service
             }
         }
 
-        void NotifyCycle(CancellationToken ctsToken)
+        async Task NotifyCycle(CancellationToken ctsToken)
         {
-
             do
             {
-                _processEventAdded.WaitOne();
+                await _processEventAdded.WaitAsync();
 
                 while (_notifyArgs.TryDequeue(out var args))
                 {

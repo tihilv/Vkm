@@ -20,6 +20,12 @@ namespace Vkm.Api.Basic
 
         private bool _disposed;
 
+        public int Width => _width;
+
+        public int Height => _height;
+
+        public byte[] Bytes => _bitmapInternal;
+
         private BitmapRepresentation(byte[] bitmapInternal, int width, int height, PixelFormat pixelFormat)
         {
             _bitmapInternal = bitmapInternal;

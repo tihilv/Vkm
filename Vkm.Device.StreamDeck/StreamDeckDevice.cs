@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -63,14 +64,32 @@ namespace Vkm.Device.StreamDeck
         {
             foreach (var element in elements)
             {
-                using (var bitmap = element.BitmapRepresentation.CreateBitmap())
-                using (var stream = new MemoryStream())
+                _device?.SetKeyBitmap(element.Location.X + element.Location.Y * ButtonCount.Width, FromBitmapRepresentation(element.BitmapRepresentation));
+            }
+        }
+
+        private static KeyBitmap FromBitmapRepresentation(BitmapRepresentation representation)
+        {
+            int width = representation.Width;
+            int height = representation.Height;
+
+            byte[] bitmapData = new byte[width * height * 3];
+            byte[] scan0 = representation.Bytes;
+
+            var stride = scan0.Length / height;
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
                 {
-                    bitmap.Save(stream, ImageFormat.Bmp);
-                    stream.Position = 0;
-                    _device?.SetKeyBitmap(element.Location.X + element.Location.Y * ButtonCount.Width, KeyBitmap.Create.FromStream(stream));
+                    int index3 = stride * y + x * 3;
+                    int index4 = (width * y + x) * 3;
+                    bitmapData[index4] = scan0[index3];
+                    bitmapData[index4 + 1] = scan0[index3 + 1];
+                    bitmapData[index4 + 2] = scan0[index3 + 2];
                 }
             }
+
+            return new KeyBitmap(width, height, bitmapData);
         }
 
         public void SetBrightness(byte valuePercent)

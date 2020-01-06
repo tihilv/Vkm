@@ -21,7 +21,7 @@ namespace Vkm.Kernel.VisualEffect
         private readonly IDevice _device;
         private readonly IVisualTransitionFactory _visualTransitionFactory;
 
-        private readonly AutoResetEvent _transitionsAdded;
+        private readonly AsyncAutoResetEvent _transitionsAdded;
         private readonly LazyDictionary<Location, VisualEffectInfo> _currentTransitions;
 
         private readonly ConcurrentQueue<LayoutDrawElement> _scheduledTransitions;
@@ -41,11 +41,11 @@ namespace Vkm.Kernel.VisualEffect
 
             _disposeLock = new object();
             _cts = new CancellationTokenSource();
-            _transitionsAdded = new AutoResetEvent(false);
+            _transitionsAdded = new AsyncAutoResetEvent();
             _currentTransitions = new LazyDictionary<Location, VisualEffectInfo>();
             _scheduledTransitions = new ConcurrentQueue<LayoutDrawElement>();
 
-            _drawTask = Task.Run(() => DrawCycle(_cts.Token), _cts.Token);
+            _drawTask = DrawCycle(_cts.Token);
         }
 
         public void Draw(IEnumerable<LayoutDrawElement> drawElements)
@@ -67,11 +67,11 @@ namespace Vkm.Kernel.VisualEffect
             return _visualTransitionFactory.CreateVisualTransition(drawElement.TransitionInfo.Type);
         }
 
-        void DrawCycle(CancellationToken ctsToken)
+        async Task DrawCycle(CancellationToken ctsToken)
         {
             do
             {
-                _transitionsAdded.WaitOne();
+                await _transitionsAdded.WaitAsync();
 
                 bool hasTransitions;
                 do
@@ -79,9 +79,9 @@ namespace Vkm.Kernel.VisualEffect
                     lock (_disposeLock)
                         hasTransitions = PerformDraw();
 
-                    Thread.Sleep((int) (1000 / FPS));
+                    await Task.Delay((int) (1000 / FPS), ctsToken);
 
-                } while (hasTransitions);
+                } while (hasTransitions && !ctsToken.IsCancellationRequested);
 
             } while (!ctsToken.IsCancellationRequested);
         }

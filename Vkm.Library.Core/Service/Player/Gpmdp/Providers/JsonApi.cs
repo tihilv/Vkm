@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using System.Security.AccessControl;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Vkm.Api.Common;
 using Vkm.Library.Interfaces.Service.Player;
 using Vkm.Library.Interfaces.Services;
 
@@ -22,7 +22,7 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
         private readonly string _playbackFilePath;
 
         private Task _updateTask;
-        private readonly AutoResetEvent _updateSync;
+        private readonly AsyncAutoResetEvent _updateSync;
         
         internal JsonApi(IBitmapDownloadService bitmapDownloadService)
         {
@@ -30,7 +30,7 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
             _jsonApiDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), JsonSubdirectory);
             _playbackFilePath = Path.Combine(_jsonApiDirectory, JsonApiFile);
             
-            _updateSync = new AutoResetEvent(false);
+            _updateSync = new AsyncAutoResetEvent();
 
             _updateTask = UpdateAction();
         }
@@ -132,7 +132,7 @@ namespace Vkm.Library.Service.Player.Gpmdp.Providers
 
                     await Task.Delay(UpdateTimeoutMs);
 
-                    _updateSync.WaitOne();
+                    await _updateSync.WaitAsync();
                 }
                 catch
                 {
