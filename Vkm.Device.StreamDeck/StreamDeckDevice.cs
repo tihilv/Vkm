@@ -28,8 +28,12 @@ namespace Vkm.Device.StreamDeck
         {
             get
             {
+                if (_device.Keys.Count == 6)
+                    return new DeviceSize(3, 2);
                 if (_device.Keys.Count == 15)
                     return new DeviceSize(5, 3);
+                if (_device.Keys.Count == 32)
+                    return new DeviceSize(8, 4);
 
                 return new DeviceSize((byte)_device.Keys.Count, 1);
             }

@@ -71,13 +71,17 @@ namespace Vkm.Library.Weather
         {
             var weather = await GetData();
 
-            LayoutDrawElement[] result = new LayoutDrawElement[_layoutContext.ButtonCount.Width*3];
+            var rows = _layoutContext.ButtonCount.Height;
+            LayoutDrawElement[] result = new LayoutDrawElement[_layoutContext.ButtonCount.Width* rows];
 
             for (byte i = 0; i < Math.Min(_layoutContext.ButtonCount.Width, weather.Length); i++)
             {
-                result[i*3] = new LayoutDrawElement(new Location(i, 0), DrawIcon(weather[i], GetDescription(weather[i]), _layoutContext));
-                result[i*3+1] = new LayoutDrawElement(new Location(i, 1), DrawTexts(WeatherHelpers.TempToStr(weather[i].TemperatureMaxCelsius??0), WeatherHelpers.TempToStr(weather[i].TemperatureMinCelsius??0), _layoutContext));
-                result[i*3+2] = new LayoutDrawElement(new Location(i, 2), DrawTexts(((int)(weather[i].PressureMPa??0)).ToString(), weather[i].Humidity.ToString()+"%", _layoutContext));
+                result[i * rows] = new LayoutDrawElement(new Location(i, 0), DrawIcon(weather[i], GetDescription(weather[i]), _layoutContext));
+                result[i * rows + 1] = new LayoutDrawElement(new Location(i, 1), DrawTexts(WeatherHelpers.TempToStr(weather[i].TemperatureMaxCelsius ?? 0), WeatherHelpers.TempToStr(weather[i].TemperatureMinCelsius ?? 0), _layoutContext));
+                if (_layoutContext.ButtonCount.Height > 2)
+                    result[i * rows + 2] = new LayoutDrawElement(new Location(i, 2), DrawTexts(((int) (weather[i].PressureMPa ?? 0)).ToString(), weather[i].Humidity.ToString() + "%", _layoutContext));
+                if (_layoutContext.ButtonCount.Height > 3)
+                    result[i * rows + 3] = new LayoutDrawElement(new Location(i, 3), DrawTexts(((int)(weather[i].Rain ?? 0)).ToString(), weather[i].Wind, _layoutContext));
             }
 
             DrawLayout?.Invoke(this, new DrawEventArgs(result));
@@ -155,7 +159,7 @@ namespace Vkm.Library.Weather
 
         protected override async Task<WeatherInfo[]> GetData()
         {
-            return await _weatherService.GetForecastForDay(_weatherOptions.Place, _dateTime);
+            return await _weatherService.GetForecastForDay(_weatherOptions.Place, _dateTime, _layoutContext.ButtonCount.Width);
         }
 
         protected override string GetDescription(WeatherInfo forecast)

@@ -19,6 +19,8 @@ namespace Vkm.Library.Run
         private IProcessService _processService;
         private ICurrentProcessService _currentProcessService;
 
+        private BackElement _backElement;
+
         public TaskbarLayout(Identifier identifier) : base(identifier)
         {
             _elements = new List<RunElement>();
@@ -31,7 +33,7 @@ namespace Vkm.Library.Run
             _processService = GlobalContext.GetServices<IProcessService>().First();
             _currentProcessService = GlobalContext.GetServices<ICurrentProcessService>().First();
 
-            AddElement(new Location(4, 2), GlobalContext.InitializeEntity(new BackElement()));
+            _backElement = GlobalContext.InitializeEntity(new BackElement());
 
         }
 
@@ -39,17 +41,20 @@ namespace Vkm.Library.Run
         {
             _currentProcessService.ProcessEnter += OnProcessEnter;
 
+            AddElement(new Location(layoutContext.ButtonCount.Width-1, layoutContext.ButtonCount.Height-1), _backElement);
             FillElements();
         }
 
         protected override void OnLeavingLayout()
         {
+            RemoveElement(_backElement);
             _currentProcessService.ProcessEnter -= OnProcessEnter;
         }
 
         private void OnProcessEnter(object sender, ProcessEventArgs e)
         {
             _currentProcessId = e.ProcessId;
+
             FillElements();
         }
 

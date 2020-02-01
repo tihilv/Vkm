@@ -41,6 +41,8 @@ namespace Vkm.Library.Service.Weather
                 currentWeather.Temperature.Max,
                 currentWeather.Pressure.Value,
                 currentWeather.Humidity.Value,
+                currentWeather.Precipitation.Value,
+                $"{(int)currentWeather.Wind.Speed.Value}",
                 currentWeather.Clouds.Name,
                 currentWeather.Weather.Number.ToString());
         }
@@ -48,20 +50,27 @@ namespace Vkm.Library.Service.Weather
         public async Task<WeatherInfo[]> GetForecast(string city, int dayCount)
         {
             var client = new OpenWeatherMapClient(_options.OpenWeatherApiKey);
-            var forecast = await client.Forecast.GetByName(city, true, MetricSystem.Metric, count: 5).ConfigureAwait(false);
+            var forecast = await client.Forecast.GetByName(city, true, MetricSystem.Metric, count: dayCount).ConfigureAwait(false);
             return forecast.Forecast.Select(s => ToWeatherInfo(s, false)).ToArray();
         }
 
-        public async Task<WeatherInfo[]> GetForecastForDay(string city, DateTime fromDate)
+        public async Task<WeatherInfo[]> GetForecastForDay(string city, DateTime fromDate, int marksCount)
         {
-            int[] hours = new[] {6, 12, 15, 18, 21};
             var client = new OpenWeatherMapClient(_options.OpenWeatherApiKey);
             var forecast = await client.Forecast.GetByName(city, false, MetricSystem.Metric).ConfigureAwait(false);
+
+            var startingHour = 7;
+            if (marksCount > 5)
+                startingHour = 6;
+            if (marksCount > 6)
+                startingHour = 3;
+            if (marksCount > 7)
+                startingHour = 0;
 
             var result = forecast.Forecast.Where(f =>
             {
                 var from = DateTime.SpecifyKind(f.From, DateTimeKind.Utc);
-                return from >= fromDate && from < fromDate.Date.AddDays(1) && (from.Hour >= 6 && from.Hour <= 22);
+                return from >= fromDate && from < fromDate.Date.AddDays(1) && (from.Hour >= startingHour && from.Hour <= 22);
             });
 
             return result.Select(s=>ToWeatherInfo(s, true)).ToArray();
@@ -70,12 +79,14 @@ namespace Vkm.Library.Service.Weather
         private WeatherInfo ToWeatherInfo(ForecastTime currentWeather, bool forTime)
         {
             return new WeatherInfo(
-                forTime?currentWeather.From:currentWeather.Day, 
+                forTime ? currentWeather.From : currentWeather.Day,
                 currentWeather.Temperature.Value,
                 currentWeather.Temperature.Min,
                 currentWeather.Temperature.Max,
                 currentWeather.Pressure.Value,
                 currentWeather.Humidity.Value,
+                currentWeather.Precipitation.Value,
+                $"{(int)currentWeather.WindSpeed.Mps}",
                 currentWeather.Clouds.Value,
                 currentWeather.Symbol.Number.ToString());
         }

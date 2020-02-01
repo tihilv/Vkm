@@ -12,8 +12,10 @@ namespace Vkm.Library.Interfaces.Service.Weather
         public int? Humidity { get; private set; }
         public string Clouds { get; private set; }
         public string Symbol { get; private set; }
+        public double? Rain { get; private set; }
+        public string Wind { get; private set; }
 
-        public WeatherInfo(DateTime dateTime, double? temperatureCelsius, double? temperatureMinCelsius, double? temperatureMaxCelsius, double? pressureMPa, int? humidity, string clouds, string symbol)
+        public WeatherInfo(DateTime dateTime, double? temperatureCelsius, double? temperatureMinCelsius, double? temperatureMaxCelsius, double? pressureMPa, int? humidity, double? rain, string wind, string clouds, string symbol)
         {
             DateTime = dateTime;
             TemperatureCelsius = temperatureCelsius;
@@ -23,6 +25,8 @@ namespace Vkm.Library.Interfaces.Service.Weather
             Clouds = clouds;
             TemperatureMinCelsius = temperatureMinCelsius;
             TemperatureMaxCelsius = temperatureMaxCelsius;
+            Rain = rain;
+            Wind = wind;
         }
     }
 }
