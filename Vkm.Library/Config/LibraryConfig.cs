@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using Vkm.Api.Basic;
@@ -10,6 +11,7 @@ using Vkm.Api.Options;
 using Vkm.Library.ApplicationChangeTransition;
 using Vkm.Library.AudioSelect;
 using Vkm.Library.Buttons;
+using Vkm.Library.Calendar;
 using Vkm.Library.Clock;
 using Vkm.Library.Common;
 using Vkm.Library.CompositeLayout;
@@ -51,6 +53,7 @@ namespace Vkm.Library.Config
             Identifier VolumeIdentifier = new Identifier("Vkm.DesktopDefaults.Volume");
             Identifier WeatherIdentifier = new Identifier("Vkm.DesktopDefaults.Weather");
             Identifier MailIdentifier = new Identifier("Vkm.DesktopDefaults.Mail");
+            Identifier CalendarIdentifier = new Identifier("Vkm.DesktopDefaults.Calendar");
             Identifier WeatherStationIdentifier = new Identifier("Vkm.DesktopDefaults.WeatherStation");
             Identifier TaskbarIdentifier = new Identifier("Vkm.DesktopDefaults.Taskbar");
             //Identifier CalcIdentifier = new Identifier("Vkm.DesktopDefaults.Calc");
@@ -126,10 +129,18 @@ namespace Vkm.Library.Config
                 ModuleInfo = new ModuleInitializationInfo(MailElementFactory.Identifier, MailIdentifier)
             });
 
+            /*
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
             {
                 Location = new Location(2, 1),
                 ModuleInfo = new ModuleInitializationInfo(WeatherStationFactory.Identifier, WeatherStationIdentifier)
+            });
+            */
+
+            desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
+            {
+                Location = new Location(2, 1),
+                ModuleInfo = new ModuleInitializationInfo(CalendarElementFactory.Identifier, CalendarIdentifier)
             });
 
             desktopOptions.CompositeLayoutElementInfos.Add(new CompositeLayoutElementInfo()
@@ -222,6 +233,10 @@ namespace Vkm.Library.Config
             var powerOffOptions = new PowerOptions() {CallLayout = true, Action = PowerAction.PowerOff};
             optionsService.SetDefaultOptions(PowerOffIdentifier, powerOffOptions);
 
+            var calendarElementOptions = new CalendarElementOptions() {ExpiredMeetingTolerance = TimeSpan.FromMinutes(2), UpcomingMeetingColor = Color.OrangeRed, UpcomingMeetingNotificationPeriod = TimeSpan.FromMinutes(5)};
+            optionsService.SetDefaultOptions(CalendarIdentifier, calendarElementOptions);
+
+            
             var audioSelectOptions = new AudioSelectOptions();
             audioSelectOptions.Names.Add("{0.0.0.00000000}.{4eff022d-8d54-413f-9020-581e6654434b}", "Наушники");
             audioSelectOptions.Names.Add("{0.0.0.00000000}.{5325d718-fd5e-479b-907c-a4873af76102}", "Камера");
