@@ -9,7 +9,6 @@ using Vkm.Api.Layout;
 using Vkm.Api.Options;
 using Vkm.Common;
 using Vkm.Library.Interfaces.Service.Calendar;
-using Vkm.Library.Interfaces.Service.Mail;
 using Location = Vkm.Api.Basic.Location;
 
 namespace Vkm.Library.Calendar

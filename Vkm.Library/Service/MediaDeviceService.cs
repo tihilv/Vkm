@@ -37,10 +37,29 @@ namespace Vkm.Library.Service
             }
         }
 
-        public void SetMute(bool value)
+        public void SetMute(bool value, MediaDeviceInfo? device)
         {
-            if (_mmDevice != null)
-                _mmDevice.AudioEndpointVolume.Mute = value;
+            if (device == null)
+            {
+                if (_mmDevice != null)
+                    _mmDevice.AudioEndpointVolume.Mute = value;
+            }
+            else
+            {
+                using (var mmDeviceEnumerator = new MMDeviceEnumerator())
+                {
+                    var devices = mmDeviceEnumerator.EnumerateAudioEndPoints(EDataFlow.eAll, DeviceState.DEVICE_STATE_ACTIVE);
+                    for (int i = 0; i < devices.Count; i++)
+                    {
+                        MMDevice d = devices[i];
+                        if (d.Id == device.Value.Id)
+                        {
+                            d.AudioEndpointVolume.Mute = value;
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         public bool HasDevice => _mmDevice != null;
@@ -56,13 +75,57 @@ namespace Vkm.Library.Service
             }
         }
 
-        public MediaDeviceInfo[] GetDevices()
+        public MediaSessionInfo[] GetSessions()
+        {
+            var sessions = _mmDevice.AudioSessionManager.Sessions;
+            MediaSessionInfo[] result = new MediaSessionInfo[sessions.Count];
+            for (var index = 0; index < sessions.Count; index++)
+            {
+                var session = sessions[index];
+                result[index] = new MediaSessionInfo(session.SessionInstanceIdentifier, session.ProcessID, session.SimpleAudioVolume.Mute);
+            }
+
+            return result;
+        }
+
+        private AudioSessionControl GetSession(MediaSessionInfo session)
+        {
+            var sessions = _mmDevice.AudioSessionManager.Sessions;
+            MediaSessionInfo[] result = new MediaSessionInfo[sessions.Count];
+            for (var index = 0; index < sessions.Count; index++)
+            {
+                var s = sessions[index];
+                if (s.SessionInstanceIdentifier == session.SessionIdentifier)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
+        public void SetMuteSession(bool value, MediaSessionInfo session)
+        {
+            var s = GetSession(session);
+            if (s != null)
+            {
+                s.SimpleAudioVolume.Mute = value;
+            }
+        }
+
+        public MediaDeviceInfo[] GetDevices(bool? outputDevice)
         {
             List<MediaDeviceInfo> result = new List<MediaDeviceInfo>();
 
             using (var mmDeviceEnumerator = new MMDeviceEnumerator())
             {
-                var devices = mmDeviceEnumerator.EnumerateAudioEndPoints(EDataFlow.eRender, DeviceState.DEVICE_STATE_ACTIVE);
+                var flow = EDataFlow.eAll;
+                if (outputDevice == true)
+                    flow = EDataFlow.eRender;
+                if (outputDevice == false)
+                    flow = EDataFlow.eCapture;
+                
+                var devices = mmDeviceEnumerator.EnumerateAudioEndPoints(flow, DeviceState.DEVICE_STATE_ACTIVE);
                 for (int i = 0; i < devices.Count; i++)
                 {
                     MMDevice device = devices[i];
@@ -93,7 +156,7 @@ namespace Vkm.Library.Service
                     break;
             }
 
-            return new MediaDeviceInfo(device.Id, device.RealName, device.FriendlyName, type);
+            return new MediaDeviceInfo(device.Id, device.RealName, device.FriendlyName, type, device.AudioEndpointVolume.Mute);
         }
 
         public void SetDefault(MediaDeviceInfo device)
@@ -132,6 +195,9 @@ namespace Vkm.Library.Service
             }
 
             _mmDevice = device;
+            //strange behaviour:
+            var audioMeterInformation = _mmDevice.AudioMeterInformation;
+            var deviceAudioSessionManager = _mmDevice.AudioSessionManager;
             _mmDevice.AudioEndpointVolume.OnVolumeNotification += AudioEndpointVolume_OnVolumeNotification;
 
             VolumeChanged?.Invoke(this, EventArgs.Empty);

@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -49,7 +48,7 @@ namespace Vkm.Library.AudioSelect
             AddElement(new Location(width, 0), GlobalContext.InitializeEntity(new VolumeElement(new Identifier(Id.Value + ".Volume"))));
 
             _defaultDeviceId = _mediaDeviceService.GetDefaultDevice().Id;
-            var devices = _mediaDeviceService.GetDevices();
+            var devices = _mediaDeviceService.GetDevices(true);
 
             var elements = devices.Select(device => GlobalContext.InitializeEntity(new AudioDeviceElement(this, device)));
             AddElementsInRectangle(elements, 0,0,(byte)(LayoutContext.ButtonCount.Width - 2),(byte)(LayoutContext.ButtonCount.Height - 1));

@@ -157,7 +157,7 @@ namespace Vkm.Library.Volume
                 {
                     if (buttonEvent == ButtonEvent.Down)
                     {
-                        _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted);
+                        _mediaDeviceService.SetMute(!_mediaDeviceService.IsMuted, null);
                     }
                 }
                 else if (buttonEvent == ButtonEvent.Down)
