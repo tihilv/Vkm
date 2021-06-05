@@ -7,7 +7,7 @@ using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
-using Vkm.Common;
+using Vkm.Library.Common;
 
 namespace Vkm.Library.Clock
 {
@@ -15,11 +15,10 @@ namespace Vkm.Library.Clock
     {
         private ClockElementOptions _options;
 
+        private readonly ClockDrawer _clockDrawer = new ClockDrawer();
+
         public override DeviceSize ButtonCount => new DeviceSize(3, 1);
 
-        private byte _hours = 99;
-        private byte _minutes = 99;
-        private byte _seconds = 99;
         
         public ClockElement(Identifier id) : base(id)
         {
@@ -49,54 +48,13 @@ namespace Vkm.Library.Clock
 
         protected override void OnLeavedLayout()
         {
-            _hours = 99;
-            _minutes = 99;
-            _seconds = 99;
+            _clockDrawer.Reset();
         }
 
         IEnumerable<LayoutDrawElement> ProvideTime()
         {
             var now = DateTime.Now;
-
-            if (_hours != now.Hour)
-            {
-                _hours = (byte)now.Hour;
-                yield return new LayoutDrawElement(new Location(0, 0), DrawNumber(_hours));
-            }
-
-            if (_minutes != now.Minute)
-            {
-                _minutes = (byte)now.Minute;
-                yield return new LayoutDrawElement(new Location(1, 0), DrawNumber(_minutes));
-            }
-
-            if (_seconds != now.Second)
-            {
-                _seconds = (byte)now.Second;
-                yield return new LayoutDrawElement(new Location(2, 0), DrawNumber(_seconds));
-            }
-        }
-
-        private Dictionary<byte, BitmapRepresentation> _cache = new Dictionary<Byte, BitmapRepresentation>();
-        
-        private BitmapRepresentation DrawNumber(byte number)
-        {
-            if (!_cache.TryGetValue(number, out var representation))
-            {
-                var bitmap = LayoutContext.CreateBitmap();
-
-                var fontFamily = GlobalContext.Options.Theme.FontFamily;
-
-                var str = number.ToString("00");
-                DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
-
-                representation = new BitmapRepresentation(bitmap);
-                bitmap.Dispose();
-                
-                _cache.Add(number, representation);
-            }
-
-            return representation.Clone();
+            return _clockDrawer.ProvideDrawElements((byte) now.Hour, (byte) now.Minute, (byte) now.Second, GlobalContext, LayoutContext);
         }
 
         public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)

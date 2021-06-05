@@ -14,13 +14,10 @@ namespace Vkm.Library.Timer
 {
     class StopwatchElement: ElementBase
     {
+        private readonly ClockDrawer _clockDrawer = new ClockDrawer();
+        
         private readonly Stopwatch _stopwatch;
 
-        private byte _minutes = 99;
-        private byte _seconds = 99;
-        private byte _secondsPart = 99;
-
-        
         public override DeviceSize ButtonCount => new DeviceSize(5, 1);
 
 
@@ -47,9 +44,7 @@ namespace Vkm.Library.Timer
 
         protected override void OnLeavingLayout()
         {
-            _minutes = 99;
-            _seconds = 99;
-            _secondsPart = 99;
+            _clockDrawer.Reset();
         }
 
         private void DrawCommon()
@@ -72,37 +67,9 @@ namespace Vkm.Library.Timer
         IEnumerable<LayoutDrawElement> ProvideTimer()
         {
             var elapsed = _stopwatch.Elapsed;
-
-            if (_minutes != elapsed.Minutes)
-            {
-                _minutes = (byte)elapsed.Minutes;
-                yield return new LayoutDrawElement(new Location(0, 0), DrawNumber(_minutes));
-            }
-
-            if (_seconds != elapsed.Seconds)
-            {
-                _seconds = (byte)elapsed.Seconds;
-                yield return new LayoutDrawElement(new Location(1, 0), DrawNumber(_seconds));
-            }
-
             var secondsPart = (byte)(60*elapsed.Milliseconds/1000);
-            if (_secondsPart != secondsPart)
-            {
-                _secondsPart = secondsPart;
-                yield return new LayoutDrawElement(new Location(2, 0), DrawNumber(_secondsPart));
-            }
-        }
 
-        private BitmapEx DrawNumber(byte number)
-        {
-            var bitmap = LayoutContext.CreateBitmap();
-
-            var fontFamily = GlobalContext.Options.Theme.FontFamily;
-
-            var str = number.ToString("00");
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
-
-            return bitmap;
+            return _clockDrawer.ProvideDrawElements((byte) elapsed.Minutes, (byte) elapsed.Seconds, secondsPart, GlobalContext, LayoutContext);
         }
 
         public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)

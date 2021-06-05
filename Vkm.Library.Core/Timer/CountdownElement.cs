@@ -15,14 +15,12 @@ namespace Vkm.Library.Timer
 {
     class CountdownElement : ElementBase
     {
+        private readonly ClockDrawer _clockDrawer = new ClockDrawer();
+        
         private TimeSpan _originalSpan;
         private readonly Stopwatch _stopwatch;
 
         private ITimerToken _elapsedToken;
-
-        private byte _hours = 99;
-        private byte _minutes = 99;
-        private byte _seconds = 99;
 
         private bool _timeRequested;
 
@@ -57,9 +55,7 @@ namespace Vkm.Library.Timer
 
         protected override void OnLeavingLayout()
         {
-            _hours = 99;
-            _minutes = 99;
-            _seconds = 99;
+            _clockDrawer.Reset();
         }
 
         private void DrawCommon()
@@ -83,35 +79,7 @@ namespace Vkm.Library.Timer
         {
             var elapsed = _originalSpan - _stopwatch.Elapsed;
 
-            if (_hours != elapsed.Hours)
-            {
-                _hours = (byte)elapsed.Hours;
-                yield return new LayoutDrawElement(new Location(0, 0), DrawNumber(_hours));
-            }
-            
-            if (_minutes != elapsed.Minutes)
-            {
-                _minutes = (byte)elapsed.Minutes;
-                yield return new LayoutDrawElement(new Location(1, 0), DrawNumber(_minutes));
-            }
-
-            if (_seconds != elapsed.Seconds)
-            {
-                _seconds = (byte)elapsed.Seconds;
-                yield return new LayoutDrawElement(new Location(2, 0), DrawNumber(_seconds));
-            }
-        }
-
-        private BitmapEx DrawNumber(byte number)
-        {
-            var bitmap = LayoutContext.CreateBitmap();
-
-            var fontFamily = GlobalContext.Options.Theme.FontFamily;
-
-            var str = number.ToString("00");
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
-
-            return bitmap;
+            return _clockDrawer.ProvideDrawElements((byte) elapsed.Hours, (byte) elapsed.Minutes, (byte) elapsed.Seconds, GlobalContext, LayoutContext);
         }
 
         public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
