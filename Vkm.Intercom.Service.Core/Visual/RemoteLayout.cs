@@ -1,5 +1,6 @@
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Intercom.Service.Api;

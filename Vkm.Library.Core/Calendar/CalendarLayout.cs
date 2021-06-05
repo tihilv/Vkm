@@ -4,6 +4,7 @@ using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
@@ -30,7 +31,7 @@ namespace Vkm.Library.Calendar
         
         public byte? PreferredBrightness => null;
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
 
         public CalendarLayout()
         {
@@ -126,7 +127,7 @@ namespace Vkm.Library.Calendar
 
                 }
                 
-                DrawLayout?.Invoke(this, new DrawEventArgs(result));
+                DrawRequested?.Invoke(this, new DrawEventArgs(result));
             }
             catch (Exception ex)
             {

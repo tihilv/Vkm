@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Time;
@@ -31,7 +32,7 @@ namespace Vkm.Api.Layout
 
         protected GlobalContext GlobalContext => _globalContext;
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
 
         protected IEnumerable<ElementPlacement> Elements => _elements.Values;
 
@@ -120,14 +121,14 @@ namespace Vkm.Api.Layout
             if ((placement.Location.X + placement.Element.ButtonCount.Width > _layoutContext.ButtonCount.Width) ||(placement.Location.Y + placement.Element.ButtonCount.Height > _layoutContext.ButtonCount.Height))
                 throw new ArgumentException($"Element {placement.Element.Id.Value} of type {placement.Element.GetType().FullName} attempted to put out of the borders.");
 
-            placement.Element.DrawElement += ElementOnDrawElement;
+            placement.Element.DrawRequested += RequestedOnDrawRequested;
             placement.Element.EnterLayout(_layoutContext, previousLayout);
         }
 
         private void DisconnectFromElement(ElementPlacement placement)
         {
             placement.Element.LeaveLayout();
-            placement.Element.DrawElement -= ElementOnDrawElement;
+            placement.Element.DrawRequested -= RequestedOnDrawRequested;
 
             LayoutDrawElement[] layoutDrawElements = new LayoutDrawElement[placement.Element.ButtonCount.Height*placement.Element.ButtonCount.Width];
             int index = 0;
@@ -138,7 +139,7 @@ namespace Vkm.Api.Layout
                 index++;
             }
 
-            DrawLayout?.Invoke(this, new DrawEventArgs(layoutDrawElements));
+            DrawRequested?.Invoke(this, new DrawEventArgs(layoutDrawElements));
         }
 
         protected void AddElement(Location location, IElement element)
@@ -166,7 +167,7 @@ namespace Vkm.Api.Layout
                 DisconnectFromElement(placement);
         }
         
-        private void ElementOnDrawElement(object sender, DrawEventArgs e)
+        private void RequestedOnDrawRequested(object sender, DrawEventArgs e)
         {
             var placedElement = _elements.Values.FirstOrDefault(el=> el.Element == sender);
             if (placedElement.Element != null)
@@ -175,7 +176,7 @@ namespace Vkm.Api.Layout
                     throw new ArgumentException($"Element {placedElement.Element.Id.Value} of type {placedElement.Element.GetType().FullName} attempted to draw out of the borders.");
 
                 var drawEventArgs = new DrawEventArgs(e.Elements.Select(el => new LayoutDrawElement(placedElement.Location + el.Location, el.BitmapRepresentation, el.TransitionInfo)).ToArray());
-                DrawLayout?.Invoke(this, drawEventArgs);
+                DrawRequested?.Invoke(this, drawEventArgs);
             }
         }
 
@@ -227,7 +228,7 @@ namespace Vkm.Api.Layout
 
         protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)
         {
-            DrawLayout?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
+            DrawRequested?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
         }
 
         class ElementKeeper

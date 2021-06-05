@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Time;
@@ -23,7 +24,7 @@ namespace Vkm.Api.Element
 
         protected GlobalContext GlobalContext => _globalContext;
 
-        public event EventHandler<DrawEventArgs> DrawElement;
+        public event EventHandler<DrawEventArgs> DrawRequested;
 
         protected ElementBase(Identifier identifier)
         {
@@ -80,7 +81,7 @@ namespace Vkm.Api.Element
 
         protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)
         {
-            DrawElement?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
+            DrawRequested?.Invoke(this, new DrawEventArgs(drawElements.ToArray()));
         }
 
         protected void RegisterTimer(TimeSpan interval, Action action)

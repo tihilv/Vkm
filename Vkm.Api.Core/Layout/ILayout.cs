@@ -1,26 +1,9 @@
-﻿using System;
-using Vkm.Api.Basic;
-using Vkm.Api.Data;
-using Vkm.Api.Identification;
+﻿using Vkm.Api.Drawable;
 
 namespace Vkm.Api.Layout
 {
-    public interface ILayout: IIdentifiable
+    public interface ILayout: IDrawable
     {
         byte? PreferredBrightness { get; }
-
-        event EventHandler<DrawEventArgs> DrawLayout;
-
-        void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
-        void LeaveLayout();
-
-        void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext);
-    }
-
-    public enum ButtonEvent: byte
-    {
-        Down = 0,
-        Up = 1,
-        LongPress = 2
     }
 }

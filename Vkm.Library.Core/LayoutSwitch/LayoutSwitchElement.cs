@@ -3,6 +3,7 @@ using System.Drawing;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
@@ -54,14 +55,14 @@ namespace Vkm.Library.LayoutSwitch
             _buttonShift = CalculateButtonShift();
             using (var bitmap = layoutContext.CreateBitmap())
                 _currentRepresentation = new BitmapRepresentation(bitmap);
-            _layoutToManage.DrawLayout += OnDrawLayout;
+            _layoutToManage.DrawRequested += OnDrawRequested;
             _layoutToManage.EnterLayout(layoutContext, _previousLayout);
         }
 
         protected override void OnLeavingLayout()
         {
             _layoutToManage.LeaveLayout();
-            _layoutToManage.DrawLayout -= OnDrawLayout;
+            _layoutToManage.DrawRequested -= OnDrawRequested;
         }
 
         protected override void OnLeavedLayout()
@@ -71,7 +72,7 @@ namespace Vkm.Library.LayoutSwitch
 
         private readonly object _bitmapLock = new object();
 
-        private void OnDrawLayout(object sender, DrawEventArgs e)
+        private void OnDrawRequested(object sender, DrawEventArgs e)
         {
             BitmapEx currentBitmap;
 

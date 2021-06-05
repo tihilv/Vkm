@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Options;
@@ -26,7 +27,7 @@ namespace Vkm.Library.Weather
         
         public byte? PreferredBrightness => null;
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
         
         public void InitContext(GlobalContext context)
         {
@@ -84,7 +85,7 @@ namespace Vkm.Library.Weather
                     result[i * rows + 3] = new LayoutDrawElement(new Location(i, 3), DrawTexts(((int)(weather[i].Rain ?? 0)).ToString(), weather[i].Wind, _layoutContext));
             }
 
-            DrawLayout?.Invoke(this, new DrawEventArgs(result));
+            DrawRequested?.Invoke(this, new DrawEventArgs(result));
         }
 
         internal static BitmapEx DrawIcon(WeatherInfo response, string text, LayoutContext layoutContext)

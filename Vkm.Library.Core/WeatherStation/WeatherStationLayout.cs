@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Time;
@@ -28,7 +29,7 @@ namespace Vkm.Library.WeatherStation
         
         public byte? PreferredBrightness => null;
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
 
         public WeatherStationLayout()
         {
@@ -108,7 +109,7 @@ namespace Vkm.Library.WeatherStation
                     result[i] = new LayoutDrawElement(element.Location, DrawTexts(currentString, element.Suffix, values, _layoutContext));
                 }
 
-                DrawLayout?.Invoke(this, new DrawEventArgs(result));
+                DrawRequested?.Invoke(this, new DrawEventArgs(result));
             }
             catch (Exception ex)
             {

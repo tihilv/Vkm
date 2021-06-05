@@ -6,6 +6,7 @@ using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
 using Vkm.Api.Device;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Time;
@@ -151,7 +152,7 @@ namespace Vkm.Kernel
                     if (oldLayout != null)
                     {
                         oldLayout.LeaveLayout(); // can provide info to draw
-                        oldLayout.DrawLayout -= LayoutOnDrawLayout;
+                        oldLayout.DrawRequested -= OnDrawRequested;
                     }
 
                     _drawingEngine.ClearDevice();
@@ -159,7 +160,7 @@ namespace Vkm.Kernel
 
                     if (_layout != null)
                     {
-                        _layout.DrawLayout += LayoutOnDrawLayout;
+                        _layout.DrawRequested += OnDrawRequested;
                         _drawingEngine.Brightness = _layout.PreferredBrightness ?? _globalContext.Options.Brightness;
 
                         _layout.EnterLayout(_layoutContext, oldLayout);
@@ -168,7 +169,7 @@ namespace Vkm.Kernel
             }
         }
 
-        private void LayoutOnDrawLayout(object sender, DrawEventArgs e)
+        private void OnDrawRequested(object sender, DrawEventArgs e)
         {
             using (_drawingEngine.PauseDrawing())
             foreach (var element in e.Elements)

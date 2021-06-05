@@ -6,6 +6,7 @@ using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Common;
@@ -24,7 +25,7 @@ namespace Vkm.Library.WeatherStation
         
         public byte? PreferredBrightness => null;
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
 
         public WeatherStationMeasurementDetailsLayout(WeatherStationDataSource element, IWeatherStationService weatherStationService)
         {
@@ -94,7 +95,7 @@ namespace Vkm.Library.WeatherStation
                     result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(deviceWidth, 1), 0, 2, _layoutContext));
                 }
 
-                DrawLayout?.Invoke(this, new DrawEventArgs(result.ToArray()));
+                DrawRequested?.Invoke(this, new DrawEventArgs(result.ToArray()));
             }
             catch (Exception ex)
             {

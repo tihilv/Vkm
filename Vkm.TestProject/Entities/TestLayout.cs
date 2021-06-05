@@ -1,6 +1,7 @@
 using System;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
+using Vkm.Api.Drawable;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Transition;
@@ -18,7 +19,7 @@ namespace Vkm.TestProject.Entities
 
         public byte? PreferredBrightness { get; }
 
-        public event EventHandler<DrawEventArgs> DrawLayout;
+        public event EventHandler<DrawEventArgs> DrawRequested;
         
         internal event EventHandler<Tuple<Location, ButtonEvent>> OnButtonPressed;
 
@@ -53,7 +54,7 @@ namespace Vkm.TestProject.Entities
 
         public void DoDraw(Location location)
         {
-            DrawLayout?.Invoke(this,
+            DrawRequested?.Invoke(this,
                 new DrawEventArgs(new[]
                 {
                     new LayoutDrawElement(location, _testBitmap.Clone(), new TransitionInfo(TransitionType.Instant, TimeSpan.Zero)),
