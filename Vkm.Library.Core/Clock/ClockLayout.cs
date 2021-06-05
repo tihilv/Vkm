@@ -1,5 +1,6 @@
 ﻿using System;
 using Vkm.Api.Basic;
+using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
@@ -29,14 +30,19 @@ namespace Vkm.Library.Clock
 
         private void TimerOnElapsed()
         {
-            using (LayoutContext.PauseDrawing())
+            WithLayout(RefreshElements);
+        }
+        
+        private void RefreshElements(LayoutContext layoutContext)
+        {
+            using (layoutContext.PauseDrawing())
             {
                 RemoveElement(_clockElement);
 
                 Location newLocation;
                 do
                 {
-                    newLocation = new Location((byte) _random.Next(LayoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width + 1), (byte) _random.Next(LayoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height + 1));
+                    newLocation = new Location((byte) _random.Next(layoutContext.ButtonCount.Width - _clockElement.ButtonCount.Width + 1), (byte) _random.Next(layoutContext.ButtonCount.Height - _clockElement.ButtonCount.Height + 1));
                 } while (newLocation == _prevLocation);
 
                 AddElement(newLocation, _clockElement);
@@ -53,10 +59,10 @@ namespace Vkm.Library.Clock
             GlobalContext.InitializeEntity(_clockElement);
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
-                LayoutContext.SetPreviousLayout();
+                layoutContext.SetPreviousLayout();
         }
     }
 }

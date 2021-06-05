@@ -42,7 +42,7 @@ namespace Vkm.Library.Run
             _currentProcessService.ProcessEnter += OnProcessEnter;
 
             AddElement(new Location(layoutContext.ButtonCount.Width-1, layoutContext.ButtonCount.Height-1), _backElement);
-            FillElements();
+            FillElements(layoutContext);
         }
 
         protected override void OnLeavingLayout()
@@ -55,20 +55,20 @@ namespace Vkm.Library.Run
         {
             _currentProcessId = e.ProcessId;
 
-            FillElements();
+            WithLayout(FillElements);
         }
 
         private object _fillLock = new object();
-        void FillElements()
+        void FillElements(LayoutContext layoutContext)
         {
             lock (_fillLock)
             {
-                using (LayoutContext.PauseDrawing())
+                using (layoutContext.PauseDrawing())
                 {
                     foreach (var element in _elements)
                         RemoveElement(element);
 
-                    var processes = _processService.GetProcessesWithWindows().OrderBy(p => p.MainWindowText).Take(LayoutContext.ButtonCount.Width * LayoutContext.ButtonCount.Height - 1);
+                    var processes = _processService.GetProcessesWithWindows().OrderBy(p => p.MainWindowText).Take(layoutContext.ButtonCount.Width * layoutContext.ButtonCount.Height - 1);
 
                     _elements.Clear();
 

@@ -38,13 +38,10 @@ namespace Vkm.Library.AudioSessions
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
                 LayoutContext.SetLayout(GlobalContext.InitializeEntity(new AudioSessionsLayout(Id, _options)));
-
-
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 

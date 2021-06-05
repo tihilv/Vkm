@@ -47,7 +47,7 @@ namespace Vkm.Library.AudioSessions
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+            public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
             {
                 if (location.X == 0 && location.Y == 0)
                 {
@@ -62,8 +62,7 @@ namespace Vkm.Library.AudioSessions
                             _audioSelectLayout._mediaDeviceService.SetMuteSession(pair.Value, pair.Key);
                         }
                         
-                        _audioSelectLayout.SetSessionMuted();
-                        return true;
+                        _audioSelectLayout.SetSessionMuted(layoutContext);
                     } 
                     else if (buttonEvent == ButtonEvent.LongPress)
                     {
@@ -81,8 +80,6 @@ namespace Vkm.Library.AudioSessions
                         }
                     }
                 }
-
-                return false;
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -105,7 +104,7 @@ namespace Vkm.Library.Timer
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -130,8 +129,6 @@ namespace Vkm.Library.Timer
                 _stopwatch.Stop();
                 DrawStopwatch();
             }
-
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

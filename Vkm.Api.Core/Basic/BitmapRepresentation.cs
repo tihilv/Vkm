@@ -15,8 +15,8 @@ namespace Vkm.Api.Basic
         private readonly byte[] _bitmapInternal;
 
         private readonly PixelFormat _pixelFormat;
-        private readonly int _width;
-        private readonly int _height;
+        private readonly ushort _width;
+        private readonly ushort _height;
 
         private bool _disposed;
 
@@ -26,7 +26,7 @@ namespace Vkm.Api.Basic
 
         public byte[] Bytes => _bitmapInternal;
 
-        private BitmapRepresentation(byte[] bitmapInternal, int width, int height, PixelFormat pixelFormat)
+        private BitmapRepresentation(byte[] bitmapInternal, ushort width, ushort height, PixelFormat pixelFormat)
         {
             _bitmapInternal = bitmapInternal;
             _pixelFormat = pixelFormat;
@@ -43,8 +43,8 @@ namespace Vkm.Api.Basic
         {
             _bitmapInternal = Array1DFromBitmap(bitmap);
 
-            _width = bitmap.Width;
-            _height = bitmap.Height;
+            _width = (ushort)bitmap.Width;
+            _height = (ushort)bitmap.Height;
             _pixelFormat = bitmap.PixelFormat;
         }
 
@@ -55,8 +55,8 @@ namespace Vkm.Api.Basic
             {
                 _bitmapInternal = Array1DFromBitmap(bitmap);
 
-                _width = bitmap.Width;
-                _height = bitmap.Height;
+                _width = (ushort)bitmap.Width;
+                _height = (ushort)bitmap.Height;
                 _pixelFormat = bitmap.PixelFormat;
             }
         }

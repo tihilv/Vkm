@@ -69,7 +69,7 @@ namespace Vkm.Library.WeatherStation
             _timerToken.Stop();
         }
 
-        public void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {

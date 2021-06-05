@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -33,7 +34,7 @@ namespace Vkm.Library.AudioSelect
 
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            DrawElements();
+            DrawElements(layoutContext);
         }
 
         protected override void OnLeavedLayout()
@@ -41,25 +42,25 @@ namespace Vkm.Library.AudioSelect
             ClearElements();
         }
 
-        void DrawElements()
+        void DrawElements(LayoutContext layoutContext)
         {
-            int width = LayoutContext.ButtonCount.Width - 1;
-            AddElement(new Location(width,LayoutContext.ButtonCount.Height-1), GlobalContext.InitializeEntity(new BackElement()));
+            int width = layoutContext.ButtonCount.Width - 1;
+            AddElement(new Location(width,layoutContext.ButtonCount.Height-1), GlobalContext.InitializeEntity(new BackElement()));
             AddElement(new Location(width, 0), GlobalContext.InitializeEntity(new VolumeElement(new Identifier(Id.Value + ".Volume"))));
 
             _defaultDeviceId = _mediaDeviceService.GetDefaultDevice().Id;
             var devices = _mediaDeviceService.GetDevices(true);
 
             var elements = devices.Select(device => GlobalContext.InitializeEntity(new AudioDeviceElement(this, device)));
-            AddElementsInRectangle(elements, 0,0,(byte)(LayoutContext.ButtonCount.Width - 2),(byte)(LayoutContext.ButtonCount.Height - 1));
+            AddElementsInRectangle(elements, 0,0,(byte)(layoutContext.ButtonCount.Width - 2),(byte)(layoutContext.ButtonCount.Height - 1));
         }
         
-        private void SetDefaultDevice(string deviceId)
+        private void SetDefaultDevice(string deviceId, LayoutContext layoutContext)
         {
             _defaultDeviceId = deviceId;
 
             ClearElements();
-            DrawElements();
+            DrawElements(layoutContext);
         }
 
         void ClearElements()
@@ -130,16 +131,13 @@ namespace Vkm.Library.AudioSelect
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+            public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
             {
                 if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
                 {
                     _audioSelectLayout._mediaDeviceService.SetDefault(_device);
-                    _audioSelectLayout.SetDefaultDevice(_device.Id);
-                    return true;
+                    _audioSelectLayout.SetDefaultDevice(_device.Id, layoutContext);
                 }
-
-                return false;
             }
         }
     }

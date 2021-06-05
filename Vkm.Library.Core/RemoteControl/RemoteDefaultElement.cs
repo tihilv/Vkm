@@ -1,4 +1,5 @@
-﻿using Vkm.Api.Basic;
+﻿using System;
+using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
@@ -40,15 +41,10 @@ namespace Vkm.Library.RemoteControl
             DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), bitmap) });
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
-            {
                 _service.StartAction(_action);
-                
-                return true;
-            }
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

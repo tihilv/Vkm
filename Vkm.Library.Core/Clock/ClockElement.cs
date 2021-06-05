@@ -76,26 +76,32 @@ namespace Vkm.Library.Clock
             }
         }
 
-        private BitmapEx DrawNumber(byte number)
+        private Dictionary<byte, BitmapRepresentation> _cache = new Dictionary<Byte, BitmapRepresentation>();
+        
+        private BitmapRepresentation DrawNumber(byte number)
         {
-            var bitmap = LayoutContext.CreateBitmap();
-
-            var fontFamily = GlobalContext.Options.Theme.FontFamily;
-
-            var str = number.ToString("00");
-            DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
-
-            return bitmap;
-        }
-
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
-        {
-            if (buttonEvent == ButtonEvent.Down)
+            if (!_cache.TryGetValue(number, out var representation))
             {
-                LayoutContext.SetLayout(_options.TimerLayoutIdentifier);
+                var bitmap = LayoutContext.CreateBitmap();
+
+                var fontFamily = GlobalContext.Options.Theme.FontFamily;
+
+                var str = number.ToString("00");
+                DefaultDrawingAlgs.DrawText(bitmap, fontFamily, str, GlobalContext.Options.Theme.ForegroundColor);
+
+                representation = new BitmapRepresentation(bitmap);
+                bitmap.Dispose();
+                
+                _cache.Add(number, representation);
             }
 
-            return base.ButtonPressed(location, buttonEvent);
+            return representation.Clone();
+        }
+
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
+        {
+            if (buttonEvent == ButtonEvent.Down)
+                LayoutContext.SetLayout(_options.TimerLayoutIdentifier);
         }
     }
 }

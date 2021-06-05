@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -72,7 +73,7 @@ namespace Vkm.Library.Power
             return _overridenAction ?? _options.Action;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -82,16 +83,10 @@ namespace Vkm.Library.Power
             else if (buttonEvent == ButtonEvent.Up)
             {
                 if (_options.CallLayout)
-                {
                     LayoutContext.SetLayout(GlobalContext.InitializeEntity(new PowerLayout(Id)));
-                }
             }
             else if (buttonEvent == ButtonEvent.LongPress)
-            {
                 ExecuteAction();
-            }
-
-            return base.ButtonPressed(location, buttonEvent);
         }
 
         private void ExecuteAction()

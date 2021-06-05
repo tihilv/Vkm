@@ -41,7 +41,7 @@ namespace Vkm.Library.Media
 
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            DrawNow();
+            DrawNow(layoutContext);
 
             foreach (IPlayerService playerService in _playerServices)
                 playerService.PlayingInfoChanged += PlayerServiceOnPlayingInfoChanged;
@@ -57,10 +57,10 @@ namespace Vkm.Library.Media
 
         private void PlayerServiceOnPlayingInfoChanged(object sender, PlayingEventArgs e)
         {
-            PerformDraw(e.PlayingInfo);
+            WithLayout(l=> PerformDraw(e.PlayingInfo, l));
         }
 
-        async void DrawNow()
+        async void DrawNow(LayoutContext layoutContext)
         {
             bool drawn = false;
             bool isPlaying = false;
@@ -73,7 +73,7 @@ namespace Vkm.Library.Media
                     {
                         if (!drawn || !isPlaying)
                         {
-                            PerformDraw(playingNow);
+                            PerformDraw(playingNow, layoutContext);
                             drawn = true;
                             isPlaying = playingNow.IsPlaying;
                         }
@@ -87,7 +87,7 @@ namespace Vkm.Library.Media
         private BitmapRepresentation _previousRepresentation;
         private bool? _isPlaying;
         
-        private void PerformDraw(PlayingInfo playingInfo)
+        private void PerformDraw(PlayingInfo playingInfo, LayoutContext layoutContext)
         {
             byte imageSize = 2;
             byte textSize = 3;
@@ -103,7 +103,7 @@ namespace Vkm.Library.Media
             {
                 _previousRepresentation = playingInfo?.BitmapRepresentation;
                 
-                using (var bitmap = new BitmapEx(LayoutContext.IconSize.Width * imageSize, LayoutContext.IconSize.Height * imageSize))
+                using (var bitmap = new BitmapEx((ushort)(layoutContext.IconSize.Width * imageSize), (ushort)(layoutContext.IconSize.Height * imageSize)))
                 {
                     bitmap.MakeTransparent();
                     if (playingInfo?.BitmapRepresentation != null)
@@ -112,17 +112,17 @@ namespace Vkm.Library.Media
                             BitmapHelpers.ResizeBitmap(coverBitmap, bitmap);
                         }
 
-                    result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(imageSize, imageSize), 0, 0, LayoutContext));
+                    result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(imageSize, imageSize), 0, 0, layoutContext));
                 }
             }
 
-            using (var bitmap = new BitmapEx(LayoutContext.IconSize.Width * textSize, LayoutContext.IconSize.Height))
+            using (var bitmap = new BitmapEx((ushort)(layoutContext.IconSize.Width * textSize), layoutContext.IconSize.Height))
             {
                 var lineWidth = 0.05;
                 
                 bitmap.MakeTransparent();
                 var title = playingInfo?.Title;
-                DefaultDrawingAlgs.DrawText(bitmap, GlobalContext.Options.Theme.FontFamily, title, LayoutContext.Options.Theme.ForegroundColor);
+                DefaultDrawingAlgs.DrawText(bitmap, GlobalContext.Options.Theme.FontFamily, title, layoutContext.Options.Theme.ForegroundColor);
 
                 if (playingInfo != null)
                 {
@@ -134,29 +134,29 @@ namespace Vkm.Library.Media
                     }
                 }
 
-                result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(textSize, 1), imageSize, 0, LayoutContext));
+                result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(textSize, 1), imageSize, 0, layoutContext));
             }
             
-            using (var bitmap = new BitmapEx(LayoutContext.IconSize.Width * textSize, LayoutContext.IconSize.Height))
+            using (var bitmap = new BitmapEx((ushort)(layoutContext.IconSize.Width * textSize), layoutContext.IconSize.Height))
             {
                 bitmap.MakeTransparent();
                 var artist = playingInfo?.Artist ?? string.Empty;
                 var album = playingInfo?.Album ?? string.Empty;
                 var text = $"{artist}\n{album}";
                 DefaultDrawingAlgs.DrawText(bitmap, GlobalContext.Options.Theme.FontFamily, text, GlobalContext.Options.Theme.ForegroundColor);
-                result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(textSize, 1), imageSize, 1, LayoutContext));
+                result.AddRange(BitmapHelpers.ExtractLayoutDrawElements(bitmap, new DeviceSize(textSize, 1), imageSize, 1, layoutContext));
             }
             
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (location.Y != 2)
                 if (buttonEvent == ButtonEvent.Down)
-                    LayoutContext.SetPreviousLayout();
+                    layoutContext.SetPreviousLayout();
             
-            base.ButtonPressed(location, buttonEvent);
+            base.ButtonPressed(location, buttonEvent, layoutContext);
         }
     }
 }

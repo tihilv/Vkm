@@ -65,7 +65,7 @@ namespace Vkm.Library.Calendar
             _timerToken.Stop();
         }
 
-        public void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -110,7 +110,7 @@ namespace Vkm.Library.Calendar
                     byte textButtonCount = (byte)(columns - firstNameIndex);
                     if (textButtonCount > 0)
                     {
-                        using (var bitmap = new BitmapEx(_layoutContext.IconSize.Width * textButtonCount, _layoutContext.IconSize.Height))
+                        using (var bitmap = new BitmapEx((ushort)(_layoutContext.IconSize.Width * textButtonCount), _layoutContext.IconSize.Height))
                         {
                             bitmap.MakeTransparent();
                             DefaultDrawingAlgs.DrawText(bitmap, _layoutContext.Options.Theme.FontFamily, _appointments[i].Subject, _layoutContext.Options.Theme.ForegroundColor);

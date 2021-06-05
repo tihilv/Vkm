@@ -1,4 +1,5 @@
-﻿using Vkm.Api.Basic;
+﻿using System;
+using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
 using Vkm.Api.Identification;
@@ -44,20 +45,20 @@ namespace Vkm.Library.Timer
             _currentIndex = 0;
         }
 
-        private void SetValue(byte value)
+        private void SetValue(Byte value, LayoutContext layoutContext)
         {
             if (_currentIndex == 2 && value > 5)
                 return;
 
             _values[_currentIndex] = value;
 
-            var bmp = LayoutContext.CreateBitmap();
+            var bmp = layoutContext.CreateBitmap();
             DefaultDrawingAlgs.DrawText(bmp, GlobalContext.Options.Theme.FontFamily, value.ToString(), GlobalContext.Options.Theme.ForegroundColor);
             DrawInvoke(new[] {new LayoutDrawElement(new Location((byte) (3 + _currentIndex % 2), (byte) (_currentIndex / 2)), bmp)});
 
             _currentIndex++;
             if (_currentIndex == _values.Length)
-                LayoutContext.SetPreviousLayout();
+                layoutContext.SetPreviousLayout();
         }
 
         class InputButtonElement : ElementBase
@@ -89,15 +90,10 @@ namespace Vkm.Library.Timer
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+            public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
             {
                 if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
-                {
-                    _inputTimeLayout.SetValue(_value);
-                    return true;
-                }
-
-                return false;
+                    _inputTimeLayout.SetValue(_value, layoutContext);
             }
 
         }

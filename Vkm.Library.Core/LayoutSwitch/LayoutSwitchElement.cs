@@ -36,7 +36,7 @@ namespace Vkm.Library.LayoutSwitch
         {
             var maxWidth = LayoutContext.IconSize.Width / LayoutContext.ButtonCount.Width;
             var maxHeight = LayoutContext.IconSize.Height / LayoutContext.ButtonCount.Height;
-            var minDimension = Math.Min(maxWidth, maxHeight);
+            var minDimension = (ushort)Math.Min(maxWidth, maxHeight);
             
             return new IconSize(minDimension, minDimension);
         }
@@ -44,8 +44,8 @@ namespace Vkm.Library.LayoutSwitch
         private IconSize CalculateButtonShift()
         {
             return new IconSize(
-                (LayoutContext.IconSize.Width - LayoutContext.ButtonCount.Width * _individualButtonSize.Width) / 2,
-                (LayoutContext.IconSize.Height - LayoutContext.ButtonCount.Height * _individualButtonSize.Height) / 2);
+                (ushort)((LayoutContext.IconSize.Width - LayoutContext.ButtonCount.Width * _individualButtonSize.Width) / 2),
+                (ushort)((LayoutContext.IconSize.Height - LayoutContext.ButtonCount.Height * _individualButtonSize.Height) / 2));
         }
 
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
@@ -95,15 +95,12 @@ namespace Vkm.Library.LayoutSwitch
             DrawInvoke(new[] {new LayoutDrawElement(new Location(0, 0), currentBitmap)});
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
                 LayoutContext.SetLayout(_layoutToManage);
-                return true;
             }
-
-            return false;
         }
     }
 }

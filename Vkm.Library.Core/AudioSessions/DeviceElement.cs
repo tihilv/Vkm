@@ -1,3 +1,4 @@
+using System;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Element;
@@ -41,16 +42,13 @@ namespace Vkm.Library.AudioSessions
                 return bitmap;
             }
 
-            public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+            public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
             {
                 if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
                 {
                     _audioSelectLayout._mediaDeviceService.SetMute(!_device.Mute, _device);
-                    _audioSelectLayout.SetSessionMuted();
-                    return true;
+                    _audioSelectLayout.SetSessionMuted(layoutContext);
                 }
-
-                return false;
             }
         }
     }

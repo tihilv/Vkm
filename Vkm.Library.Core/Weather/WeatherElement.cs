@@ -78,7 +78,7 @@ namespace Vkm.Library.Weather
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -88,7 +88,6 @@ namespace Vkm.Library.Weather
 
                 LayoutContext.SetLayout(forecastLayout);
             }
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

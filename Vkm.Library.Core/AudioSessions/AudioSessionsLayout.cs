@@ -39,7 +39,7 @@ namespace Vkm.Library.AudioSessions
         
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
-            DrawElements();
+            DrawElements(layoutContext);
         }
 
         protected override void OnLeavedLayout()
@@ -47,12 +47,12 @@ namespace Vkm.Library.AudioSessions
             ClearElements();
         }
         
-        void DrawElements()
+        void DrawElements(LayoutContext layoutContext)
         {
-            int width = LayoutContext.ButtonCount.Width - 1;
-            AddElement(new Location(width,LayoutContext.ButtonCount.Height-1), GlobalContext.InitializeEntity(new BackElement()));
+            int width = layoutContext.ButtonCount.Width - 1;
+            AddElement(new Location(width,layoutContext.ButtonCount.Height-1), GlobalContext.InitializeEntity(new BackElement()));
 
-            for (int i = 0; i < LayoutContext.ButtonCount.Height-1; i++)
+            for (int i = 0; i < layoutContext.ButtonCount.Height-1; i++)
             {
                 AddElement(new Location(width,i), GlobalContext.InitializeEntity(new AudioSessionsMacroElement(this, (i+1))));
             }
@@ -64,7 +64,7 @@ namespace Vkm.Library.AudioSessions
             elements.AddRange(sessions.Select(device => GlobalContext.InitializeEntity(new AudioSessionsElement(this, device))).ToList());
             elements.AddRange(devices.Select(device => GlobalContext.InitializeEntity(new AudioDeviceElement(this, device))));
             
-            AddElementsInRectangle(elements, 0,0,(byte)(LayoutContext.ButtonCount.Width - 2),(byte)(LayoutContext.ButtonCount.Height - 1));
+            AddElementsInRectangle(elements, 0,0,(byte)(layoutContext.ButtonCount.Width - 2),(byte)(layoutContext.ButtonCount.Height - 1));
         }
         
         void ClearElements()
@@ -73,10 +73,10 @@ namespace Vkm.Library.AudioSessions
                 RemoveElement(placement.Element);
         }
 
-        private void SetSessionMuted()
+        private void SetSessionMuted(LayoutContext layoutContext)
         {
             ClearElements();
-            DrawElements();
+            DrawElements(layoutContext);
         }
     }
 

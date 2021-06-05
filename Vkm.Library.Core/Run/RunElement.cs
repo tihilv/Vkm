@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
 using Vkm.Api.Data;
@@ -73,21 +74,15 @@ namespace Vkm.Library.Run
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
                 if (_processId == 0 || !_processService.Activate(_processId))
                     _processId = _processService.Start(_options.Executable);
-
-                return true;
             }
             else if (buttonEvent == ButtonEvent.LongPress)
-            {
                 _processService.Stop(_processId);
-            }
-
-            return base.ButtonPressed(location, buttonEvent);
         }
 
         public void SetRunning(int processId, bool selected)

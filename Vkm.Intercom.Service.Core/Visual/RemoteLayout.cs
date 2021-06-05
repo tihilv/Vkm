@@ -1,4 +1,5 @@
 using Vkm.Api.Basic;
+using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Intercom.Service.Api;
@@ -35,9 +36,9 @@ namespace Vkm.Intercom.Service.Visual
             RemoveElement(location);
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
-            base.ButtonPressed(location, buttonEvent);
+            base.ButtonPressed(location, buttonEvent, layoutContext);
 
             _callbackClient.ButtonPressed(Id, location, buttonEvent);
         }

@@ -11,7 +11,7 @@ namespace Vkm.Api.Device
         public static BitmapEx CreateBitmap(this IDevice device, ThemeOptions options)
         {
             var iconSize = device.IconSize;
-            var result = new BitmapEx(iconSize.Width, iconSize.Height, PixelFormat.Format24bppRgb);
+            var result = new BitmapEx((ushort)iconSize.Width, (ushort)iconSize.Height, PixelFormat.Format24bppRgb);
 
             if (options.BackgroundBitmapRepresentation == null)
             {

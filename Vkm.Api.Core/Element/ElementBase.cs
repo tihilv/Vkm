@@ -73,9 +73,9 @@ namespace Vkm.Api.Element
             OnLeavedLayout();
         }
 
-        public virtual bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public virtual void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
-            return false;
+            
         }
 
         protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)

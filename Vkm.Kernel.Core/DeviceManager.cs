@@ -75,7 +75,7 @@ namespace Vkm.Kernel
         {
             using (_drawingEngine.PauseDrawing())
                 if (_globalContext.DeviceHooks.Values.All(h => !h.OnKeyEventHook(location, buttonEvent, _layout, _layoutContext)))
-                    _layout?.ButtonPressed(location, buttonEvent);
+                    _layout?.ButtonPressed(location, buttonEvent, _layoutContext);
         }
 
         private void ClearPressedButtons()

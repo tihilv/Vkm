@@ -67,7 +67,7 @@ namespace Vkm.Library.WeatherStation
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -76,7 +76,6 @@ namespace Vkm.Library.WeatherStation
 
                 LayoutContext.SetLayout(weatherStationLayout);
             }
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

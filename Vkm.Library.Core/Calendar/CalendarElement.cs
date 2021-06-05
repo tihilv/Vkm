@@ -113,7 +113,7 @@ namespace Vkm.Library.Calendar
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -121,10 +121,7 @@ namespace Vkm.Library.Calendar
                 GlobalContext.InitializeEntity(weatherStationLayout);
 
                 LayoutContext.SetLayout(weatherStationLayout);
-                
-                return true;
             }
-            return base.ButtonPressed(location, buttonEvent);
         }
 
         public IOptions GetDefaultOptions()

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
@@ -63,7 +64,7 @@ namespace Vkm.Library.Buttons
             DrawInvoke(new [] {new LayoutDrawElement(new Location(0, 0), bitmap)});
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down && location.X == 0 && location.Y == 0)
             {
@@ -71,11 +72,7 @@ namespace Vkm.Library.Buttons
                     _keyboardService.SendKeys(_keys);
                 else
                     _keyboardService.SendKeys(_key.Value);
-                
-                return true;
             }
-
-            return false;
         }
 
         public void ReplaceText(string text)

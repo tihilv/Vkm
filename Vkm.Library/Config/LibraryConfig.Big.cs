@@ -196,10 +196,7 @@ namespace Vkm.Library.Config
                 ModuleInfo = new ModuleInitializationInfo(AudioSessionsElementFactory.Identifier, AudioSessionsIdentifier)
             });
             
-            
             optionsService.SetDefaultOptions(DefaultCompositeLayout, desktopOptions);
-
-
 
             var runOptions = new RunOptions();
             runOptions.Executable = "calc.exe";
@@ -265,7 +262,7 @@ namespace Vkm.Library.Config
             var amipOptions = new AmipOptions() {Separator = new[] {" ||| "}, Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "amip.txt")};
             optionsService.SetDefaultOptions(AmipPlayerService.Identifier, amipOptions);
             
-            var layoutManagementHoolOptions = new LongPressHookOptions() {Location = new Location(4,2), LayoutIdentifier = DefaultLayoutSwitchLayout};
+            var layoutManagementHoolOptions = new LongPressHookOptions() {Location = new Location(7,3), LayoutIdentifier = DefaultLayoutSwitchLayout};
             optionsService.SetDefaultOptions(LongPressHook.Identifier, layoutManagementHoolOptions);
             
             var netatmoOptions = new NetatmoOptions() { ClientId = "5d7e3403c52009c91e692291", Secret = "lUfYpj3y9WYFGvvw09lE9gZetdNbxgwxFgfWzaHe", Login = "tihilv_atmo@mail.ru", Password = "netAtmoStation0_", HistoryRefreshSpan = TimeSpan.FromMinutes(2), MaxMeasureCount = 200};

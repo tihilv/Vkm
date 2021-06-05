@@ -51,7 +51,7 @@ namespace Vkm.Library.WeatherStation
         {
         }
 
-        public void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
                 _layoutContext.SetPreviousLayout();
@@ -87,7 +87,7 @@ namespace Vkm.Library.WeatherStation
                 result.Add(GetHeaderElement(4, 1, _element.Suffix, color));
 
                 var deviceWidth = _layoutContext.ButtonCount.Width;
-                using (var bitmap = new BitmapEx(_layoutContext.IconSize.Width * deviceWidth, _layoutContext.IconSize.Height))
+                using (var bitmap = new BitmapEx((ushort)(_layoutContext.IconSize.Width * deviceWidth), _layoutContext.IconSize.Height))
                 {
                     bitmap.MakeTransparent();
                     DefaultDrawingAlgs.DrawPlot(bitmap, color, values, 0, bitmap.Height);

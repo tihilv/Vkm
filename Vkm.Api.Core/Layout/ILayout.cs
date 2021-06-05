@@ -14,7 +14,7 @@ namespace Vkm.Api.Layout
         void EnterLayout(LayoutContext layoutContext, ILayout previousLayout);
         void LeaveLayout();
 
-        void ButtonPressed(Location location, ButtonEvent isDown);
+        void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext);
     }
 
     public enum ButtonEvent: byte

@@ -46,7 +46,7 @@ namespace Vkm.TestProject.Entities
             LayoutEntered = false;
         }
 
-        public void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             OnButtonPressed?.Invoke(this, Tuple.Create(location, buttonEvent));
         }

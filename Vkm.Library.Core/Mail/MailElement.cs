@@ -102,18 +102,11 @@ namespace Vkm.Library.Mail
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
-            {
                 foreach (var service in _mailServices)
-                {
                     service.Activate();
-                }
-                
-                return true;
-            }
-            return base.ButtonPressed(location, buttonEvent);
         }
     }
 }

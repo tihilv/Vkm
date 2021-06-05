@@ -99,7 +99,7 @@ namespace Vkm.Library.Volume
 
         private BitmapEx DrawLevel(bool muted, double volume, float peakValue)
         {
-            var bitmap = new BitmapEx(LayoutContext.IconSize.Width * ButtonCount.Width, LayoutContext.IconSize.Height * ButtonCount.Height);
+            var bitmap = new BitmapEx((ushort)(LayoutContext.IconSize.Width * ButtonCount.Width), (ushort)(LayoutContext.IconSize.Height * ButtonCount.Height));
             bitmap.MakeTransparent();
 
             var delta = 50;
@@ -137,7 +137,7 @@ namespace Vkm.Library.Volume
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down || buttonEvent == ButtonEvent.Up)
             {
@@ -162,11 +162,7 @@ namespace Vkm.Library.Volume
                 }
                 else if (buttonEvent == ButtonEvent.Down)
                     DoVolumeChange();
-
-                return true;
             }
-
-            return false;
         }
     }
 }

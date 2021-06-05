@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
-using Vkm.Api.Element;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Library.Common;
@@ -32,7 +31,7 @@ namespace Vkm.Library.RemoteControl
         {
             _service.ActiveActionChanged += ServiceOnActiveActionChanged;
 
-            FillData();
+            FillData(layoutContext);
         }
 
         protected override void OnLeavingLayout()
@@ -42,14 +41,14 @@ namespace Vkm.Library.RemoteControl
 
         private void ServiceOnActiveActionChanged(object sender, ActionEventArgs e)
         {
-            FillData();
+            WithLayout(l => FillData(l));
         }
 
-        async void FillData()
+        async void FillData(LayoutContext layoutContext)
         {
             var actions = await _service.GetActions();
 
-            var elements = actions.Select(a => GlobalContext.InitializeEntity(new RemoteDefaultElement(new Identifier($"{Id.Value}_{a.Id}"), a, _service))).Take(LayoutContext.ButtonCount.Width * LayoutContext.ButtonCount.Height - 1);
+            var elements = actions.Select(a => GlobalContext.InitializeEntity(new RemoteDefaultElement(new Identifier($"{Id.Value}_{a.Id}"), a, _service))).Take(layoutContext.ButtonCount.Width * layoutContext.ButtonCount.Height - 1);
             
             base.AddElementsInRectangle(elements);
         }

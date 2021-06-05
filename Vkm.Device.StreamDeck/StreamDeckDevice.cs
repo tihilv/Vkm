@@ -52,7 +52,7 @@ namespace Vkm.Device.StreamDeck
 
         public void Init()
         {
-            _iconSize = new IconSize(_device.Keys.Max(k=>k.Width), _device.Keys.Max(k=>k.Width));
+            _iconSize = new IconSize((ushort)_device.Keys.Max(k=>k.Width), (ushort)_device.Keys.Max(k=>k.Height));
 
             _device.KeyStateChanged += DeviceOnKeyStateChanged;
         }

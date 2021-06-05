@@ -33,8 +33,8 @@ namespace Vkm.Library.Hook
                 {
                     if (!_longPress)
                     {
-                        layout.ButtonPressed(location, ButtonEvent.Down);
-                        layout.ButtonPressed(location, ButtonEvent.Up);
+                        layout.ButtonPressed(location, ButtonEvent.Down, layoutContext);
+                        layout.ButtonPressed(location, ButtonEvent.Up, layoutContext);
                     }
 
                     return true;

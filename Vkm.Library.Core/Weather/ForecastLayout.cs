@@ -51,7 +51,7 @@ namespace Vkm.Library.Weather
             
         }
 
-        public abstract void ButtonPressed(Location location, ButtonEvent buttonEvent);
+        public abstract void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext);
 
         protected abstract Task<WeatherInfo[]> GetData();
 
@@ -111,7 +111,7 @@ namespace Vkm.Library.Weather
 
     class DaysForecastLayout : ForecastLayout
     {
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -151,7 +151,7 @@ namespace Vkm.Library.Weather
             _dateTime = dateTime;
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
                 _layoutContext.SetPreviousLayout();

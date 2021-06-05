@@ -43,12 +43,12 @@ namespace Vkm.Library.Timer
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
         {
             if (_currentPage == -1)
-                ReplaceTimers(0);
+                ReplaceTimers(0, layoutContext);
             else
-                DrawMarkers();
+                DrawMarkers(layoutContext);
         }
 
-        void ReplaceTimers(byte toPage)
+        void ReplaceTimers(byte toPage, LayoutContext layoutContext)
         {
             _currentPage = toPage;
             var countdownLocation = new Location(0, 0);
@@ -63,16 +63,16 @@ namespace Vkm.Library.Timer
             AddElement(countdownLocation, _countdownElements[toPage]);
             AddElement(timerLocation, _stopwatchElements[toPage]);
 
-            DrawMarkers();
+            DrawMarkers(layoutContext);
         }
 
-        private void DrawMarkers()
+        private void DrawMarkers(LayoutContext layoutContext)
         {
             List<LayoutDrawElement> result = new List<LayoutDrawElement>();
 
             for (byte i = 0; i < TimersCount; i++)
             {
-                var bmp = LayoutContext.CreateBitmap();
+                var bmp = layoutContext.CreateBitmap();
 
                 using (var graphics = bmp.CreateGraphics())
                 using (var brush = new SolidBrush(GlobalContext.Options.Theme.ForegroundColor))
@@ -90,17 +90,17 @@ namespace Vkm.Library.Timer
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
                 if (location.Y == 2 && location.X < TimersCount)
                 {
-                    ReplaceTimers(location.X);
+                    ReplaceTimers(location.X, layoutContext);
                 }
             }
 
-            base.ButtonPressed(location, buttonEvent);
+            base.ButtonPressed(location, buttonEvent, layoutContext);
         }
 
         

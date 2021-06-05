@@ -9,31 +9,36 @@ namespace Vkm.Api.Basic
 {
     public class BitmapEx: IDisposable
     {
-        private static readonly ConcurrentDictionary<Tuple<int, int, PixelFormat>, ConcurrentStack<Bitmap>> _bitmapPool = new ConcurrentDictionary<Tuple<int, int, PixelFormat>, ConcurrentStack<Bitmap>>();
+        private static readonly ConcurrentDictionary<UInt64, ConcurrentStack<Bitmap>> _bitmapPool = new ConcurrentDictionary<UInt64, ConcurrentStack<Bitmap>>();
 
-        private readonly int _width;
-        private readonly int _height;
+        private readonly ushort _width;
+        private readonly ushort _height;
         private readonly PixelFormat _pixelFormat;
 
         private readonly Bitmap _internal;
 
         private bool _disposed;
 
-        public BitmapEx(int width, int height, PixelFormat pixelFormat = PixelFormat.Format32bppArgb)
+        public BitmapEx(ushort width, ushort height, PixelFormat pixelFormat = PixelFormat.Format32bppArgb)
         {
             _internal = GetNewBitmap(width, height, pixelFormat);
-            _width = _internal.Width;
-            _height = _internal.Height;
+            _width = (ushort)_internal.Width;
+            _height = (ushort)_internal.Height;
             _pixelFormat = _internal.PixelFormat;
         }
 
-        public int Width => _width;
-        public int Height => _height;
+        public ushort Width => _width;
+        public ushort Height => _height;
         public PixelFormat PixelFormat => _pixelFormat;
 
-        private static Bitmap GetNewBitmap(int width, int height, PixelFormat pixelFormat)
+        private static UInt64 GetKey(ushort width, ushort height, PixelFormat pixelFormat)
         {
-            var key = Tuple.Create(width, height, pixelFormat);
+            return (UInt64) (int) pixelFormat << 32 + width << 16 + height;
+        }
+        
+        private static Bitmap GetNewBitmap(ushort width, ushort height, PixelFormat pixelFormat)
+        {
+            var key = GetKey(width, height, pixelFormat);
 
             var pool = _bitmapPool.GetOrAdd(key, i => new ConcurrentStack<Bitmap>());
 
@@ -50,7 +55,7 @@ namespace Vkm.Api.Basic
             {
                 _disposed = true;
 
-                var key = Tuple.Create(Width, Height, PixelFormat);
+                var key = GetKey(Width, Height, PixelFormat);
                 _bitmapPool[key].Push(_internal);
             }
             else

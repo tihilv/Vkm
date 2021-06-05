@@ -113,7 +113,7 @@ namespace Vkm.Library.Timer
             return bitmap;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -136,8 +136,6 @@ namespace Vkm.Library.Timer
                     LayoutContext.SetLayout(GlobalContext.InitializeEntity(new InputTimeLayout(new Identifier(""))));
                 }
             }
-
-            return base.ButtonPressed(location, buttonEvent);
         }
 
         void Stop()

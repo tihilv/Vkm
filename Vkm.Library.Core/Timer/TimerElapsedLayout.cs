@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Vkm.Api.Basic;
+using Vkm.Api.Data;
 using Vkm.Api.Identification;
 using Vkm.Api.Layout;
 using Vkm.Api.Transition;
@@ -21,16 +22,21 @@ namespace Vkm.Library.Timer
         {
             base.Init();
 
-            RegisterTimer(_frameDuration, Draw);
+            RegisterTimer(_frameDuration, OnTimerElapsed);
         }
 
-        private void Draw()
+        private void OnTimerElapsed()
+        {
+            WithLayout(Draw);
+        }
+        
+        private void Draw(LayoutContext layoutContext)
         {
             List<LayoutDrawElement> result = new List<LayoutDrawElement>();
-            for (byte i = 0; i < LayoutContext.ButtonCount.Width; i++)
-            for (byte j = 0; j < LayoutContext.ButtonCount.Height; j++)
+            for (byte i = 0; i < layoutContext.ButtonCount.Width; i++)
+            for (byte j = 0; j < layoutContext.ButtonCount.Height; j++)
             {
-                var bmp = LayoutContext.CreateBitmap();
+                var bmp = layoutContext.CreateBitmap();
 
                 using (var grahics = bmp.CreateGraphics())
                 using (var brush = new SolidBrush(Color.FromArgb(_random.Next(0, 255), _random.Next(0, 255), _random.Next(0, 255), _random.Next(0, 255))))
@@ -44,11 +50,11 @@ namespace Vkm.Library.Timer
             DrawInvoke(result);
         }
 
-        public override void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
-            base.ButtonPressed(location, buttonEvent);
+            base.ButtonPressed(location, buttonEvent, layoutContext);
 
-            LayoutContext.SetPreviousLayout();
+            layoutContext.SetPreviousLayout();
         }
     }
 }

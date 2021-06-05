@@ -105,7 +105,7 @@ namespace Vkm.Library.Media
             _previousRepresentation = DefaultBitmapRepresentation;
         }
 
-        public override bool ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public override void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             if (buttonEvent == ButtonEvent.Down)
             {
@@ -114,8 +114,6 @@ namespace Vkm.Library.Media
 
                 LayoutContext.SetLayout(mediaLayout);
             }
-            return base.ButtonPressed(location, buttonEvent);
         }
-
     }
 }

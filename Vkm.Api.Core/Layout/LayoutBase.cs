@@ -29,7 +29,6 @@ namespace Vkm.Api.Layout
 
         public virtual byte? PreferredBrightness => null;
 
-        protected LayoutContext LayoutContext => _layoutContext;
         protected GlobalContext GlobalContext => _globalContext;
 
         public event EventHandler<DrawEventArgs> DrawLayout;
@@ -118,7 +117,7 @@ namespace Vkm.Api.Layout
 
         private void ConnectToElement(ElementPlacement placement, ILayout previousLayout)
         {
-            if ((placement.Location.X + placement.Element.ButtonCount.Width > LayoutContext.ButtonCount.Width) ||(placement.Location.Y + placement.Element.ButtonCount.Height > LayoutContext.ButtonCount.Height))
+            if ((placement.Location.X + placement.Element.ButtonCount.Width > _layoutContext.ButtonCount.Width) ||(placement.Location.Y + placement.Element.ButtonCount.Height > _layoutContext.ButtonCount.Height))
                 throw new ArgumentException($"Element {placement.Element.Id.Value} of type {placement.Element.GetType().FullName} attempted to put out of the borders.");
 
             placement.Element.DrawElement += ElementOnDrawElement;
@@ -135,7 +134,7 @@ namespace Vkm.Api.Layout
             for (byte x = 0; x < placement.Element.ButtonCount.Width; x++)
             for (byte y = 0; y < placement.Element.ButtonCount.Height; y++)
             {
-                layoutDrawElements[index] = new LayoutDrawElement(new Location((byte) (placement.Location.X + x), (byte) (placement.Location.Y + y)), LayoutContext.CreateBitmap());
+                layoutDrawElements[index] = new LayoutDrawElement(new Location((byte) (placement.Location.X + x), (byte) (placement.Location.Y + y)), _layoutContext.CreateBitmap());
                 index++;
             }
 
@@ -182,12 +181,12 @@ namespace Vkm.Api.Layout
 
         protected void AddElementsInRectangle(IEnumerable<IElement> elements)
         {
-            AddElementsInRectangle(elements, 0, 0, (byte) (LayoutContext.ButtonCount.Width - 1), (byte) (LayoutContext.ButtonCount.Height - 1));
+            AddElementsInRectangle(elements, 0, 0, (byte) (_layoutContext.ButtonCount.Width - 1), (byte) (_layoutContext.ButtonCount.Height - 1));
         }
 
         protected void AddElementsInRectangle(IEnumerable<IElement> elements, byte fromX, byte fromY, byte toX, byte toY)
         {
-            using (LayoutContext.PauseDrawing())
+            using (_layoutContext.PauseDrawing())
             {
                 byte width = (byte) (toX - fromX + 1);
 
@@ -202,14 +201,14 @@ namespace Vkm.Api.Layout
         }
 
 
-        public virtual void ButtonPressed(Location location, ButtonEvent buttonEvent)
+        public virtual void ButtonPressed(Location location, ButtonEvent buttonEvent, LayoutContext layoutContext)
         {
             var elementsToLook = _elements.Values.ToArray();
 
             foreach (ElementPlacement placement in elementsToLook)
             {
                 if (location.X >= placement.Location.X && location.X < placement.Location.X + placement.Element.ButtonCount.Width && location.Y >= placement.Location.Y && location.Y < placement.Location.Y + placement.Element.ButtonCount.Height)
-                    placement.Element.ButtonPressed(new Location((byte) (location.X - placement.Location.X), (byte) (location.Y - placement.Location.Y)), buttonEvent);
+                    placement.Element.ButtonPressed(new Location((byte) (location.X - placement.Location.X), (byte) (location.Y - placement.Location.Y)), buttonEvent, _layoutContext);
             }
         }
 
@@ -217,6 +216,13 @@ namespace Vkm.Api.Layout
         {
             var timer = GlobalContext.Services.TimerService.RegisterTimer(interval, action);
             _timers.TryAdd(timer, timer);
+        }
+        
+        protected void WithLayout(Action<LayoutContext> action)
+        {
+            var lc = _layoutContext;
+            if (lc != null)
+                action(lc);
         }
 
         protected void DrawInvoke(IEnumerable<LayoutDrawElement> drawElements)
