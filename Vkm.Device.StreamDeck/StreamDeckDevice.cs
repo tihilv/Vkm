@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using OpenMacroBoard.SDK;
 using StreamDeckSharp;
@@ -19,7 +16,7 @@ namespace Vkm.Device.StreamDeck
         private readonly Identifier _identifier;
         private IconSize _iconSize;
 
-        private IStreamDeckBoard _device;
+        private IMacroBoard _device;
 
         public Identifier Id => _identifier;
         public IconSize IconSize => _iconSize;
@@ -43,8 +40,9 @@ namespace Vkm.Device.StreamDeck
 
         public StreamDeckDevice(IStreamDeckRefHandle devicePath)
         {
-            _device = devicePath.Open();
-            _identifier = new Identifier("StreamDeck." + _device.GetSerialNumber());
+            var device = devicePath.Open();
+            _device = device.WithButtonPressEffect(new ButtonPressEffectConfig() {Scale = 0.9}).WithDisconnectReplay();
+            _identifier = new Identifier("StreamDeck." + device.GetSerialNumber());
         }
 
         public void InitContext(GlobalContext context)
