@@ -21,7 +21,7 @@ namespace Vkm.Library.AudioSessions
         private IMediaDeviceService _mediaDeviceService;
         private IBitmapDownloadService _bitmapDownloadService;
 
-        private Dictionary<int, MacroData> _macroData;
+        private readonly Dictionary<int, MacroData> _macroData;
 
         public AudioSessionsLayout(Identifier identifier, AudioSessionsOptions options) : base(identifier)
         {
