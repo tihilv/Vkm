@@ -33,7 +33,7 @@ namespace Vkm.Api.Basic
 
         private static UInt64 GetKey(ushort width, ushort height, PixelFormat pixelFormat)
         {
-            return (UInt64) (int) pixelFormat << 32 + width << 16 + height;
+            return ((UInt64)(int)pixelFormat << 32) + ((UInt64)width << 16) + height;
         }
         
         private static Bitmap GetNewBitmap(ushort width, ushort height, PixelFormat pixelFormat)
