@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>Vkm.Library</RootNamespace>
         <LangVersion>8</LangVersion>
         <AssemblyName>Vkm.Library.Core.vkmext</AssemblyName>
+        <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

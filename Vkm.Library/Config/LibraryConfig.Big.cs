@@ -10,6 +10,7 @@ using Vkm.Api.Device;
 using Vkm.Api.Identification;
 using Vkm.Api.Module;
 using Vkm.Api.Options;
+using Vkm.Common.Properties;
 using Vkm.Library.ApplicationChangeTransition;
 using Vkm.Library.AudioSelect;
 using Vkm.Library.AudioSessions;
@@ -81,7 +82,7 @@ namespace Vkm.Library.Config
             Identifier DefaultLayoutSwitchLayout = new Identifier("Vkm.DefaultLayoutSwitch.Layout");
             Identifier DefaultRemoteControlLayout = new Identifier("Vkm.DefaultRemoteControl.Layout");
 
-            GlobalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.BackgroundBitmap);
+            GlobalOptions.Theme.BackgroundBitmapRepresentation = new BitmapRepresentation(Resources.background);
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(NumpadLayoutFactory.Identifier, DefaultNumpadLayout));
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(ClockLayoutFactory.Identifier, DefaultScreenSaverLayout));
             GlobalOptions.LayoutLoadOptions.InitializationInfos.Add(new ModuleInitializationInfo(CompositeLayoutFactory.Identifier, DefaultCompositeLayout));

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
         <AssemblyName>Vkm.Intercom.Core</AssemblyName>
         <RootNamespace>Vkm.Intercom</RootNamespace>
         <LangVersion>8</LangVersion>
+        <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
 </Project>
