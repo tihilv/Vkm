@@ -5,6 +5,7 @@
         <RootNamespace>Vkm.Common</RootNamespace>
         <LangVersion>8</LangVersion>
         <AssemblyName>Vkm.Library.vkmext</AssemblyName>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,6 +20,7 @@
       <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1003" />
       <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
       <PackageReference Include="OpenWeatherMap" Version="1.1.0" />
+      <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

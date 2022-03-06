@@ -5,6 +5,7 @@
         <RootNamespace>Vkm.Manager</RootNamespace>
         <LangVersion>8</LangVersion>
         <OutputType>WinExe</OutputType>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,6 +30,10 @@
 
     <ItemGroup>
       <None Remove="Vkm.Manager.csproj1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     </ItemGroup>
 
 </Project>
