@@ -2,6 +2,7 @@
 using System.IO.Pipes;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+#pragma warning disable SYSLIB0011
 
 namespace Vkm.Intercom.Channels
 {

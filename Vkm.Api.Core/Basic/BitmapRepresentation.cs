@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Vkm.Api.Basic
 {

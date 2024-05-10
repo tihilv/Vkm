@@ -1,39 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <RootNamespace>Vkm.Manager</RootNamespace>
-        <LangVersion>8</LangVersion>
         <OutputType>WinExe</OutputType>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <UseWindowsForms>true</UseWindowsForms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
-      <Prefer32bit>true</Prefer32bit>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
-      <Prefer32bit>true</Prefer32bit>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
       <ProjectReference Include="..\Vkm.Common.Win32\Vkm.Common.Win32.csproj" />
       <ProjectReference Include="..\Vkm.Kernel.Core\Vkm.Kernel.Core.csproj" />
+      
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Vkm.Manager.csproj1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+      <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

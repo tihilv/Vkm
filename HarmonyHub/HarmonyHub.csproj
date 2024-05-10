@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <RootNamespace>HarmonyHub</RootNamespace>
-        <LangVersion>8</LangVersion>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Loamen.agsXMPP" Version="1.3.1" />
-      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     </ItemGroup>
 
 </Project>

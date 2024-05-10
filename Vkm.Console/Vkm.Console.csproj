@@ -1,35 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <RootNamespace>Vkm.Console</RootNamespace>
-        <LangVersion>8</LangVersion>
         <OutputType>WinExe</OutputType>
+        <UseWindowsForms>true</UseWindowsForms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
       <ProjectReference Include="..\Vkm.Intercom.Service.Core\Vkm.Intercom.Service.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Vkm.Console.csproj1" />
     </ItemGroup>
 
 </Project>

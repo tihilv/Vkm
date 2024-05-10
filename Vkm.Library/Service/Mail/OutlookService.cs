@@ -69,12 +69,13 @@ namespace Vkm.Library.Service.Mail
             return new AppointmentInfo(start, end, location, organiser, subject);
 
         }
-        
+
         public AppointmentInfo[] GetCalendar(DateTime from, DateTime to)
         {
-            if (EnsureOutlookConnected())
+            try
             {
-                try
+
+                if (EnsureOutlookConnected())
                 {
                     List<AppointmentInfo> result = new List<AppointmentInfo>();
 
@@ -86,11 +87,11 @@ namespace Vkm.Library.Service.Mail
 
                     return result.ToArray();
                 }
-                catch (Exception ex)
-                {
-                    _application = null;
-                    _mailItems = null;
-                }
+            }
+            catch (Exception ex)
+            {
+                _application = null;
+                _mailItems = null;
             }
 
             return _emptyAppointments;

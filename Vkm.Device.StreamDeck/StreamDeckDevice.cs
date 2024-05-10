@@ -38,7 +38,7 @@ namespace Vkm.Device.StreamDeck
 
         public event EventHandler<ButtonEventArgs> ButtonEvent;
 
-        public StreamDeckDevice(IStreamDeckRefHandle devicePath)
+        public StreamDeckDevice(StreamDeckDeviceReference devicePath)
         {
             var device = devicePath.Open();
             _device = device.WithButtonPressEffect(new ButtonPressEffectConfig() {Scale = 0.9}).WithDisconnectReplay();
@@ -91,7 +91,7 @@ namespace Vkm.Device.StreamDeck
                 }
             }
 
-            return new KeyBitmap(width, height, bitmapData);
+            return KeyBitmap.Create.FromBgr24Array(width, height, bitmapData);
         }
 
         public void SetBrightness(byte valuePercent)

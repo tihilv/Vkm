@@ -1,34 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <RootNamespace>Vkm.Device.Virtual</RootNamespace>
-        <LangVersion>8</LangVersion>
         <AssemblyName>Vkm.Device.Virtual.vkmext</AssemblyName>
+        <UseWindowsForms>true</UseWindowsForms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Vkm.Device.Virtual.csproj1" />
     </ItemGroup>
 
 </Project>

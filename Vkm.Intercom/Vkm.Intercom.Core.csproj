@@ -3,8 +3,16 @@
     <PropertyGroup>
         <AssemblyName>Vkm.Intercom.Core</AssemblyName>
         <RootNamespace>Vkm.Intercom</RootNamespace>
-        <LangVersion>8</LangVersion>
-        <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
 
 </Project>

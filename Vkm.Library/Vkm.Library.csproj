@@ -1,26 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <RootNamespace>Vkm.Common</RootNamespace>
-        <LangVersion>8</LangVersion>
         <AssemblyName>Vkm.Library.vkmext</AssemblyName>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <UseWindowsForms>true</UseWindowsForms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1003" />
-      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-      <PackageReference Include="OpenWeatherMap" Version="1.1.0" />
-      <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1004" />
+      <PackageReference Include="OpenWeatherMap" Version="1.1.3" />
+      <PackageReference Include="System.Management" Version="8.0.0" />
+      <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,14 +31,6 @@
       <ProjectReference Include="..\Vkm.Api.Core\Vkm.Api.Core.csproj" />
       <ProjectReference Include="..\Vkm.Common.Win32\Vkm.Common.Win32.csproj" />
       <ProjectReference Include="..\Vkm.Library.Core\Vkm.Library.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Vkm.Library.csproj1" />
     </ItemGroup>
 
     <ItemGroup>

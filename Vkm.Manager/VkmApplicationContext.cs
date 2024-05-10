@@ -66,7 +66,7 @@ namespace Vkm.Manager
             return new NotifyIcon()
             {
                 Icon = Resources.TrayIcon,
-                ContextMenu = new ContextMenu(new[] {new MenuItem("Exit", Exit)}),
+                
                 Visible = true
             };
         }

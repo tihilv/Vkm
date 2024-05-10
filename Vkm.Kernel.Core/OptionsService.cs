@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Vkm.Api.Configurator;
 using Vkm.Api.Identification;
 using Vkm.Api.Options;
+#pragma warning disable SYSLIB0011
 
 namespace Vkm.Kernel
 {

@@ -12,6 +12,16 @@ namespace Vkm.Kernel
     {
         private readonly List<IModule> _modules;
 
+        static ModulesService()
+        {
+            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+        }
+
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return args.RequestingAssembly;
+        }
+
         public ModulesService(string path)
         {
             _modules = new List<IModule>();
@@ -32,7 +42,8 @@ namespace Vkm.Kernel
 
         private IEnumerable<IModule> LoadModules(string path)
         {
-            Assembly assembly = Assembly.LoadFile(path);
+            var assembly = Assembly.LoadFrom(path);
+            
             Type[] types = assembly.GetTypes();
             var modelElementTypes = types.Where(t=>t.GetInterface(typeof(IModule).Name) != null && !t.ContainsGenericParameters);
             foreach (var modelElementType in modelElementTypes)

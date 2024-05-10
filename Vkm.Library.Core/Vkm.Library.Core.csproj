@@ -2,17 +2,18 @@
 
     <PropertyGroup>
         <RootNamespace>Vkm.Library</RootNamespace>
-        <LangVersion>8</LangVersion>
         <AssemblyName>Vkm.Library.Core.vkmext</AssemblyName>
-        <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\out\Release\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\bin\Debug\</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\out\Debug\</OutputPath>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,9 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-      <PackageReference Include="Netatmo" Version="1.4.1" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="Netatmo" Version="1.5.3" />
     </ItemGroup>
 
     <ItemGroup>

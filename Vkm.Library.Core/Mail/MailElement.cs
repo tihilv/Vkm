@@ -41,13 +41,20 @@ namespace Vkm.Library.Mail
 
             foreach (var service in _mailServices)
             {
-                var r = service.GetUnreadMessageCount();
-                if (r != null)
+                try
                 {
-                    if (result == null)
-                        result = r;
-                    else
-                        result += r;
+                    var r = service.GetUnreadMessageCount();
+                    if (r != null)
+                    {
+                        if (result == null)
+                            result = r;
+                        else
+                            result += r;
+                    }
+                }
+                catch
+                {
+                    // nothing to do
                 }
             }
 

@@ -44,9 +44,21 @@ namespace Vkm.Library.Calendar
             var from = DateTime.Now.Subtract(_options.ExpiredMeetingTolerance);
             var to = from.AddDays(2).Date;
 
-            var events = _calendarServices.SelectMany(c => c.GetCalendar(from, to)).OrderBy(c=>c.FromDateTime).ToArray();
+            var events = _calendarServices.SelectMany(c => GetCalendar(c, from, to)).OrderBy(c=>c.FromDateTime).ToArray();
 
             return events;
+        }
+
+        private AppointmentInfo[] GetCalendar(ICalendarService calendarService, DateTime from, DateTime to)
+        {
+            try
+            {
+                return calendarService.GetCalendar(from, to);
+            }
+            catch
+            {
+                return [];
+            }
         }
 
         protected override void OnEnteredLayout(LayoutContext layoutContext, ILayout previousLayout)
