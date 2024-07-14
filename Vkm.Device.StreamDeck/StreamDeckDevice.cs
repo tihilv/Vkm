@@ -78,7 +78,7 @@ namespace Vkm.Device.StreamDeck
             byte[] bitmapData = new byte[width * height * 3];
             byte[] scan0 = representation.Bytes;
 
-            var stride = scan0.Length / height;
+            var stride = width * 3;
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)

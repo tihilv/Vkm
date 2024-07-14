@@ -79,11 +79,6 @@ namespace Vkm.Api.Basic
             return Graphics.FromImage(_internal);
         }
 
-        public void Save(Stream stream, ImageFormat imageFormat)
-        {
-            _internal.Save(stream, imageFormat);
-        }
-
         public Bitmap GetInternal()
         {
             return _internal;

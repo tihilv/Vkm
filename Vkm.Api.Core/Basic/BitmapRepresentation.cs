@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,7 +12,7 @@ namespace Vkm.Api.Basic
     [Serializable]
     public class BitmapRepresentation : IDisposable
     {
-        private static readonly ConcurrentDictionary<int, ConcurrentStack<byte[]>> _pool = new ConcurrentDictionary<int, ConcurrentStack<byte[]>>();
+        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Create();
 
         private readonly byte[] _bitmapInternal;
 
@@ -72,13 +73,7 @@ namespace Vkm.Api.Basic
 
         private static byte[] GetNewArray(int length)
         {
-            var pool = _pool.GetOrAdd(length, i => new ConcurrentStack<byte[]>());
-
-            if (pool.TryPop(out var v))
-                return v;
-
-
-            return new byte[length];
+            return _arrayPool.Rent(length);
         }
 
         public BitmapEx CreateBitmap()
@@ -121,7 +116,7 @@ namespace Vkm.Api.Basic
             if (!_disposed)
             {
                 _disposed = true;
-                _pool[_bitmapInternal.Length].Push(_bitmapInternal);
+                _arrayPool.Return(_bitmapInternal);
             }
             else
             {
