@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreAudioApi
+﻿namespace CoreAudioApi
 {
     /// <summary>
     /// the type of connection that a connector is part of

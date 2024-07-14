@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using CoreAudioApi.Interfaces;
 using System.Runtime.InteropServices;
 

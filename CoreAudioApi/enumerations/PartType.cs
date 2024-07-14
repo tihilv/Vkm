@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreAudioApi
+﻿namespace CoreAudioApi
 {
     /// <summary>
     /// whether a part in a device topology is a connector or subunit

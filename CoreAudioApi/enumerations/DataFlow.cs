@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreAudioApi
+﻿namespace CoreAudioApi
 {
     /// <summary>
     /// data-flow direction of an audio stream through a connector

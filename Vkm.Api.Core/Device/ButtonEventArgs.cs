@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Vkm.Api.Basic;
 
 namespace Vkm.Api.Device

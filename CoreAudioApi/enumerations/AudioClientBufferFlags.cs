@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreAudioApi
+﻿namespace CoreAudioApi
 {
     /// <summary>
     /// flags that indicate the status of an audio endpoint buffer

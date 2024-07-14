@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using agsXMPP;
 using agsXMPP.protocol.client;
@@ -10,7 +7,6 @@ using agsXMPP.Sasl;
 using agsXMPP.Xml.Dom;
 using HarmonyHub.Internals;
 using HarmonyHub.Utils;
-using System.Threading;
 
 namespace HarmonyHub
 {

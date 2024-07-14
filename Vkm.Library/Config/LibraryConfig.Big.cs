@@ -29,7 +29,6 @@ using Vkm.Library.Mail;
 using Vkm.Library.Media;
 using Vkm.Library.Numpad;
 using Vkm.Library.Power;
-using Vkm.Library.Properties;
 using Vkm.Library.RemoteControl;
 using Vkm.Library.Run;
 using Vkm.Library.Service.Netatmo;

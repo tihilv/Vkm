@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Vkm.Intercom.Channels;
 
 namespace Vkm.Intercom.Dispatchers

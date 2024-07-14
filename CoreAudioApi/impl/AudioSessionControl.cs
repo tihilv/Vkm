@@ -28,8 +28,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using CoreAudioApi.Interfaces;
 using System.Runtime.InteropServices;

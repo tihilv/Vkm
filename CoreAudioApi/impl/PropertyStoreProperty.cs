@@ -20,11 +20,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using CoreAudioApi.Interfaces;
-
 namespace CoreAudioApi
 {
     public class PropertyStoreProperty

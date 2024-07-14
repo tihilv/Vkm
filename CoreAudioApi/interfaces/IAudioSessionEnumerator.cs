@@ -21,7 +21,7 @@
 */
 
 using System.Runtime.InteropServices;
-using System;
+
 namespace CoreAudioApi.Interfaces
 {
     [Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8"),

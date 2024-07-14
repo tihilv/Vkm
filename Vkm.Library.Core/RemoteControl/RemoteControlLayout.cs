@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Vkm.Api.Basic;
 using Vkm.Api.Data;
 using Vkm.Api.Identification;

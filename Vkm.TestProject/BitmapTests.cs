@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vkm.Api.Basic;
 using Vkm.Api.Common;
-using Vkm.Api.Data;
 using Vkm.Api.Layout;
 using Vkm.TestProject.Entities;
 

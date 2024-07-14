@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;

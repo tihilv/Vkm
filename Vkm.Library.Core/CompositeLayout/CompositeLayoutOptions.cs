@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using Vkm.Api.Options;
 using Vkm.Common;
 
