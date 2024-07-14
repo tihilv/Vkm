@@ -75,23 +75,9 @@ namespace Vkm.Device.StreamDeck
             int width = representation.Width;
             int height = representation.Height;
 
-            byte[] bitmapData = new byte[width * height * 3];
             byte[] scan0 = representation.Bytes;
 
-            var stride = width * 3;
-            for (int y = 0; y < height; ++y)
-            {
-                for (int x = 0; x < width; ++x)
-                {
-                    int index3 = stride * y + x * 3;
-                    int index4 = (width * y + x) * 3;
-                    bitmapData[index4] = scan0[index3];
-                    bitmapData[index4 + 1] = scan0[index3 + 1];
-                    bitmapData[index4 + 2] = scan0[index3 + 2];
-                }
-            }
-
-            return KeyBitmap.Create.FromBgr24Array(width, height, bitmapData);
+            return KeyBitmap.Create.FromBgr24Array(width, height, scan0.AsSpan(0, width * height * 3));
         }
 
         public void SetBrightness(byte valuePercent)

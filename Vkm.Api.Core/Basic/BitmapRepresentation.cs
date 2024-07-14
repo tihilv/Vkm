@@ -11,7 +11,7 @@ namespace Vkm.Api.Basic
     [Serializable]
     public class BitmapRepresentation : IDisposable
     {
-        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Create();
+        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
 
         private readonly byte[] _bitmapInternal;
 
